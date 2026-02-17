@@ -31,7 +31,7 @@ export default function ResetPasswordPage() {
             Almost done, just enter your new password below.
           </p>
 
-          <HexagonCard>
+          <HexagonCard size="medium">
             <Suspense fallback={<div className="w-full max-w-md h-64 animate-pulse rounded-lg bg-white/5" />}>
               <ResetPasswordForm />
             </Suspense>

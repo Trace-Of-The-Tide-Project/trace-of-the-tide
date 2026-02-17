@@ -26,7 +26,7 @@ export default function RegisterPage() {
           </div>
           <h1 className="text-xl font-semibold text-white text-center mb-6 cursor-crosshair select-none">  Join Trace of the Tide
           </h1>
-          <HexagonCard>
+          <HexagonCard >
             <RegisterForm />
           </HexagonCard>
 

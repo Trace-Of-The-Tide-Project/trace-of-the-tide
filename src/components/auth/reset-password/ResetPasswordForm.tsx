@@ -57,22 +57,23 @@ export function ResetPasswordForm() {
     }
   }
 
-  if (!token) {
-    return (
-      <div className="w-full max-w-md space-y-4">
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-3 py-2">
-          Invalid or missing reset link. Please request a new password reset from the login page.
-        </p>
-        <Link
-          href="/auth/forgot-password"
-          className="inline-block text-sm hover:underline"
-          style={{ color: theme.accentGold }}
-        >
-          Request new reset link
-        </Link>
-      </div>
-    )
-  }
+  // Allow opening reset password page without token (e.g. for testing/preview)
+  // if (!token) {
+  //   return (
+  //     <div className="w-full max-w-md space-y-4">
+  //       <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-3 py-2">
+  //         Invalid or missing reset link. Please request a new password reset from the login page.
+  //       </p>
+  //       <Link
+  //         href="/auth/forgot-password"
+  //         className="inline-block text-sm hover:underline"
+  //         style={{ color: theme.accentGold }}
+  //       >
+  //         Request new reset link
+  //       </Link>
+  //     </div>
+  //   )
+  // }
 
   return (
     <form onSubmit={handleSubmit} className="relative space-y-6 w-full max-w-md">

@@ -24,12 +24,12 @@ export default function ForgotPasswordPage() {
               <Image src="/images/brand.png" alt="" width={120} height={48} className="h-12 w-auto object-contain" />
             </div>
           </div>
-
-          <HexagonCard>
-            <h1 className="text-xl font-semibold text-white text-center mb-2">Forgot your password?</h1>
+ <h1 className="text-xl font-semibold text-white text-center mb-2">Forgot your password?</h1>
             <p className="text-neutral-400 text-sm text-center mb-6 max-w-md mx-auto">
               Enter the email address that you use for your account and we&apos;ll send you a password reset link.
             </p>
+          <HexagonCard size="compact">
+           
             <ForgotPasswordForm />
           </HexagonCard>
 

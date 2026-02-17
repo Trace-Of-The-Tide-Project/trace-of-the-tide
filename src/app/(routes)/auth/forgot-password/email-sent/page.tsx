@@ -75,7 +75,7 @@ export default function EmailSentPage() {
             Enter the email address that you use for your account and we&apos;ll send you a password reset link.
           </p>
 
-          <HexagonCard>
+          <HexagonCard size="compact">
             <div className="w-full max-w-md flex flex-col items-center text-center">
               <div className="w-14 h-14 flex items-center justify-center rounded-full border-2 border-neutral-500 text-neutral-400 mb-4">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
