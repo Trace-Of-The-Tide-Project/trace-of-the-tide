@@ -1,7 +1,6 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { prisma } from '@/lib/prisma'
-import bcrypt from 'bcryptjs'
+import { authEndpoints } from '@/lib/api'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,38 +15,39 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Missing credentials')
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+        const res = await fetch(authEndpoints.login(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+          }),
         })
 
-        if (!user || !user.password) {
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data?.message ?? data?.error ?? 'Invalid credentials')
+        }
+
+        const data = await res.json().catch(() => null)
+        if (!data) throw new Error('Invalid credentials')
+
+        const user = data.user ?? data
+        const id = user.id ?? user.sub
+        const email = user.email
+        const name =
+          user.name ??
+          ([user.firstName, user.lastName].filter(Boolean).join(' ') || email)
+
+        if (!id || !email) {
           throw new Error('Invalid credentials')
         }
-
-        if (!user.isVerified) {
-          throw new Error('Please verify your email first')
-        }
-
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
-
-        if (!isPasswordValid) {
-          throw new Error('Invalid credentials')
-        }
-
-        // Update last login
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() },
-        })
 
         return {
-          id: user.id,
-          email: user.email,
-          name: `${user.firstName} ${user.lastName}`,
-          role: user.role,
+          id: String(id),
+          email,
+          name: name || undefined,
+          role: (user as { role?: string }).role,
         }
       },
     }),
@@ -56,14 +56,14 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        token.role = user.role
+        token.role = (user as { role?: string }).role
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string
-        session.user.role = token.role as string
+        (session.user as { id?: string; role?: string }).id = token.id as string
+        (session.user as { id?: string; role?: string }).role = token.role as string
       }
       return session
     },

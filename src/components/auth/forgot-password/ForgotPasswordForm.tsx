@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { EmailIcon } from '@/components/ui/icons'
 import { AuthInput } from '@/components/ui/AuthInput'
 import { theme } from '@/lib/theme'
+import { authEndpoints } from '@/lib/api'
 
 export function ForgotPasswordForm() {
   const router = useRouter()
@@ -31,7 +32,7 @@ export function ForgotPasswordForm() {
       })
       const json = await res.json().catch(() => ({}))
       if (!res.ok) {
-        setError(json?.error ?? 'Something went wrong. Please try again.')
+        setError(json?.message ?? json?.error ?? 'Something went wrong. Please try again.')
         return
       }
       if (typeof window !== 'undefined') {

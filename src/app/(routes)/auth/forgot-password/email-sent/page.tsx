@@ -5,6 +5,7 @@ import Image from 'next/image'
 import HexBackground from '@/components/ui/HexBackground'
 import { HexagonCard, AuthLinks } from '@/components/auth/shared'
 import { theme } from '@/lib/theme'
+import { authEndpoints } from '@/lib/api'
 
 const RESEND_COOLDOWN_SEC = 48
 
@@ -36,7 +37,7 @@ export default function EmailSentPage() {
     if (!email || loading || secondsLeft > 0) return
     setLoading(true)
     try {
-      await fetch('/api/auth/forgot-password', {
+      await fetch(authEndpoints.forgotPassword(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

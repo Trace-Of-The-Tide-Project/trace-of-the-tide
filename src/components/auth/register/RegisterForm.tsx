@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { PersonIcon, EmailIcon, LockIcon } from '@/components/ui/icons'
 import { AuthInput } from '@/components/ui/AuthInput'
 import { theme } from '@/lib/theme'
+import { authEndpoints } from '@/lib/api'
 
 export function RegisterForm() {
   const router = useRouter()
@@ -32,22 +33,18 @@ export function RegisterForm() {
     }
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch(authEndpoints.register(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firstName, lastName, email, password }),
       })
-      const json = await res.json()
+      const json = await res.json().catch(() => ({}))
       if (!res.ok) {
-        setError(json?.error ?? 'Registration failed.')
+        setError(json?.message ?? json?.error ?? 'Registration failed.')
         return
       }
-      if (json?.success && json?.data?.message) {
-        router.push('/auth/login?registered=1')
-        router.refresh()
-        return
-      }
-      setError('Registration failed.')
+      router.push('/auth/login?registered=1')
+      router.refresh()
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
