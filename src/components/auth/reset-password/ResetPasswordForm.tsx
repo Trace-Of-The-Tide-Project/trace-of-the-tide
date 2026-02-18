@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { LockIcon } from '@/components/ui/icons'
 import { AuthInput } from '@/components/ui/AuthInput'
 import { theme } from '@/lib/theme'
+import { authEndpoints } from '@/lib/api'
 
 export function ResetPasswordForm() {
   const router = useRouter()
@@ -38,14 +39,14 @@ export function ResetPasswordForm() {
 
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/setup-password', {
+      const res = await fetch(authEndpoints.resetPassword(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password }),
       })
       const json = await res.json().catch(() => ({}))
       if (!res.ok) {
-        setError(json?.error ?? 'Failed to reset password. The link may have expired.')
+        setError(json?.message ?? json?.error ?? 'Failed to reset password. The link may have expired.')
         return
       }
       router.push('/auth/success')
