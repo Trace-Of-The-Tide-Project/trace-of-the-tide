@@ -55,7 +55,7 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-50 w-full border-b py-2"
+      className="sticky top-0 z-50 w-full py-2"
       style={{
         backgroundColor: theme.bgDark,
         borderColor: theme.cardBorder,

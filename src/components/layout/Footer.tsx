@@ -31,7 +31,10 @@ const fieldsLinks = [
 
 export function Footer() {
   return (
-    <footer className="w-full" style={{ backgroundColor: theme.bgDark, color: "#e5e5e5" }}>
+    <footer
+      className="w-full select-none"
+      style={{ backgroundColor: theme.bgDark, color: "#e5e5e5" }}
+    >
       {/* Top section - 4 columns */}
       <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-10">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">

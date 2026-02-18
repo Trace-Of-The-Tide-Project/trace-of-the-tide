@@ -24,12 +24,11 @@ export default function RegisterPage() {
               <Image src="/images/brand.png" alt="" width={120} height={48} className="h-12 w-auto object-contain" />
             </div>
           </div>
-          <h1 className="text-xl font-semibold text-white text-center mb-6 cursor-crosshair select-none">  Join Trace of the Tide
+          <h1 className="text-xl font-semibold text-white text-center mb-6 cursor-crosshair select-none"> Join Trace of the Tide
           </h1>
           <HexagonCard >
             <RegisterForm />
           </HexagonCard>
-
           <AuthLinks
             primaryText="Already have an account?"
             primaryHref="/auth/login"
