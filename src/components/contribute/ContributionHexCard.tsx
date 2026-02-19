@@ -3,10 +3,15 @@
 import { useState } from "react";
 import { theme } from "@/lib/theme";
 
-const HEX_CLIP = "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
+/**
+ * Rounded hexagon clip-path — each corner is approximated by multiple points
+ * for smooth/soft edges instead of sharp corners.
+ */
+const HEX_CLIP_ROUNDED =
+  "polygon(47.5% 5.67%, 48.29% 5.3%, 49.13% 5.08%, 50% 5%, 50.87% 5.08%, 51.71% 5.3%, 52.5% 5.67%, 87.14% 25.67%, 87.85% 26.17%, 88.47% 26.79%, 88.97% 27.5%, 89.34% 28.29%, 89.57% 29.13%, 89.64% 30%, 89.64% 70%, 89.57% 70.87%, 89.34% 71.71%, 88.97% 72.5%, 88.47% 73.21%, 87.85% 73.83%, 87.14% 74.33%, 52.5% 94.33%, 51.71% 94.7%, 50.87% 94.92%, 50% 95%, 49.13% 94.92%, 48.29% 94.7%, 47.5% 94.33%, 12.86% 74.33%, 12.15% 73.83%, 11.53% 73.21%, 11.03% 72.5%, 10.66% 71.71%, 10.43% 70.87%, 10.36% 70%, 10.36% 30%, 10.43% 29.13%, 10.66% 28.29%, 11.03% 27.5%, 11.53% 26.79%, 12.15% 26.17%, 12.86% 25.67%)";
 
-const GRAY_BORDER = "#525252";
-const GRAY_TEXT = "#9ca3af";
+const CARD_BG = "#2a2a2a";
+const CARD_BG_HOVER = "#333333";
 
 type ContributionHexCardProps = {
   icon: React.ReactNode;
@@ -26,42 +31,37 @@ export function ContributionHexCard({
   const [hovered, setHovered] = useState(false);
   const isActive = selected || hovered;
 
-  const borderColor = isActive ? theme.accentGold : GRAY_BORDER;
-  const innerBorder = isActive ? theme.accentGold : GRAY_BORDER;
-  const textColor = isActive ? theme.accentGoldFocus : GRAY_TEXT;
-
   return (
     <button
       type="button"
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`group relative mx-auto flex w-full max-w-[220px] flex-col items-center justify-center gap-1 py-3 px-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-offset-transparent ${className}`}
+      className={`group relative -mx-[12px] -my-[18px] flex w-[190px] shrink-0 flex-col items-center justify-center gap-1 py-4 px-3 transition-all cursor-pointer duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-offset-transparent focus:ring-[#C9A96E] ${className}`}
       style={{
-        clipPath: HEX_CLIP,
-        background: borderColor,
-        padding: "2px",
-        minHeight: "100px",
+        clipPath: HEX_CLIP_ROUNDED,
+        background: isActive ? theme.accentGold : hovered ? CARD_BG_HOVER : CARD_BG,
+        padding: isActive ? "2px" : "0",
+        minHeight: "174px",
       }}
       aria-pressed={selected}
     >
       <div
-        className="flex h-full w-full flex-col items-center justify-center gap-1.5 py-2.5 px-2"
+        className="flex h-full w-full flex-col items-center justify-center gap-2"
         style={{
-          clipPath: HEX_CLIP,
-          background: "#1a1a1a",
-          boxShadow: `inset 0 0 0 1px ${innerBorder}`,
+          clipPath: HEX_CLIP_ROUNDED,
+          background: isActive ? CARD_BG : "transparent",
         }}
       >
         <span
-          className="flex shrink-0 items-center justify-center [&>svg]:h-5 [&>svg]:w-auto"
-          style={{ color: textColor }}
+          className="flex shrink-0 items-center justify-center [&>svg]:h-6 [&>svg]:w-auto"
+          style={{ color: isActive ? theme.accentGold : "white" }}
         >
           {icon}
         </span>
         <span
-          className="text-center text-xs font-semibold leading-tight"
-          style={{ color: textColor }}
+          className="text-center text-xs font-medium leading-tight"
+          style={{ color: isActive ? theme.accentGold : "white" }}
         >
           {label}
         </span>

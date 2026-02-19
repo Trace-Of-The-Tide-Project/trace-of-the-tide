@@ -8,24 +8,26 @@ import {
   ContributeIcon,
   PersonalStoryIcon,
   PenLineIcon,
-  PersonIcon,
-  GiftIcon,
-  GridIcon,
-  SunIcon,
-  CompassIcon,
+  PaletteIcon,
+  MusicIcon,
+  BookIcon,
+  CameraIcon,
+  FileTextIcon,
+  IdCardIcon,
+  GlobeIcon,
 } from "@/components/ui/icons";
 import { theme } from "@/lib/theme";
 
 const CONTRIBUTION_TYPES = [
   { id: "personal-story", label: "Personal Story", icon: PersonalStoryIcon },
   { id: "testimony", label: "Testimony", icon: PenLineIcon },
-  { id: "biography", label: "Biography", icon: PersonIcon },
-  { id: "artwork", label: "Artwork", icon: GiftIcon },
-  { id: "music", label: "Music", icon: SunIcon },
-  { id: "literature", label: "Literature", icon: PenLineIcon },
-  { id: "photography", label: "Photography", icon: GridIcon },
-  { id: "history-document", label: "History document", icon: PenLineIcon },
-  { id: "other", label: "Other", icon: CompassIcon },
+  { id: "biography", label: "Biography", icon: IdCardIcon },
+  { id: "artwork", label: "Artwork", icon: PaletteIcon },
+  { id: "music", label: "Music", icon: MusicIcon },
+  { id: "literature", label: "Literature", icon: BookIcon },
+  { id: "photography", label: "Photography", icon: CameraIcon },
+  { id: "history-document", label: "History document", icon: FileTextIcon },
+  { id: "other", label: "Other", icon: GlobeIcon },
 ] as const;
 
 export default function ContributePage() {
@@ -59,21 +61,60 @@ export default function ContributePage() {
         </div>
       </section>
 
-      {/* What would you like to contribute? + hex cards (3x3 grid) */}
-      <section className="relative mx-auto max-w-4xl px-6 pb-16 sm:px-8">
-        <div
-          className="mt-8 grid justify-center gap-y-3 gap-x-8"
-          style={{ gridTemplateColumns: "repeat(3, 120px)" }}
-        >
-          {CONTRIBUTION_TYPES.map(({ id, label, icon: Icon }) => (
-            <ContributionHexCard
-              key={id}
-              icon={<Icon />}
-              label={label}
-              selected={selectedId === id}
-              onClick={() => setSelectedId(id)}
-            />
-          ))}
+      {/* What would you like to contribute? + hex cards (honeycomb layout) */}
+      <section>
+        <div className="flex flex-col items-center gap-0">
+          {/* Row 1: 3 cards */}
+          <div className="flex justify-center gap-0">
+            {CONTRIBUTION_TYPES.slice(0, 3).map(({ id, label, icon: Icon }) => (
+              <ContributionHexCard
+                key={id}
+                icon={<Icon />}
+                label={label}
+                selected={selectedId === id}
+                onClick={() => setSelectedId(id)}
+              />
+            ))}
+          </div>
+          {/* Row 2: 2 cards (offset for honeycomb) */}
+          <div
+            className="flex justify-center gap-0"
+            style={{ marginLeft: "35px"}}
+          >
+            {CONTRIBUTION_TYPES.slice(3, 5).map(({ id, label, icon: Icon }) => (
+              <ContributionHexCard
+                key={id}
+                icon={<Icon />}
+                label={label}
+                selected={selectedId === id}
+                onClick={() => setSelectedId(id)}
+              />
+            ))}
+          </div>
+          {/* Row 3: 3 cards */}
+          <div className="flex justify-center gap-0" >
+            {CONTRIBUTION_TYPES.slice(5, 8).map(({ id, label, icon: Icon }) => (
+              <ContributionHexCard
+                key={id}
+                icon={<Icon />}
+                label={label}
+                selected={selectedId === id}
+                onClick={() => setSelectedId(id)}
+              />
+            ))}
+          </div>
+          {/* Row 4: 1 card */}
+          <div className="flex justify-center gap-0" style={{ marginLeft: "150px" }}>
+            {CONTRIBUTION_TYPES.slice(8, 9).map(({ id, label, icon: Icon }) => (
+              <ContributionHexCard
+                key={id}
+                icon={<Icon />}
+                label={label}
+                selected={selectedId === id}
+                onClick={() => setSelectedId(id)}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Contribution form */}

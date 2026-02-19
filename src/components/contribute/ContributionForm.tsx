@@ -2,64 +2,20 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import {
+  CloudUploadIcon,
+  ChevronDownIcon,
+  FileTextIcon,
+  Grid2x2Icon,
+  TrashIcon,
+} from "@/components/ui/icons";
 import { theme } from "@/lib/theme";
-
-const iconProps = {
-  width: 20,
-  height: 20,
-  viewBox: "0 0 24 24",
-  fill: "none" as const,
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
-};
-
-function CloudUploadIcon() {
-  return (
-    <svg {...iconProps}>
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
-    </svg>
-  );
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg {...iconProps} width={18} height={18}>
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
-function FileTextIcon() {
-  return (
-    <svg {...iconProps}>
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <line x1="10" y1="9" x2="8" y2="9" />
-    </svg>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg {...iconProps}>
-      <polyline points="3 6 5 6 21 6" />
-      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-      <line x1="10" y1="11" x2="10" y2="17" />
-      <line x1="14" y1="11" x2="14" y2="17" />
-    </svg>
-  );
-}
+import {
+  CONTRIBUTION_FORM_INPUT_BASE as inputBase,
+  COUNTRY_CODES,
+} from "@/lib/constants";
 
 type UploadedFile = { id: string; file: File; sizeLabel: string };
-
-const inputBase =
-  "w-full rounded-lg border bg-[#1a1a1a] px-4 py-3 text-white placeholder-gray-500 transition-colors hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-offset-transparent focus:ring-[#C9A96E] focus:border-[#C9A96E]";
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -116,9 +72,9 @@ export function ContributionForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-5">
+    <form onSubmit={handleSubmit} className="mx-auto w-[80vw] max-w-[80vw] select-none space-y-4 sm:w-full sm:max-w-xl sm:space-y-5">
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
           Contribution title
         </label>
         <input
@@ -133,10 +89,10 @@ export function ContributionForm() {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1 block select-none text-xs cursor-pointer font-medium text-white sm:mb-1.5 sm:text-sm">
           Choose collection <span className="text-gray-500">(Optional)</span>
         </label>
-        <div className="relative">
+        <div className="relative select-none">
           <select
             name="collection"
             className={`${inputBase} appearance-none pr-10`}
@@ -147,19 +103,19 @@ export function ContributionForm() {
             <option value="documents">Documents</option>
             <option value="media">Media</option>
           </select>
-          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 select-none text-gray-500">
             <ChevronDownIcon />
           </span>
         </div>
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
           Description
         </label>
         <textarea
           name="description"
-          rows={5}
+          rows={4}
           placeholder="Enter a description for the contribution"
           className={inputBase}
           style={{ borderColor: theme.inputBorder }}
@@ -167,14 +123,14 @@ export function ContributionForm() {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
           Upload files
         </label>
         <div
           onDrop={onDrop}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
-          className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors ${
+          className={`flex select-none flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-6 transition-colors sm:px-6 sm:py-10 ${
             isDragging ? "border-[#C9A96E] bg-[#C9A96E]/10" : "border-gray-600 bg-[#1a1a1a]"
           }`}
         >
@@ -187,12 +143,12 @@ export function ContributionForm() {
           />
           <label
             htmlFor="file-upload"
-            className="flex cursor-pointer flex-col items-center gap-2 text-gray-400"
+            className="flex cursor-pointer select-none flex-col items-center gap-2 text-gray-400"
           >
             <span style={{ color: theme.accentGoldFocus }}>
               <CloudUploadIcon />
             </span>
-            <span className="text-center text-sm">
+            <span className="text-center text-xs sm:text-sm">
               Drag and drop files here, or click to browse
             </span>
             <span className="text-xs text-gray-500">
@@ -202,23 +158,21 @@ export function ContributionForm() {
         </div>
 
         {files.length > 0 && (
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-3 select-none space-y-2">
             {files.map(({ id, file, sizeLabel }) => (
               <li
                 key={id}
-                className="flex items-center gap-3 rounded-lg border border-gray-700 bg-[#1a1a1a] px-4 py-3"
+                className="flex select-none items-center gap-2 rounded-lg border border-gray-700 bg-[#1a1a1a] px-3 py-2 sm:gap-3 sm:px-4 sm:py-3"
               >
                 <span className="text-gray-500">
                   <FileTextIcon />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm text-white">
-                  {file.name}
-                </span>
+                <span className="min-w-0 flex-1 truncate text-sm text-white">{file.name}</span>
                 <span className="text-xs text-gray-500">{sizeLabel}</span>
                 <button
                   type="button"
                   onClick={() => removeFile(id)}
-                  className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#C9A96E]"
+                  className="select-none rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#C9A96E]"
                   aria-label="Remove file"
                 >
                   <TrashIcon />
@@ -230,9 +184,7 @@ export function ContributionForm() {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
-          Your name
-        </label>
+        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">Your name</label>
         <input
           name="name"
           type="text"
@@ -243,7 +195,7 @@ export function ContributionForm() {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
           Your email address
         </label>
         <input
@@ -256,35 +208,57 @@ export function ContributionForm() {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
           Your mobile number <span className="text-gray-500">(Optional)</span>
         </label>
-        <div className="flex gap-2">
+        <div
+          className="flex select-none items-stretch overflow-hidden rounded-lg border"
+          style={{ borderColor: theme.inputBorder }}
+        >
           <div
-            className="flex w-16 items-center justify-center rounded-lg border bg-[#1a1a1a] px-3 py-3 text-gray-400"
+            className="relative flex w-[120px] shrink-0 cursor-pointer select-none items-center border-r bg-[#1a1a1a] sm:w-[140px]"
             style={{ borderColor: theme.inputBorder }}
           >
-            +20
+            <select
+              name="countryCode"
+              className="absolute inset-0 z-10 cursor-pointer select-none appearance-none border-0 bg-transparent py-2 pl-6 pr-6 text-xs text-gray-400 focus:outline-none focus:ring-0 sm:py-2.5 sm:pl-8 sm:pr-8"
+              defaultValue="+20"
+            >
+              {COUNTRY_CODES.map(({ code, country }) => (
+                <option key={code} value={code} className="bg-[#1a1a1a] text-white">
+                  {code} {country}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 [&>svg]:h-4 [&>svg]:w-4">
+              <Grid2x2Icon />
+            </span>
+            <span
+              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 [&>svg]:h-4 [&>svg]:w-4"
+              aria-hidden
+            >
+              <ChevronDownIcon />
+            </span>
           </div>
           <input
             name="mobile"
             type="tel"
             placeholder="01 2345 6789"
-            className={`${inputBase} flex-1`}
-            style={{ borderColor: theme.inputBorder }}
+            className={`${inputBase} min-w-0 flex-1 rounded-none border-0 border-l-0`}
+            style={{ borderColor: "transparent" }}
           />
         </div>
       </div>
 
-      <p className="text-xs text-gray-500">
-        By submitting, you agree that your contribution may be used and attributed in
-        accordance with our terms. We may contact you regarding your submission.
+      <p className="select-none text-xs text-gray-500">
+        By submitting, you agree that your contribution may be used and attributed in accordance
+        with our terms. We may contact you regarding your submission.
       </p>
 
       <div className="pt-2">
         <button
           type="submit"
-          className="w-full rounded-lg px-6 py-3.5 text-base font-semibold text-white transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black"
+          className="w-full select-none cursor-pointer rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black sm:px-6 sm:py-3.5 sm:text-base"
           style={{
             backgroundColor: theme.accentGold,
             boxShadow: `0 0 0 1px ${theme.accentGold}`,
