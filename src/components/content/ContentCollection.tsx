@@ -1,0 +1,123 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { Grid2x2Icon, CalendarIcon } from "@/components/ui/icons";
+import { theme } from "@/lib/theme";
+
+type CollectionItem = {
+  image: string;
+  title: string;
+  author: string;
+  date: string;
+  description: string;
+};
+
+type ContentCollectionProps = {
+  articleCount: number;
+  duration: string;
+  items: CollectionItem[];
+  visibleCount?: number;
+};
+
+export function ContentCollection({
+  articleCount,
+  duration,
+  items,
+  visibleCount = 5,
+}: ContentCollectionProps) {
+  const [showAll, setShowAll] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
+  const visible = showAll ? items : items.slice(0, visibleCount);
+
+  return (
+    <div className="rounded-xl border border-gray-800 p-4" style={{ backgroundColor: theme.bgDark }}>
+      <h3 className="text-lg font-bold text-white">Collection content</h3>
+      <p className="mt-0.5 text-sm text-gray-500">
+        {articleCount} Articles • {duration} of content
+      </p>
+
+      <ul className="-ml-4 mt-4 space-y-3">
+        {visible.map((item, i) => {
+          const isSelected = selectedIndex === i;
+          return (
+            <li
+              key={i}
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedIndex(i)}
+              onKeyDown={(e) => e.key === "Enter" && setSelectedIndex(i)}
+              className="flex cursor-pointer gap-3 rounded-lg transition-colors hover:bg-white/5"
+            >
+              <div
+                className="h-full min-h-16 w-0.5 shrink-0 self-stretch rounded-full"
+                style={{
+                  backgroundColor: isSelected ? theme.accentGoldFocus : "transparent",
+                }}
+              />
+              <div
+                className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 bg-[#1a1a1a]"
+                style={{
+                  borderColor: isSelected ? theme.accentGoldFocus : "#374151",
+                }}
+              >
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                  sizes="80px"
+                />
+                <div className="absolute left-1.5 top-1.5 text-white">
+                  <Grid2x2Icon />
+                </div>
+              </div>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <p
+                  className="truncate text-sm font-medium"
+                  style={{ color: isSelected ? theme.accentGoldFocus : "white" }}
+                >
+                  {item.title}
+                </p>
+                <div className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-white">
+                  <span className="flex min-w-0 shrink items-center gap-1.5">
+                    <span
+                      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
+                      style={{ backgroundColor: "#C9A96E", color: "#1a1a1a" }}
+                    >
+                      {item.author.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="truncate">{item.author}</span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-1 text-white">
+                    <CalendarIcon />
+                    <span className="truncate">{item.date}</span>
+                  </span>
+                </div>
+                <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed" style={{ color: "#A3A3A3" }}>
+                  {item.description}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
+        <span>
+          {Math.min(visible.length, items.length)}/{items.length}
+        </span>
+        {items.length > visibleCount && (
+          <button
+            type="button"
+            onClick={() => setShowAll(!showAll)}
+            className="font-medium hover:underline"
+            style={{ color: theme.accentGold }}
+          >
+            {showAll ? "Show less" : "Show more"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
