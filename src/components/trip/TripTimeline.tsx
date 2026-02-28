@@ -76,66 +76,67 @@ export function TripTimeline({ entries }: TripTimelineProps) {
       </div>
 
       {tab === "timeline" && (
-        <div className="relative pl-10">
-          {/* Vertical dashed line */}
-          <div
-            className="absolute left-[18px] top-3 bottom-3 w-px"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(to bottom, #555 0px, #555 6px, transparent 6px, transparent 12px)",
-            }}
-          />
-
-          <div className="space-y-10">
-            {entries.map((entry, i) => (
-              <div key={i} className="relative">
-                {/* Number circle */}
+        <div>
+          {entries.map((entry, i) => (
+            <div key={i} className="flex gap-5">
+              {/* Left rail: line + number + line */}
+              <div className="flex w-10 shrink-0 flex-col items-center">
+                {/* Line above + gap (skip for first entry) */}
+                {i > 0 && (
+                  <>
+                    <div
+                      className="w-px border-l-2 border-dashed border-gray-600"
+                      style={{ height: "3rem" }}
+                      aria-hidden
+                    />
+                    <div className="h-3" aria-hidden />
+                  </>
+                )}
+                {/* Number badge */}
                 <div
-                  className="absolute -left-10 top-0 flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold"
-                  style={{
-                    borderColor: theme.accentGold,
-                    color: theme.accentGold,
-                    backgroundColor: "#0d0d0d",
-                  }}
+                  className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-600 bg-[#232323] text-sm font-medium text-white"
                 >
                   {i + 1}
                 </div>
-
-                {/* Content */}
-                <div>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                    <h3 className="text-base font-semibold text-white">
-                      {entry.title}
-                    </h3>
-                    <div className="flex items-center gap-3 text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <CalendarSmall />
-                        {entry.date}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <ClockSmall />
-                        {entry.time}
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="mt-2 text-sm leading-relaxed text-gray-400">
-                    {entry.description}
-                  </p>
-
-                  {/* Image placeholder */}
-                  <div className="mt-4 h-40 rounded-lg bg-[#1a1a1a] sm:h-48" />
-
-                  {entry.location && (
-                    <p className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">
-                      <PinSmall />
-                      {entry.location}
-                    </p>
-                  )}
-                </div>
+                {/* Gap */}
+                <div className="h-3" aria-hidden />
+                {/* Line below — stretches to fill remaining height */}
+                <div className="w-px flex-1 border-l-2 border-dashed border-gray-600" aria-hidden />
               </div>
-            ))}
-          </div>
+
+              {/* Content */}
+              <div className="min-w-0 flex-1 pb-4" style={{ paddingTop: i === 0 ? "0" : "3rem" }}>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                  <h3 className="text-base font-semibold text-white">
+                    {entry.title}
+                  </h3>
+                  <div className="flex items-center gap-3 text-xs text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <CalendarSmall />
+                      {entry.date}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <ClockSmall />
+                      {entry.time}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                  {entry.description}
+                </p>
+
+                <div className="mt-4 h-40 rounded-lg bg-[#1a1a1a] sm:h-48" />
+
+                {entry.location && (
+                  <p className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">
+                    <PinSmall />
+                    {entry.location}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

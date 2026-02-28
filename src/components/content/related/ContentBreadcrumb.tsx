@@ -14,7 +14,7 @@ export function ContentBreadcrumb({ items }: ContentBreadcrumbProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="flex items-center gap-2 rounded-lg px-5 py-3 text-sm text-gray-400"
+      className="flex items-center gap-2 rounded-xl border border-gray-800 bg-[#1a1a1a] px-8 py-4 text-sm text-gray-400"
     >
       <Link href="/" className="shrink-0 text-gray-500 hover:text-white">
         <HomeIcon />

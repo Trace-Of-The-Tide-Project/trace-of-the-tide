@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState, useCallback, useMemo } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { PlayIcon, PauseIcon } from "@/components/ui/icons";
+import { theme } from "@/lib/theme";
 import { formatTime } from "./mediaUtils";
 
 type ContentAudioPlayerProps = {
@@ -23,22 +24,46 @@ export function ContentAudioPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
+  const syncTime = useCallback(() => {
+    const a = audioRef.current;
+    if (a) {
+      setCurrentTime(a.currentTime);
+      if (isFinite(a.duration) && a.duration > 0) setDuration(a.duration);
+    }
+  }, []);
+
   const togglePlay = useCallback(() => {
     const a = audioRef.current;
     if (!a) return;
     if (a.paused) {
       a.play()
-        .then(() => setPlaying(true))
+        .then(() => {
+          setPlaying(true);
+          syncTime();
+          requestAnimationFrame(() => syncTime());
+          setTimeout(syncTime, 50);
+        })
         .catch(() => {});
     } else {
       a.pause();
       setPlaying(false);
     }
-  }, []);
+  }, [syncTime]);
 
   const handleTimeUpdate = useCallback(() => {
     const a = audioRef.current;
     if (a) setCurrentTime(a.currentTime);
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      const a = audioRef.current;
+      if (a) {
+        if (!a.paused) setCurrentTime(a.currentTime);
+        if (isFinite(a.duration) && a.duration > 0) setDuration(a.duration);
+      }
+    }, 100);
+    return () => clearInterval(id);
   }, []);
 
   const updateDuration = useCallback(() => {
@@ -82,29 +107,29 @@ export function ContentAudioPlayer({
 
   return (
     <div
-      className="overflow-hidden rounded-xl p-8 sm:p-10"
+      className="overflow-hidden rounded-xl p-4 sm:p-6 md:p-8 lg:p-10"
     >
-      <div className="flex gap-8">
+      <div className="flex gap-4 sm:gap-6 md:gap-8">
         {thumbnail && (
-          <div className="relative h-44 w-44 shrink-0 self-start overflow-hidden rounded-lg sm:h-48 sm:w-48">
-            <Image src={thumbnail} alt="" fill className="object-cover" sizes="192px" />
+          <div className="relative h-24 w-24 shrink-0 self-center overflow-hidden rounded-lg sm:h-32 sm:w-32 md:h-40 md:w-40 lg:h-48 lg:w-48">
+            <Image src={thumbnail} alt="" fill className="object-cover" sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, (max-width: 1024px) 160px, 192px" />
           </div>
         )}
-        <div className="flex min-w-0 flex-1 flex-col justify-center gap-5">
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 sm:gap-4 md:gap-5">
           {/* Upper section: play, name + time */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <button
               type="button"
               onClick={togglePlay}
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#1a1a1a] text-white transition-colors hover:bg-[#252525]"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a1a1a] text-white transition-colors hover:bg-[#252525] sm:h-12 sm:w-12 md:h-14 md:w-14"
             >
               {playing ? <PauseIcon /> : <PlayIcon />}
             </button>
             <div className="min-w-0 flex-1">
               {title && (
-                <p className="text-base font-semibold text-white sm:text-lg">{title}</p>
+                <p className="text-sm font-semibold text-white sm:text-base md:text-lg">{title}</p>
               )}
-              <p className="mt-0.5 text-sm text-gray-400">
+              <p className="mt-0.5 text-xs text-gray-400 sm:text-sm">
                 Audio time: <span className="tabular-nums">{displayTotalTime}</span>
               </p>
             </div>
@@ -145,7 +170,7 @@ export function ContentAudioPlayer({
                     <div
                       key={i}
                       className="w-0.5 shrink-0 rounded-sm"
-                      style={{ height: `${h * 100}%`, backgroundColor: "#CCCCCC" }}
+                      style={{ height: `${h * 100}%`, backgroundColor: theme.accentGold }}
                     />
                   ))}
                 </div>
@@ -175,7 +200,7 @@ export function ContentAudioPlayer({
                     <div
                       key={i}
                       className="w-0.5 shrink-0 rounded-sm"
-                      style={{ height: `${h * 100}%`, backgroundColor: "#CCCCCC" }}
+                      style={{ height: `${h * 100}%`, backgroundColor: theme.accentGold }}
                     />
                   ))}
                 </div>

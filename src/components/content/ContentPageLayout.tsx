@@ -1,23 +1,24 @@
 import { theme } from "@/lib/theme";
 import { ShareYourStory } from "@/components/contribute/ShareYourStory";
-import { ContentBreadcrumb } from "./ContentBreadcrumb";
-import { ContentMediaPlayer } from "./ContentMediaPlayer";
-import { ContentArticleHeader } from "./ContentArticleHeader";
-import { ContentArticleBody } from "./ContentArticleBody";
-import { ContentAuthorCard } from "./ContentAuthorCard";
-import { ContentContributors } from "./ContentContributors";
-import { ContentCollection } from "./ContentCollection";
-import { RelatedContent } from "./RelatedContent";
-import type { RelatedContentCardData } from "./RelatedContentCard";
+import { ContentBreadcrumb } from "./related/ContentBreadcrumb";
+import { ContentMediaPlayer } from "./media/ContentMediaPlayer";
+import { ContentArticleHeader } from "./article/ContentArticleHeader";
+import { ContentArticleBody } from "./article/ContentArticleBody";
+import { ContentAuthorCard } from "./sidebar/ContentAuthorCard";
+import { ContentContributors } from "./sidebar/ContentContributors";
+import { ContentCollection } from "./sidebar/ContentCollection";
+import { RelatedContent } from "./related/RelatedContent";
+import type { RelatedContentCardData } from "./related/RelatedContentCard";
 
 type ContentPageLayoutProps = {
   breadcrumbs: { label: string; href?: string }[];
   media: {
-    type: "video" | "audio" | "image";
-    src: string;
+    type: "video" | "audio" | "image" | "gallery";
+    src?: string;
     thumbnail?: string;
     duration?: string;
     title?: string;
+    items?: { type: "image" | "video" | "audio"; src: string; thumbnail?: string; title?: string; duration?: string }[];
   };
   article: {
     title: string;
@@ -63,10 +64,7 @@ export function ContentPageLayout({
   relatedContent,
 }: ContentPageLayoutProps) {
   return (
-    <div
-      className="min-h-screen w-full"
-      style={{ backgroundColor: theme.bgDark }}
-    >
+    <div className="min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
       {/* Gradient overlay: header + media only (stops before article); white center, fades to outer */}
       <div
         className="relative overflow-hidden"
@@ -111,12 +109,15 @@ export function ContentPageLayout({
 
           {/* Right — sidebar */}
           <aside className="flex w-full shrink-0 flex-col gap-6 lg:sticky lg:top-6 lg:w-[24rem] lg:self-start">
-              <div className="rounded-2xl border border-gray-800 p-5" style={{ backgroundColor: theme.bgDark }}>
-                <ContentAuthorCard {...author} />
-                <div className="my-5 h-px bg-gray-800" />
-                <ContentContributors contributors={contributors} />
-              </div>
-              <ContentCollection {...collection} />
+            <div
+              className="rounded-2xl border border-gray-800 p-5"
+              style={{ backgroundColor: theme.bgDark }}
+            >
+              <ContentAuthorCard {...author} />
+              <div className="my-5 h-px bg-gray-800" />
+              <ContentContributors contributors={contributors} />
+            </div>
+            <ContentCollection {...collection} />
           </aside>
         </div>
       </div>

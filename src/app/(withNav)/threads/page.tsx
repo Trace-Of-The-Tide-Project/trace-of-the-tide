@@ -4,6 +4,7 @@ import {
   THREADS_MAIN,
   THREADS_ENTRIES,
   CONTENT_AUTHOR,
+  CONTENT_CONTRIBUTORS,
   CONTENT_COLLECTION,
   CONTENT_RELATED,
 } from "@/lib/constants";
@@ -33,6 +34,7 @@ export default function ThreadsPage() {
       initialVisibleCount={2}
       loadMoreCount={2}
       author={{ ...CONTENT_AUTHOR }}
+      contributors={[...CONTENT_CONTRIBUTORS].map((c) => ({ ...c }))}
       collection={{
         articleCount: CONTENT_COLLECTION.articleCount,
         duration: CONTENT_COLLECTION.duration,

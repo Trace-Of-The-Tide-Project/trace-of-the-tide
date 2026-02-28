@@ -144,6 +144,17 @@ export const CONTENT_MEDIA_AUDIO = {
   duration: "24:00",
 };
 
+export const CONTENT_MEDIA_GALLERY = {
+  type: "gallery" as const,
+  items: [
+    { type: "image" as const, src: "/images/image.png", thumbnail: "/images/image.png" },
+    { type: "video" as const, src: "/media/video.mp4", thumbnail: "/images/image.png" },
+    { type: "audio" as const, src: "/media/audio.mp3", thumbnail: "/images/image.png", title: "The Future of Sustainable Technology", duration: "24:00" },
+    { type: "image" as const, src: "/images/image.png", thumbnail: "/images/image.png" },
+    { type: "video" as const, src: "/media/video.mp4", thumbnail: "/images/image.png" },
+  ],
+};
+
 export const CONTENT_BREADCRUMBS = [
   { label: "Breadcrumb label", href: "#" },
   { label: "Breadcrumb label", href: "#" },

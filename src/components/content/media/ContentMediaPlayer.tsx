@@ -3,13 +3,16 @@
 import { ContentVideoPlayer } from "./ContentVideoPlayer";
 import { ContentAudioPlayer } from "./ContentAudioPlayer";
 import { ContentImageDisplay } from "./ContentImageDisplay";
+import { ContentGalleryPlayer } from "./ContentGalleryPlayer";
+import type { GalleryItem } from "./ContentGalleryPlayer";
 
 export type ContentMediaPlayerProps = {
-  type: "video" | "audio" | "image";
-  src: string;
+  type: "video" | "audio" | "image" | "gallery";
+  src?: string;
   thumbnail?: string;
   duration?: string;
   title?: string;
+  items?: GalleryItem[];
 };
 
 export function ContentMediaPlayer({
@@ -18,9 +21,11 @@ export function ContentMediaPlayer({
   thumbnail,
   duration,
   title,
+  items,
 }: ContentMediaPlayerProps) {
-  if (type === "image") return <ContentImageDisplay src={src} />;
-  if (type === "audio") {
+  if (type === "gallery" && items) return <ContentGalleryPlayer items={items} />;
+  if (type === "image" && src) return <ContentImageDisplay src={src} />;
+  if (type === "audio" && src) {
     return (
       <ContentAudioPlayer
         src={src}
@@ -30,5 +35,6 @@ export function ContentMediaPlayer({
       />
     );
   }
-  return <ContentVideoPlayer src={src} thumbnail={thumbnail || src} />;
+  if (src) return <ContentVideoPlayer src={src} thumbnail={thumbnail || src} />;
+  return null;
 }

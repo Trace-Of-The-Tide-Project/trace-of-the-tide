@@ -4,13 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import { theme } from "@/lib/theme";
 import { ShareYourStory } from "@/components/contribute/ShareYourStory";
-import { ContentBreadcrumb } from "./ContentBreadcrumb";
-import { ContentArticleHeader } from "./ContentArticleHeader";
-import { ContentArticleBody } from "./ContentArticleBody";
-import { ContentAuthorCard } from "./ContentAuthorCard";
-import { ContentCollection } from "./ContentCollection";
-import { RelatedContent } from "./RelatedContent";
-import type { RelatedContentCardData } from "./RelatedContentCard";
+import { ContentBreadcrumb } from "./related/ContentBreadcrumb";
+import { ContentArticleHeader } from "./article/ContentArticleHeader";
+import { ContentArticleBody } from "./article/ContentArticleBody";
+import { ContentAuthorCard } from "./sidebar/ContentAuthorCard";
+import { ContentContributors } from "./sidebar/ContentContributors";
+import { ContentCollection } from "./sidebar/ContentCollection";
+import { RelatedContent } from "./related/RelatedContent";
+import type { RelatedContentCardData } from "./related/RelatedContentCard";
 
 export type ThreadEntry = {
   image: string;
@@ -36,6 +37,12 @@ type ThreadsPageLayoutProps = {
     link?: string;
     color?: string;
   };
+  contributors: {
+    name: string;
+    role: string;
+    initials: string;
+    color?: string;
+  }[];
   collection: {
     articleCount: number;
     duration: string;
@@ -59,10 +66,21 @@ export function ThreadsPageLayout({
   initialVisibleCount = 2,
   loadMoreCount = 2,
   author,
+  contributors,
   collection,
   relatedContent,
 }: ThreadsPageLayoutProps) {
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
+  const [expandedEntries, setExpandedEntries] = useState<Set<number>>(new Set());
+
+  const toggleEntry = (index: number) => {
+    setExpandedEntries((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
   const visibleEntries = entries.slice(0, visibleCount);
   const hasMore = visibleCount < entries.length;
   const remaining = entries.length - visibleCount;
@@ -71,21 +89,24 @@ export function ThreadsPageLayout({
     setVisibleCount((c) => Math.min(c + loadMoreCount, entries.length));
   };
 
+  const showLess = () => {
+    setVisibleCount(initialVisibleCount);
+  };
+
+  const canCollapse = visibleCount > initialVisibleCount;
+
   return (
-    <div
-      className="min-h-screen w-full"
-      style={{ backgroundColor: theme.bgDark }}
-    >
-      <div className="mx-auto max-w-6xl px-6 pt-4 sm:px-10">
+    <div className="min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
+      <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6">
         <ContentBreadcrumb items={breadcrumbs} />
       </div>
 
-      <div className="mx-auto max-w-6xl px-6 py-8 sm:px-10 sm:py-10">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-8">
           {/* Left — timeline */}
           <div className="flex min-w-0 flex-1 flex-col">
             {/* Main timeline title + meta */}
-            <div className="mb-10">
+            <div className="mb-10 ml-5">
               <h1 className="text-2xl font-bold leading-snug text-white sm:text-3xl">
                 {mainTitle}
               </h1>
@@ -101,66 +122,110 @@ export function ThreadsPageLayout({
             </div>
 
             {/* Timeline */}
-            <div className="relative pl-1">
-          {/* Vertical dotted line — centered in number column */}
-          <div
-            className="absolute left-3 top-0 bottom-0 w-px border-l-2 border-dashed border-gray-600"
-            aria-hidden
-          />
-
-          <ul className="space-y-12">
-            {visibleEntries.map((entry, index) => (
-              <li key={index} className="relative flex gap-6">
-                {/* Number column: line runs through center */}
-                <div className="relative z-10 flex w-6 shrink-0 items-start justify-center pt-0.5">
-                  <div
-                    className="flex h-6 w-6 items-center justify-center rounded-full text-sm font-medium text-white"
-                    style={{ backgroundColor: theme.accentGold }}
-                  >
-                    {index + 1}
-                  </div>
-                </div>
-
-                {/* Content block */}
-                <div className="min-w-0 flex-1">
-                  <div className="space-y-4">
-                    <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[#1a1a1a] sm:max-w-2xl">
-                      <Image
-                        src={entry.image}
-                        alt=""
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 672px"
-                      />
+            <div className="pl-2">
+              {visibleEntries.map((entry, index) => (
+                <div key={index} className="relative flex gap-4">
+                  {/* Left rail: line + number + line */}
+                  <div className="flex w-10 shrink-0 flex-col items-center">
+                    {/* Line above + gap (skip for first entry) */}
+                    {index > 0 && (
+                      <>
+                        <div
+                          className="w-px border-l-2 border-dashed border-gray-600"
+                          style={{ height: "3rem" }}
+                          aria-hidden
+                        />
+                        <div className="h-3" aria-hidden />
+                      </>
+                    )}
+                    {/* Number badge */}
+                    <div className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-600 bg-[#232323] text-sm font-medium text-white">
+                      {index + 1}
                     </div>
-                    <ContentArticleHeader
-                      title={entry.title}
-                      edition={entry.edition}
-                      category={entry.category}
-                      publishedDate={entry.publishedDate}
-                      readingTime={entry.readingTime}
+                    {/* Gap */}
+                    <div className="h-3" aria-hidden />
+                    {/* Line below — stretches to fill remaining height */}
+                    <div
+                      className="w-px flex-1 border-l-2 border-dashed border-gray-600"
+                      aria-hidden
                     />
-                    <ContentArticleBody sections={entry.sections} />
+                  </div>
+
+                  {/* Content */}
+                  <div
+                    className="min-w-0 flex-1 pb-4"
+                    style={{ paddingTop: index === 0 ? "0" : "3rem" }}
+                  >
+                    <div className="space-y-4 pt-10">
+                      <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[#1a1a1a]">
+                        <Image
+                          src={entry.image}
+                          alt=""
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, 672px"
+                        />
+                      </div>
+                      <ContentArticleHeader
+                        title={entry.title}
+                        edition={entry.edition}
+                        category={entry.category}
+                        publishedDate={entry.publishedDate}
+                        readingTime={entry.readingTime}
+                      />
+                      {expandedEntries.has(index) && (
+                        <ContentArticleBody sections={entry.sections} />
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => toggleEntry(index)}
+                        className="flex items-center gap-1.5 text-sm font-medium text-gray-400 transition-colors hover:text-white"
+                      >
+                        {expandedEntries.has(index) ? "Show less" : "Read more"}
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={`transition-transform ${expandedEntries.has(index) ? "rotate-180" : ""}`}
+                        >
+                          <path d="M6 9l6 6 6-6" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+              ))}
 
-          {/* Show more */}
-          {hasMore && (
-            <div className="mt-10 flex justify-center">
-              <button
-                type="button"
-                onClick={showMore}
-                className="rounded-lg px-6 py-3 text-sm font-semibold text-[#1a1a1a] transition-opacity hover:opacity-90"
-                style={{ backgroundColor: theme.accentGold }}
-              >
-                Show more
-                {remaining > 0 && ` (${remaining} left)`}
-              </button>
-            </div>
-          )}
+              {/* Show more / Show less */}
+              {(hasMore || canCollapse) && (
+                <div className="flex justify-center gap-3 pt-6">
+                  {hasMore && (
+                    <button
+                      type="button"
+                      onClick={showMore}
+                      className="rounded-lg px-6 py-3 text-sm font-semibold text-[#1a1a1a] transition-opacity hover:opacity-90"
+                      style={{ backgroundColor: theme.accentGold }}
+                    >
+                      Show more
+                      {remaining > 0 && ` (${remaining} left)`}
+                    </button>
+                  )}
+                  {canCollapse && (
+                    <button
+                      type="button"
+                      onClick={showLess}
+                      className="rounded-lg border border-gray-700 px-6 py-3 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+                    >
+                      Show less
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -171,6 +236,8 @@ export function ThreadsPageLayout({
               style={{ backgroundColor: theme.bgDark }}
             >
               <ContentAuthorCard {...author} />
+              <div className="my-5 h-px bg-gray-800" />
+              <ContentContributors contributors={contributors} />
             </div>
             <ContentCollection {...collection} />
           </aside>
