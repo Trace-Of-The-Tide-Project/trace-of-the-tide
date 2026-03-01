@@ -68,7 +68,7 @@ export function Navbar() {
           className="flex shrink-0 items-center gap-3 text-white transition-opacity hover:opacity-90"
         >
           <Image
-            src="/images/logo.png"
+            src="/images/Logo.png"
             alt="Trace of The Tide"
             width={100}
             height={24}

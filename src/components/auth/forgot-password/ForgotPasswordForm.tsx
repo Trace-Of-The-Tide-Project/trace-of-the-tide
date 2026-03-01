@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { EmailIcon } from '@/components/ui/icons'
 import { AuthInput } from '@/components/ui/AuthInput'
 import { theme } from '@/lib/theme'
-import { authEndpoints } from '@/lib/api'
 
 export function ForgotPasswordForm() {
   const router = useRouter()

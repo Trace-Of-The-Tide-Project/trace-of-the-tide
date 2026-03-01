@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
         <div className="w-full max-w-3xl">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-6">
-              <Image src="/images/brand.png" alt="" width={120} height={48} className="h-12 w-auto object-contain" />
+              <Image src="/images/Brand.png" alt="" width={120} height={48} className="h-12 w-auto object-contain" />
             </div>
           </div>
  <h1 className="text-xl font-semibold text-white text-center mb-2">Forgot your password?</h1>
