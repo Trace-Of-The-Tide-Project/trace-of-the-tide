@@ -503,3 +503,215 @@ export function CalendarIcon() {
     </svg>
   );
 }
+
+export function UsersIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+export function ShieldIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+export function LayoutDashboardIcon() {
+  return (
+    <svg {...iconProps}>
+      <rect x="3" y="3" width="7" height="9" rx="1" />
+      <rect x="14" y="3" width="7" height="5" rx="1" />
+      <rect x="14" y="12" width="7" height="9" rx="1" />
+      <rect x="3" y="16" width="7" height="5" rx="1" />
+    </svg>
+  );
+}
+
+export function FolderIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+export function CodeIcon() {
+  return (
+    <svg {...iconProps}>
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </svg>
+  );
+}
+
+export function MessageSquareIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+export function HeartHandshakeIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+      <path d="M12 5L9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" />
+      <path d="m18 15-2-2" />
+      <path d="m15 18-2-2" />
+    </svg>
+  );
+}
+
+export function SendIcon() {
+  return (
+    <svg {...iconProps}>
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+  );
+}
+
+export function DollarSignIcon() {
+  return (
+    <svg {...iconProps}>
+      <line x1="12" y1="1" x2="12" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </svg>
+  );
+}
+
+export function BarChartIcon() {
+  return (
+    <svg {...iconProps}>
+      <line x1="12" y1="20" x2="12" y2="10" />
+      <line x1="18" y1="20" x2="18" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="16" />
+    </svg>
+  );
+}
+
+export function AlertTriangleIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}
+
+export function BellIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
+
+export function EyeIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+export function LogOutIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
+
+export function UserCheckIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="8.5" cy="7" r="4" />
+      <polyline points="17 11 19 13 23 9" />
+    </svg>
+  );
+}
+
+export function StarIcon() {
+  return (
+    <svg {...iconProps}>
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+export function ClockIcon() {
+  return (
+    <svg {...iconProps}>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+export function SearchIcon() {
+  return (
+    <svg {...iconProps}>
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
+export function FilmIcon() {
+  return (
+    <svg {...iconProps}>
+      <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+      <line x1="7" y1="2" x2="7" y2="22" />
+      <line x1="17" y1="2" x2="17" y2="22" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <line x1="2" y1="7" x2="7" y2="7" />
+      <line x1="2" y1="17" x2="7" y2="17" />
+      <line x1="17" y1="7" x2="22" y2="7" />
+      <line x1="17" y1="17" x2="22" y2="17" />
+    </svg>
+  );
+}
+
+export function MicIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+      <line x1="12" y1="19" x2="12" y2="23" />
+      <line x1="8" y1="23" x2="16" y2="23" />
+    </svg>
+  );
+}
+
+export function TrendingUpIcon() {
+  return (
+    <svg {...iconProps}>
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+      <polyline points="17 6 23 6 23 12" />
+    </svg>
+  );
+}
+
+export function CreditCardIcon() {
+  return (
+    <svg {...iconProps}>
+      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+      <line x1="1" y1="10" x2="23" y2="10" />
+    </svg>
+  );
+}

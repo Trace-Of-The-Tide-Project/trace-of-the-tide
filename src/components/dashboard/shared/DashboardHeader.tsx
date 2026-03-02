@@ -1,0 +1,43 @@
+import { theme } from "@/lib/theme";
+
+type DashboardHeaderProps = {
+  title: string;
+  subtitle?: string;
+  actions?: React.ReactNode;
+  profile?: {
+    initials: string;
+    name: string;
+    meta?: string[];
+  };
+};
+
+export function DashboardHeader({ title, subtitle, actions, profile }: DashboardHeaderProps) {
+  return (
+    <div className="flex flex-col gap-4 border-b border-[#333] px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-8">
+      <div className="flex items-center gap-4">
+        {profile && (
+          <span
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-lg font-bold"
+            style={{ backgroundColor: theme.accentGoldFocus, color: theme.bgDark }}
+          >
+            {profile.initials}
+          </span>
+        )}
+        <div>
+          <h1 className="text-xl font-bold text-white sm:text-2xl">{profile?.name ?? title}</h1>
+          {profile?.meta && (
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+              {profile.meta.map((m, i) => (
+                <span key={i}>{m}</span>
+              ))}
+            </div>
+          )}
+          {!profile && subtitle && (
+            <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
+          )}
+        </div>
+      </div>
+      {actions && <div className="flex items-center gap-2">{actions}</div>}
+    </div>
+  );
+}
