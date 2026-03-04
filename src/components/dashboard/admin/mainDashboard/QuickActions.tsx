@@ -6,7 +6,8 @@ export type QuickActionItem = {
   icon: ComponentType;
   label: string;
   description: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
 };
 
 type QuickActionsProps = {
@@ -41,12 +42,27 @@ export function QuickActions({ items }: QuickActionsProps) {
       <div className="flex flex-col gap-5">
         {items.map((item) => {
           const Icon = item.icon;
+          const className = "flex items-center gap-4 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5 mx-4 transition-colors hover:bg-white/2";
+          if (item.onClick) {
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={item.onClick}
+                className={`w-full text-left ${className}`}
+              >
+                <HexIcon>
+                  <Icon />
+                </HexIcon>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-white">{item.label}</p>
+                  <p className="mt-0.5 text-xs text-gray-500">{item.description}</p>
+                </div>
+              </button>
+            );
+          }
           return (
-            <Link
-              key={item.id}
-              href={item.href}
-              className="flex items-center gap-4 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5 mx-4 transition-colors hover:bg-white/2"
-            >
+            <Link key={item.id} href={item.href ?? "#"} className={className}>
               <HexIcon>
                 <Icon />
               </HexIcon>

@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import type { ComponentType } from "react";
-import { DetailModal } from "@/components/dashboard/shared/DetailModal";
+import { DetailModal } from "@/components/dashboard/modals/DetailModal";
 
 type ModalItem = {
   id: string;
   title: string;
   subtitle: string;
-  actionLabel: string;
+  actionLabel?: string;
+  actionColor?: string;
   actionHref?: string;
+  processButtons?: boolean;
 };
 
 export type AlertItem = {

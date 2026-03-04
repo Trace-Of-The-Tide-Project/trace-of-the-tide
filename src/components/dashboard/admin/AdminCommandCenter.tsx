@@ -1,39 +1,7 @@
 "use client";
 
 import { StatCard } from "../shared/StatCard";
-import {
-  UsersIcon,
-  FileTextIcon,
-  DollarSignIcon,
-  EyeIcon,
-} from "@/components/ui/icons";
-
-const stats = [
-  {
-    icon: UsersIcon,
-    value: "12,546",
-    label: "Total Users",
-    trend: { value: "12.5%", direction: "up" as const, comparison: "VS last month" },
-  },
-  {
-    icon: FileTextIcon,
-    value: "3,438",
-    label: "Content Published",
-    trend: { value: "8.2%", direction: "up" as const, comparison: "VS last month" },
-  },
-  {
-    icon: DollarSignIcon,
-    value: "$34,892",
-    label: "Monthly Donations",
-    trend: { value: "22.4%", direction: "up" as const, comparison: "VS last month" },
-  },
-  {
-    icon: EyeIcon,
-    value: "2,847",
-    label: "Active Today",
-    trend: { value: "3.1%", direction: "down" as const, comparison: "VS yesterday" },
-  },
-];
+import { commandCenterStats } from "@/lib/dashboard/admin-dashboard-constants";
 
 export function AdminCommandCenter() {
   return (
@@ -55,7 +23,7 @@ export function AdminCommandCenter() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 pb-6 lg:grid-cols-4">
-        {stats.map((stat) => (
+        {commandCenterStats.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
       </div>

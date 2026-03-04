@@ -7,9 +7,11 @@ type DetailModalItem = {
   id: string;
   title: string;
   subtitle: string;
-  actionLabel: string;
+  actionLabel?: string;
+  actionColor?: string;
   onAction?: () => void;
   actionHref?: string;
+  processButtons?: boolean;
 };
 
 type Badge = {
@@ -70,7 +72,7 @@ export function DetailModal({
 
       <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[#333] bg-[#0a0a0a] p-6">
         {/* Header */}
-        <div className="mb-4 flex items-start justify-between">
+        <div className="mb-4 flex items-start justify-between border-b border-[#333] pb-4">
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-bold text-white">{title}</h2>
@@ -98,20 +100,42 @@ export function DetailModal({
         </div>
 
         {/* Items */}
-        <div className="flex flex-col gap-3">
+        <div className="flex max-h-[40vh] flex-col gap-3 overflow-y-auto">
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between rounded-xl border border-[#333] bg-[#111] px-5 py-4"
+              className="flex min-h-[60px] shrink-0 items-center justify-between gap-4 rounded-xl border border-[#333] bg-[#111] px-5 py-4"
             >
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-white">{item.title}</p>
-                <p className="mt-0.5 text-xs text-gray-500">{item.subtitle}</p>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <p className="truncate text-sm font-medium text-white">{item.title}</p>
+                <p className="mt-0.5 truncate text-xs text-gray-500">{item.subtitle}</p>
               </div>
-              {item.actionHref ? (
+              {item.processButtons ? (
+                <div className="flex shrink-0 items-center gap-2">
+                  <button
+                    type="button"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#1a1a1a] text-gray-300 transition-colors hover:border-red-800 hover:text-red-400"
+                    aria-label="Reject"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#1a1a1a] text-gray-300 transition-colors hover:border-emerald-800 hover:text-emerald-400"
+                    aria-label="Approve"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : item.actionHref ? (
                 <a
                   href={item.actionHref}
-                  className="shrink-0 rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+                  className="shrink-0 rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+                  style={item.actionColor ? { color: item.actionColor } : undefined}
                 >
                   {item.actionLabel}
                 </a>
@@ -119,7 +143,8 @@ export function DetailModal({
                 <button
                   type="button"
                   onClick={item.onAction}
-                  className="shrink-0 rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+                  className="shrink-0 rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+                  style={item.actionColor ? { color: item.actionColor } : undefined}
                 >
                   {item.actionLabel}
                 </button>
@@ -153,7 +178,7 @@ export function DetailModal({
         )}
 
         {/* Close button */}
-        <div className="mt-3 flex justify-center">
+        <div className="mt-3 flex justify-end">
           <button
             type="button"
             onClick={onClose}
