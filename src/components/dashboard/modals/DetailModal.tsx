@@ -114,7 +114,7 @@ export function DetailModal({
                 <div className="flex shrink-0 items-center gap-2">
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#1a1a1a] text-gray-300 transition-colors hover:border-red-800 hover:text-red-400"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-gray-300 transition-colors hover:border-red-800 hover:text-red-400"
                     aria-label="Reject"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -123,7 +123,7 @@ export function DetailModal({
                   </button>
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#1a1a1a] text-gray-300 transition-colors hover:border-emerald-800 hover:text-emerald-400"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-gray-300 transition-colors hover:border-emerald-800 hover:text-emerald-400"
                     aria-label="Approve"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -134,7 +134,7 @@ export function DetailModal({
               ) : item.actionHref ? (
                 <a
                   href={item.actionHref}
-                  className="shrink-0 rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+                  className="shrink-0 rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
                   style={item.actionColor ? { color: item.actionColor } : undefined}
                 >
                   {item.actionLabel}
@@ -143,7 +143,7 @@ export function DetailModal({
                 <button
                   type="button"
                   onClick={item.onAction}
-                  className="shrink-0 rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+                  className="shrink-0 rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
                   style={item.actionColor ? { color: item.actionColor } : undefined}
                 >
                   {item.actionLabel}
@@ -182,7 +182,7 @@ export function DetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-[#333] bg-[#1a1a1a] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+            className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
           >
             Close
           </button>

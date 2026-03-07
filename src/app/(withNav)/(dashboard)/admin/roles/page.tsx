@@ -1,5 +1,7 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+"use client";
+
+import { RolesPermissionsContent } from "@/components/dashboard/admin/roles/RolesPermissionsContent";
 
 export default function RolesPage() {
-  return <PlaceholderPage title="Roles & Permissions" subtitle="Configure access control and role definitions." />;
+  return <RolesPermissionsContent />;
 }

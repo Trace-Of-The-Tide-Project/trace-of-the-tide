@@ -41,7 +41,7 @@ export function DashboardSidebar({ config, onItemClick }: DashboardSidebarProps)
         style={{ scrollbarWidth: "none" }}
       >
         <style>{`.dash-sidebar-nav::-webkit-scrollbar { display: none; }`}</style>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           {config.sections.map((section, i) => (
             <SidebarSection
               key={section.heading ?? i}

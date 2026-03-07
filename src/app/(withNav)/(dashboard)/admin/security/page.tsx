@@ -44,7 +44,7 @@ export default function SecurityPage() {
               </div>
               <button
                 type="button"
-                className="rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium transition-colors hover:border-gray-500"
+                className="rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium transition-colors hover:border-gray-500"
                 style={{ color: "#CBA158" }}
               >
                 Flag

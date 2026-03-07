@@ -1,5 +1,7 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+"use client";
+
+import { UsersManagementContent } from "@/components/dashboard/admin/users/UsersManagementContent";
 
 export default function UsersPage() {
-  return <PlaceholderPage title="Users" subtitle="Manage platform users and their accounts." />;
+  return <UsersManagementContent />;
 }

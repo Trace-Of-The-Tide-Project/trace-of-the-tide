@@ -22,7 +22,7 @@ export function SidebarGroup({
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center gap-3 rounded-lg border border-[#333] bg-[#1a1a1a] px-3 py-2.5 text-sm text-gray-400 transition-colors hover:bg-[#222] hover:text-white"
+        className="flex w-full items-center gap-3 rounded-lg border border-[#333] bg-[#333333] px-3 py-2.5 text-sm text-gray-400 transition-colors hover:bg-[#222] hover:text-white"
       >
         <span className="shrink-0">
           <Icon />
@@ -44,7 +44,7 @@ export function SidebarGroup({
       </button>
 
       {isOpen && (
-        <div className="mt-1 flex flex-col gap-0.5 pl-4">
+        <div className="mt-1 flex flex-col gap-0.5">
           {items.map((item) => (
             <SidebarItem key={item.href} {...item} onClick={onItemClick} />
           ))}

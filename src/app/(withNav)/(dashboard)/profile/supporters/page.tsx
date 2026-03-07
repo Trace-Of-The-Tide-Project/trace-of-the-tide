@@ -1,5 +1,16 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+"use client";
+
+import { DashboardHeader } from "@/components/dashboard/shared/DashboardHeader";
+import { SupportersContent } from "@/components/dashboard/profile/SupportersContent";
 
 export default function SupportersPage() {
-  return <PlaceholderPage title="Supporters" subtitle="View your supporters and their contributions." />;
+  return (
+    <div>
+      <DashboardHeader
+        title="Supporters"
+        subtitle="View your supporters and their contributions."
+      />
+      <SupportersContent />
+    </div>
+  );
 }

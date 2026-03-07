@@ -8,10 +8,11 @@ import HexBackground from "@/components/ui/HexBackground";
 type DashboardLayoutProps = {
   config: DashboardConfig;
   header?: React.ReactNode;
+  commandCenter?: React.ReactNode;
   children: React.ReactNode;
 };
 
-export function DashboardLayout({ config, header, children }: DashboardLayoutProps) {
+export function DashboardLayout({ config, header, commandCenter, children }: DashboardLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
@@ -46,16 +47,15 @@ export function DashboardLayout({ config, header, children }: DashboardLayoutPro
 
         <div className="flex flex-col gap-6 px-4 py-6 sm:px-8 md:px-16 lg:px-24 xl:px-40 xl:py-12">
           {/* Header area */}
-          {header && (
-            <div className="border-b border-[#333] ">
-              {header}
-            </div>
-          )}
+          {header && <div>{header}</div>}
+
+          {/* Command center / page-specific header - above sidebar and content */}
+          {commandCenter && <div>{commandCenter}</div>}
 
           {/* Sidebar + content row */}
           <div className="flex items-stretch gap-6">
             {/* Desktop sidebar */}
-            <aside className="hidden w-70 shrink-0 lg:block">
+            <aside className="hidden w-56 shrink-0 lg:block">
               <div className="flex h-full flex-col rounded-xl border border-[#333] bg-[#0a0a0a]">
                 <DashboardSidebar config={config} />
               </div>

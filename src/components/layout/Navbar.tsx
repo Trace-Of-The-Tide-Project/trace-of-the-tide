@@ -79,25 +79,25 @@ export function Navbar() {
         </Link>
 
         {/* Part 2: Links + auth - right. From 900px down: auth + hamburger only */}
-        <div className="flex items-center justify-end gap-2 min-[901px]:gap-4">
+        <div className="flex items-center justify-end gap-2 lg:gap-4">
           {/* Nav links: visible from 901px up */}
           {navItems.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
-              className="hidden min-[901px]:flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
+              className="hidden lg:flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
             >
               <Icon />
               <span>{label}</span>
             </Link>
           ))}
           <span
-            className="mx-1 hidden h-8 w-px min-[901px]:block"
+            className="mx-1 hidden h-8 w-px lg:block"
             style={{ backgroundColor: theme.cardBorder }}
           />
           <button
             type="button"
-            className="hidden min-[901px]:flex items-center gap-2 rounded px-2 py-1.5 text-gray-400 transition-colors hover:text-white"
+            className="hidden lg:flex items-center gap-2 rounded px-2 py-1.5 text-gray-400 transition-colors hover:text-white"
             aria-label="Select language"
           >
             <LanguagesIcon />
@@ -108,7 +108,7 @@ export function Navbar() {
               {/* 900px and below: avatar button (rounded square) */}
               <Link
                 href="/profile"
-                className="flex min-[901px]:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-opacity hover:opacity-90"
+                className="flex lg:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-opacity hover:opacity-90"
                 style={{ backgroundColor: theme.cardBorder }}
                 aria-label="Profile"
               >
@@ -125,7 +125,7 @@ export function Navbar() {
               {/* 901px and up: full profile button */}
               <Link
                 href="/profile"
-                className="hidden min-[901px]:flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white"
+                className="hidden lg:flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white"
                 style={{
                   backgroundColor: theme.cardBorder,
                 }}
@@ -146,7 +146,7 @@ export function Navbar() {
             <>
               <Link
                 href="/auth/login"
-                className="hidden min-[901px]:inline-flex rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
+                className="hidden lg:inline-flex rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
                 style={{
                   backgroundColor: theme.cardBorder,
                 }}
@@ -155,7 +155,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/auth/register"
-                className="hidden min-[901px]:inline-flex rounded-md px-4 py-2 text-sm font-medium transition-colors"
+                className="hidden lg:inline-flex rounded-md px-4 py-2 text-sm font-medium transition-colors"
                 style={{
                   backgroundColor: theme.accentGold,
                   color: theme.bgDark,
@@ -167,7 +167,7 @@ export function Navbar() {
           )}
           <button
             type="button"
-            className="hidden min-[901px]:flex rounded-md p-2 text-white/90 transition-colors hover:text-white"
+            className="hidden lg:flex rounded-md p-2 text-white/90 transition-colors hover:text-white"
             style={{
               backgroundColor: theme.cardBorder,
             }}
@@ -180,7 +180,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(true)}
-            className="flex min-[901px]:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:text-white/90"
+            className="flex lg:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:text-white/90"
             style={{
               backgroundColor: theme.cardBorder,
             }}
@@ -193,7 +193,7 @@ export function Navbar() {
 
       {/* Mobile menu overlay & panel */}
       <div
-        className={`fixed inset-0 z-[60] min-[901px]:hidden ${isMobileMenuOpen ? "visible" : "invisible"}`}
+        className={`fixed inset-0 z-[60] lg:hidden ${isMobileMenuOpen ? "visible" : "invisible"}`}
         aria-hidden={!isMobileMenuOpen}
       >
         {/* Backdrop */}

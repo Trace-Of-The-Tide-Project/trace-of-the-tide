@@ -32,7 +32,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+            className="rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
           >
             View all
           </Link>
@@ -72,7 +72,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
             <div className="mt-3 flex items-center gap-2 pl-[52px]">
               <button
                 type="button"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#1a1a1a] text-white transition-colors hover:border-gray-500"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-white transition-colors hover:border-gray-500"
                 aria-label="View application"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -82,7 +82,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
               </button>
               <button
                 type="button"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#1a1a1a] text-white transition-colors hover:border-red-800 hover:text-red-400"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-white transition-colors hover:border-red-800 hover:text-red-400"
                 aria-label="Reject"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -91,7 +91,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
               </button>
               <button
                 type="button"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#1a1a1a] text-white transition-colors hover:border-emerald-800 hover:text-emerald-400"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-white transition-colors hover:border-emerald-800 hover:text-emerald-400"
                 aria-label="Approve"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

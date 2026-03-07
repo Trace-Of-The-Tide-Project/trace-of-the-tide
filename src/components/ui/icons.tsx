@@ -382,6 +382,15 @@ export function HeadsetIcon() {
   );
 }
 
+export function SquareCheckIcon() {
+  return (
+    <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <polyline points="9 12 11 14 15 10" />
+    </svg>
+  );
+}
+
 export function ContributeIcon() {
   return (
     <svg
@@ -707,6 +716,15 @@ export function TrendingUpIcon() {
   );
 }
 
+export function TrendingDownIcon() {
+  return (
+    <svg {...iconProps}>
+      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+      <polyline points="17 18 23 18 23 12" />
+    </svg>
+  );
+}
+
 export function CreditCardIcon() {
   return (
     <svg {...iconProps}>
@@ -715,3 +733,77 @@ export function CreditCardIcon() {
     </svg>
   );
 }
+
+export function RefreshCwIcon() {
+  return (
+    <svg {...iconProps} width={14} height={14}>
+      <path d="M21 12a9 9 0 1 1-2.34-5.84" />
+      <polyline points="21 3 21 9 15 9" />
+    </svg>
+  );
+}
+
+export function PlusIcon() {
+  return (
+    <svg {...iconProps} width={14} height={14}>
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+}
+
+export function ShareIcon() {
+  return (
+    <svg {...iconProps} width={14} height={14}>
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+      <polyline points="16 6 12 2 8 6" />
+      <line x1="12" y1="2" x2="12" y2="15" />
+    </svg>
+  );
+}
+
+export function ChevronRightIcon() {
+  return (
+    <svg {...iconProps} width={14} height={14}>
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+/** Capital T for Thread / sequential content */
+export function ThreadIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M4 4h16v2h-7v14h-2V6H4z" />
+    </svg>
+  );
+}
+
+/** Megaphone / horn for Open Call / announcements */
+export function MegaphoneIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M3 11l18-5v12L3 14v-3z" />
+      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+    </svg>
+  );
+}
+
+export function DownloadIcon() {
+  return (
+    <svg {...iconProps} width={16} height={16}>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+}
+
+export function FilterIcon() {
+  return (
+    <svg {...iconProps} width={18} height={18}>
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+    </svg>
+  );
+}
+

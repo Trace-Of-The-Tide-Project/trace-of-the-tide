@@ -131,7 +131,7 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#333] bg-[#1a1a1a] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
             >
               Close
             </button>

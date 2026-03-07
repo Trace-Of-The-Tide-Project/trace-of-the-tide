@@ -140,6 +140,44 @@ export const recentActivity = [
   { id: "6", icon: ShieldIcon, title: "Login from new device", description: "Editor account accessed ...", time: "2 minutes ago" },
 ];
 
+export const topPerformingArticles = [
+  {
+    id: "1",
+    title: "British Restrict Jewish Immigration to Palestine",
+    contributors: 32,
+    views: "2,321",
+    trend: { value: "+12%", direction: "up" as const },
+  },
+  {
+    id: "2",
+    title: "British Restrict Jewish Immigration to Palestine",
+    contributors: 28,
+    views: "1,956",
+    trend: { value: "-8%", direction: "down" as const },
+  },
+  {
+    id: "3",
+    title: "British Restrict Jewish Immigration to Palestine",
+    contributors: 24,
+    views: "1,802",
+    trend: { value: "+12%", direction: "up" as const },
+  },
+  {
+    id: "4",
+    title: "British Restrict Jewish Immigration to Palestine",
+    contributors: 21,
+    views: "1,654",
+    trend: { value: "-8%", direction: "down" as const },
+  },
+  {
+    id: "5",
+    title: "British Restrict Jewish Immigration to Palestine",
+    contributors: 18,
+    views: "1,423",
+    trend: { value: "+12%", direction: "up" as const },
+  },
+];
+
 export const commandCenterStats = [
   { icon: UsersIcon, value: "12,546", label: "Total Users", trend: { value: "12.5%", direction: "up" as const, comparison: "VS last month" } },
   { icon: FileTextIcon, value: "3,438", label: "Content Published", trend: { value: "8.2%", direction: "up" as const, comparison: "VS last month" } },

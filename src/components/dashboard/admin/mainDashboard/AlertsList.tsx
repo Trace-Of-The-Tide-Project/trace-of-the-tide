@@ -65,7 +65,7 @@ export function AlertsList({ items, onDismissAll }: AlertsListProps) {
             <button
               type="button"
               onClick={onDismissAll}
-              className="rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
             >
               Dismiss all
             </button>

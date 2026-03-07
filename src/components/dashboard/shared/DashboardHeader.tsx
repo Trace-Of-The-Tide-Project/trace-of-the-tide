@@ -4,6 +4,8 @@ type DashboardHeaderProps = {
   title: string;
   subtitle?: string;
   actions?: React.ReactNode;
+  /** When true, removes horizontal and top padding, keeps bottom padding only */
+  compactPadding?: boolean;
   profile?: {
     initials: string;
     name: string;
@@ -11,10 +13,21 @@ type DashboardHeaderProps = {
   };
 };
 
-export function DashboardHeader({ title, subtitle, actions, profile }: DashboardHeaderProps) {
+export function DashboardHeader({
+  title,
+  subtitle,
+  actions,
+  profile,
+  compactPadding = false,
+}: DashboardHeaderProps) {
+  const paddingClass = compactPadding
+    ? "pb-6"
+    : "px-6 py-6 sm:px-8 sm:py-8";
   return (
-    <div className="flex flex-col gap-4 border-b border-[#333] px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-8">
-      <div className="flex items-center gap-4">
+    <div
+      className={`flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between ${paddingClass}`}
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-4">
         {profile && (
           <span
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-lg font-bold"
@@ -32,12 +45,14 @@ export function DashboardHeader({ title, subtitle, actions, profile }: Dashboard
               ))}
             </div>
           )}
-          {!profile && subtitle && (
-            <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
-          )}
+          {!profile && subtitle && <p className="mt-1 text-sm text-gray-500">{subtitle}</p>}
         </div>
       </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
+      {actions && (
+        <div className="flex shrink-0 flex-wrap items-center gap-2 lg:justify-end">
+          {actions}
+        </div>
+      )}
     </div>
   );
 }
