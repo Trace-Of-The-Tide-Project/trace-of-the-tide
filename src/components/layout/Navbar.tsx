@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
   GridIcon,
@@ -13,8 +12,11 @@ import {
   LanguagesIcon,
   MoonIcon,
   MenuIcon,
+  LogOutIcon,
   XIcon,
 } from "@/components/ui/icons";
+import { useStoredAuthUser } from "@/hooks/useStoredAuthUser";
+import { clearStoredAuth } from "@/services/auth.service";
 import { theme } from "@/lib/theme";
 
 const navItems = [
@@ -31,11 +33,19 @@ function getInitial(name: string | null | undefined, email: string | null | unde
 }
 
 export function Navbar() {
-  const { data: session, status } = useSession();
+  const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const user = useStoredAuthUser();
+  const displayName = user?.full_name || user?.username || user?.email || "Username";
 
   const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), []);
+  const handleLogout = useCallback(() => {
+    clearStoredAuth();
+    closeMobileMenu();
+    router.push("/auth/login");
+    router.refresh();
+  }, [closeMobileMenu, router]);
 
   useEffect(() => {
     if (pathname) closeMobileMenu();
@@ -79,36 +89,36 @@ export function Navbar() {
         </Link>
 
         {/* Part 2: Links + auth - right. From 900px down: auth + hamburger only */}
-        <div className="flex items-center justify-end gap-2 min-[901px]:gap-4">
+        <div className="flex items-center justify-end gap-2 lg:gap-4">
           {/* Nav links: visible from 901px up */}
           {navItems.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
-              className="hidden min-[901px]:flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
+              className="hidden lg:flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
             >
               <Icon />
               <span>{label}</span>
             </Link>
           ))}
           <span
-            className="mx-1 hidden h-8 w-px min-[901px]:block"
+            className="mx-1 hidden h-8 w-px lg:block"
             style={{ backgroundColor: theme.cardBorder }}
           />
           <button
             type="button"
-            className="hidden min-[901px]:flex items-center gap-2 rounded px-2 py-1.5 text-gray-400 transition-colors hover:text-white"
+            className="hidden lg:flex items-center gap-2 rounded px-2 py-1.5 text-gray-400 transition-colors hover:text-white"
             aria-label="Select language"
           >
             <LanguagesIcon />
             <span className="text-sm">EN</span>
           </button>
-          {status !== "loading" && session?.user ? (
+          {user ? (
             <>
               {/* 900px and below: avatar button (rounded square) */}
               <Link
                 href="/profile"
-                className="flex min-[901px]:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-opacity hover:opacity-90"
+                className="flex lg:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-opacity hover:opacity-90"
                 style={{ backgroundColor: theme.cardBorder }}
                 aria-label="Profile"
               >
@@ -119,34 +129,45 @@ export function Navbar() {
                     color: theme.bgDark,
                   }}
                 >
-                  {getInitial(session.user.name, session.user.email)}
+                  {getInitial(user.full_name || user.username, user.email)}
                 </span>
               </Link>
               {/* 901px and up: full profile button */}
               <Link
                 href="/profile"
-                className="hidden min-[901px]:flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white"
+                className="hidden lg:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white"
                 style={{
                   backgroundColor: theme.cardBorder,
                 }}
               >
                 <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium"
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-sm font-medium"
                   style={{
                     backgroundColor: theme.accentGoldFocus,
                     color: theme.bgDark,
                   }}
                 >
-                  {getInitial(session.user.name, session.user.email)}
+                  {getInitial(user.full_name || user.username, user.email)}
                 </span>
-                <span>{session.user.name || session.user.email || "Username"}</span>
+                <span>{displayName}</span>
               </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="hidden lg:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
+                style={{
+                  backgroundColor: theme.cardBorder,
+                }}
+              >
+                <LogOutIcon />
+                Logout
+              </button>
             </>
           ) : (
             <>
               <Link
                 href="/auth/login"
-                className="hidden min-[901px]:inline-flex rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
+                className="hidden lg:inline-flex rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
                 style={{
                   backgroundColor: theme.cardBorder,
                 }}
@@ -155,7 +176,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/auth/register"
-                className="hidden min-[901px]:inline-flex rounded-md px-4 py-2 text-sm font-medium transition-colors"
+                className="hidden lg:inline-flex rounded-md px-4 py-2 text-sm font-medium transition-colors"
                 style={{
                   backgroundColor: theme.accentGold,
                   color: theme.bgDark,
@@ -167,7 +188,7 @@ export function Navbar() {
           )}
           <button
             type="button"
-            className="hidden min-[901px]:flex rounded-md p-2 text-white/90 transition-colors hover:text-white"
+            className="hidden lg:flex rounded-md p-2 text-white/90 transition-colors hover:text-white"
             style={{
               backgroundColor: theme.cardBorder,
             }}
@@ -180,7 +201,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(true)}
-            className="flex min-[901px]:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:text-white/90"
+            className="flex lg:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:text-white/90"
             style={{
               backgroundColor: theme.cardBorder,
             }}
@@ -193,7 +214,7 @@ export function Navbar() {
 
       {/* Mobile menu overlay & panel */}
       <div
-        className={`fixed inset-0 z-[60] min-[901px]:hidden ${isMobileMenuOpen ? "visible" : "invisible"}`}
+        className={`fixed inset-0 z-60 lg:hidden ${isMobileMenuOpen ? "visible" : "invisible"}`}
         aria-hidden={!isMobileMenuOpen}
       >
         {/* Backdrop */}
@@ -251,23 +272,34 @@ export function Navbar() {
               <LanguagesIcon />
               <span>EN</span>
             </button>
-            {status !== "loading" && session?.user ? (
-              <Link
-                href="/profile"
-                onClick={closeMobileMenu}
-                className="flex items-center gap-3 rounded-md px-4 py-3 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium"
-                  style={{
-                    backgroundColor: theme.accentGoldFocus,
-                    color: theme.bgDark,
-                  }}
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-3 rounded-md px-4 py-3 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
                 >
-                  {getInitial(session.user.name, session.user.email)}
-                </span>
-                <span>{session.user.name || session.user.email || "Username"}</span>
-              </Link>
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium"
+                    style={{
+                      backgroundColor: theme.accentGoldFocus,
+                      color: theme.bgDark,
+                    }}
+                  >
+                    {getInitial(user.full_name || user.username, user.email)}
+                  </span>
+                  <span>{displayName}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center justify-center gap-2 rounded-md px-4 py-3 text-white transition-colors"
+                  style={{ backgroundColor: theme.cardBorder }}
+                >
+                  <LogOutIcon />
+                  Logout
+                </button>
+              </>
             ) : (
               <>
                 <Link

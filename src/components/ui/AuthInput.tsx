@@ -7,7 +7,7 @@ const inputBaseClass = `w-full pl-10 pr-4 py-3.5 rounded-lg bg-black border text
 type AuthInputProps = {
   id: string
   name: string
-  type?: 'text' | 'email' | 'password'
+  type?: 'text' | 'email' | 'password' | 'tel'
   label: string
   placeholder: string
   required?: boolean
@@ -33,6 +33,8 @@ export function AuthInput({
   minLength,
   autoComplete,
   icon,
+  value,
+  onChange,
   rightSlot,
   labelRight,
   inputClassName,
@@ -65,6 +67,8 @@ export function AuthInput({
           required={required}
           minLength={minLength}
           autoComplete={autoComplete}
+          value={value}
+          onChange={onChange}
           className={inputClassName ?? baseWithPr}
           style={{ borderColor: theme.inputBorder }}
         />

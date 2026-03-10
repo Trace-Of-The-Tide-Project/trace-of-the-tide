@@ -1,56 +1,15 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { PersonIcon, EmailIcon, LockIcon } from '@/components/ui/icons'
-import { AuthInput } from '@/components/ui/AuthInput'
-import { theme } from '@/lib/theme'
-import { authEndpoints } from '@/lib/api'
+import { useState } from "react";
+import Link from "next/link";
+import { PersonIcon, EmailIcon, LockIcon, PhoneIcon } from "@/components/ui/icons";
+import { AuthInput } from "@/components/ui/AuthInput";
+import { theme } from "@/lib/theme";
+import { useRegisterForm } from "./useRegisterForm";
 
 export function RegisterForm() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [agreedToTerms, setAgreedToTerms] = useState(false)
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError('')
-    const form = e.currentTarget
-    const firstName = (form.elements.namedItem('firstName') as HTMLInputElement).value.trim()
-    const lastName = (form.elements.namedItem('lastName') as HTMLInputElement).value.trim()
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
-    const password = (form.elements.namedItem('password') as HTMLInputElement).value
-    if (!agreedToTerms) {
-      setError('Please agree to the terms and privacy policy.')
-      return
-    }
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters.')
-      return
-    }
-    setLoading(true)
-    try {
-      const res = await fetch(authEndpoints.register(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, password }),
-      })
-      const json = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        setError(json?.message ?? json?.error ?? 'Registration failed.')
-        return
-      }
-      router.push('/auth/login?registered=1')
-      router.refresh()
-    } catch {
-      setError('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [showPassword, setShowPassword] = useState(false);
+  const { loading, error, agreedToTerms, setAgreedToTerms, handleSubmit } = useRegisterForm();
 
   return (
     <form onSubmit={handleSubmit} className="relative space-y-6 w-full max-w-md">
@@ -59,42 +18,53 @@ export function RegisterForm() {
           {error}
         </p>
       )}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <AuthInput
-          id="firstName"
-          name="firstName"
+          id="username"
+          name="username"
           type="text"
-          label="First name"
-          placeholder="John"
+          label="Username"
+          placeholder="saja"
           required
-          autoComplete="given-name"
+          autoComplete="username"
           icon={<PersonIcon />}
         />
         <AuthInput
-          id="lastName"
-          name="lastName"
-          type="text"
-          label="Last name"
-          placeholder="Doe"
+          id="email"
+          name="email"
+          type="email"
+          label="Email address"
+          placeholder="saja@trace.ps"
           required
-          autoComplete="family-name"
+          autoComplete="email"
+          icon={<EmailIcon />}
+        />
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <AuthInput
+          id="full_name"
+          name="full_name"
+          type="text"
+          label="Full name"
+          placeholder="Saja Khalil"
+          required
+          autoComplete="name"
           icon={<PersonIcon />}
+        />
+        <AuthInput
+          id="phone_number"
+          name="phone_number"
+          type="tel"
+          label="Phone number"
+          placeholder="+970 59 123 4567"
+          autoComplete="tel"
+          icon={<PhoneIcon />}
         />
       </div>
       <AuthInput
-        id="email"
-        name="email"
-        type="email"
-        label="Email address"
-        placeholder="johndoe@domain.com"
-        required
-        autoComplete="email"
-        icon={<EmailIcon />}
-      />
-      <AuthInput
         id="password"
         name="password"
-        type={showPassword ? 'text' : 'password'}
+        type={showPassword ? "text" : "password"}
         label="Password"
         placeholder="Password (+8 characters)"
         required
@@ -106,7 +76,7 @@ export function RegisterForm() {
             type="button"
             onClick={() => setShowPassword((p) => !p)}
             className="text-neutral-500 hover:text-white"
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             👁
           </button>
@@ -122,11 +92,11 @@ export function RegisterForm() {
           style={{ borderColor: theme.inputBorder }}
         />
         <label htmlFor="terms" className="text-sm text-white cursor-default select-none">
-          I agree to the{' '}
+          I agree to the{" "}
           <Link href="/terms" className="hover:underline" style={{ color: theme.accentGold }}>
             terms
-          </Link>{' '}
-          and{' '}
+          </Link>{" "}
+          and{" "}
           <Link href="/privacy" className="hover:underline" style={{ color: theme.accentGold }}>
             privacy policy
           </Link>
@@ -139,8 +109,8 @@ export function RegisterForm() {
         className="w-full py-3 rounded-lg font-medium text-black transition-colors disabled:opacity-60 cursor-pointer select-none"
         style={{ backgroundColor: theme.accentGold }}
       >
-        {loading ? 'Creating account…' : 'Create a new account'}
+        {loading ? "Creating account…" : "Create a new account"}
       </button>
     </form>
-  )
+  );
 }

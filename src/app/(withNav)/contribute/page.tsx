@@ -43,7 +43,7 @@ export default function ContributePage() {
             background: theme.bgDark,
           }}
         />
-        <div className="absolute inset-0 h-[420px] w-full">
+        <div className="absolute inset-0 h-[200px] w-full">
           <HexBackground />
         </div>
 
