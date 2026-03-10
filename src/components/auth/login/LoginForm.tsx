@@ -2,59 +2,15 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
 import { EmailIcon, LockIcon } from '@/components/ui/icons'
 import { AuthInput } from '@/components/ui/AuthInput'
 import { theme } from '@/lib/theme'
+import { useLoginForm } from './useLoginForm'
 
 export function LoginForm() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
-
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/'
-  const registered = searchParams.get('registered')
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError('')
-    const form = e.currentTarget
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
-    const password = (form.elements.namedItem('password') as HTMLInputElement).value
-
-    if (!email || !password) {
-      setError('Please enter your email and password.')
-      return
-    }
-
-    setLoading(true)
-    try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        setError(result.error)
-        return
-      }
-      if (result?.ok) {
-        router.push(callbackUrl)
-        router.refresh()
-        return
-      }
-      setError('Something went wrong. Please try again.')
-    } catch {
-      setError('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { loading, error, registered, email, setEmail, rememberMe, setRememberMe, handleSubmit } =
+    useLoginForm()
 
   return (
     <form onSubmit={handleSubmit} className="relative space-y-6 w-full max-w-md">
@@ -77,6 +33,8 @@ export function LoginForm() {
         required
         autoComplete="email"
         icon={<EmailIcon />}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <AuthInput
         id="password"

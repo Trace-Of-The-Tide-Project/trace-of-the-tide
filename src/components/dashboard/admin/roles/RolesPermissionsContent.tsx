@@ -53,12 +53,7 @@ function RoleHierarchyHex({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 48 48" fill="none">
-        <path
-          d={hexPath(24, 24, 22)}
-          fill="#333"
-          stroke="#555"
-          strokeWidth="1.5"
-        />
+        <path d={hexPath(24, 24, 22)} fill="#333" stroke="#555" strokeWidth="1.5" />
       </svg>
       <span
         className="relative z-10 flex items-center justify-center [&>svg]:h-5 [&>svg]:w-5"
@@ -87,7 +82,7 @@ function getInitialMatrix(): MatrixState {
       const isAdmin = role === "Admin";
       const defaultForRole =
         isAdmin ||
-        (perm === "View Content") ||
+        perm === "View Content" ||
         (perm === "Create Content" && ri >= 1) ||
         (perm === "Edit Own Content" && ri >= 2) ||
         (perm === "Edit All Content" && ri >= 4) ||
@@ -204,7 +199,7 @@ function EditorAppActionsDropdown({
 
 function EditorApplications() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<EditorAppStatus | "all">("pending");
+  const [statusFilter, setStatusFilter] = useState<EditorAppStatus | "all">("all");
   const [applications, setApplications] = useState<EditorApplication[]>(
     () => sampleEditorApplications
   );
@@ -214,8 +209,7 @@ function EditorApplications() {
       !search.trim() ||
       app.name.toLowerCase().includes(search.toLowerCase().trim()) ||
       app.email.toLowerCase().includes(search.toLowerCase().trim());
-    const matchesStatus =
-      statusFilter === "all" || app.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || app.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -225,7 +219,7 @@ function EditorApplications() {
     rejected: applications.filter((a) => a.status === "rejected").length,
   };
 
-  const handleStatusChange = (status: EditorAppStatus) => {
+  const handleStatusChange = (status: EditorAppStatus | "all") => {
     setStatusFilter(status);
   };
 
@@ -242,8 +236,7 @@ function EditorApplications() {
   };
 
   const statusBadgeStyle = (s: EditorAppStatus) => {
-    if (s === "pending")
-      return "rounded-md bg-[#444] px-3 py-1 text-sm font-medium text-white";
+    if (s === "pending") return "rounded-md bg-[#444] px-3 py-1 text-sm font-medium text-white";
     if (s === "approved")
       return "rounded-md bg-emerald-600/80 px-3 py-1 text-sm font-medium text-white";
     return "rounded-md bg-red-600/80 px-3 py-1 text-sm font-medium text-white";
@@ -265,18 +258,26 @@ function EditorApplications() {
           />
         </div>
         <div className="flex gap-2">
-          {STATUS_FILTERS.filter((f) => f.value !== "all").map((f) => (
+          {STATUS_FILTERS.map((f) => (
             <button
               key={f.value}
               type="button"
-              onClick={() => handleStatusChange(f.value as EditorAppStatus)}
+              onClick={() => handleStatusChange(f.value)}
               className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                 statusFilter === f.value
                   ? "border-[#555] bg-[#333] text-white"
                   : "border-[#444] bg-transparent text-gray-400 hover:text-white"
               }`}
             >
-              {f.label} ({f.value === "pending" ? counts.pending : f.value === "approved" ? counts.approved : counts.rejected})
+              {f.label} (
+              {f.value === "all"
+                ? applications.length
+                : f.value === "pending"
+                  ? counts.pending
+                  : f.value === "approved"
+                    ? counts.approved
+                    : counts.rejected}
+              )
             </button>
           ))}
         </div>
@@ -284,67 +285,66 @@ function EditorApplications() {
 
       <div className="space-y-4">
         {filtered.map((app) => (
-          <div
-            key={app.id}
-            className="rounded-xl border border-[#444] bg-[#232323] p-4"
-          >
-            {/* Top row: avatar + title + buttons in parallel */}
-            <div className="flex flex-wrap items-center gap-4">
+          <div key={app.id} className="rounded-xl border border-[#444] p-4">
+            <div className="flex items-start gap-4">
               <div
                 className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-bold text-white"
                 style={{ backgroundColor: theme.accentGoldFocus }}
               >
                 {app.name.charAt(0).toUpperCase()}
               </div>
-              <p className="min-w-0 flex-1 font-semibold text-white">{app.name}</p>
-              <div className="flex flex-wrap items-center gap-2 shrink-0">
-              <span className={statusBadgeStyle(app.status)}>
-                {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
-              </span>
-              {app.status === "pending" && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => {}}
-                    className="flex items-center gap-2 rounded-lg border border-[#444] bg-[#333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
-                  >
-                    <span className="[&>svg]:h-4 [&>svg]:w-4"><EyeIcon /></span>
-                    Review
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleApprove(app.id)}
-                    className="flex items-center gap-2 rounded-lg border border-emerald-600/50 bg-emerald-600/80 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600"
-                  >
-                    <span className="[&>svg]:h-4 [&>svg]:w-4"><SquareCheckIcon /></span>
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleReject(app.id)}
-                    className="flex items-center gap-2 rounded-lg border border-red-600/50 bg-red-600/80 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
-                  >
-                    <span className="[&>svg]:h-4 [&>svg]:w-4"><XIcon /></span>
-                    Reject
-                  </button>
-                </>
-              )}
-              <EditorAppActionsDropdown app={app} />
+              <div className="flex min-w-0 flex-1 flex-col leading-tight">
+                <p className="font-semibold text-white">{app.name}</p>
+                <p className="text-sm text-gray-500">{app.email}</p>
+              </div>
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <span className={statusBadgeStyle(app.status)}>
+                  {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                </span>
+                {app.status === "pending" && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {}}
+                      className="flex items-center gap-2 rounded-lg border border-[#444] bg-[#333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
+                    >
+                      <span className="[&>svg]:h-4 [&>svg]:w-4">
+                        <EyeIcon />
+                      </span>
+                      Review
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleApprove(app.id)}
+                      className="flex items-center gap-2 rounded-lg border border-emerald-600/50 bg-emerald-600/80 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600"
+                    >
+                      <span className="[&>svg]:h-4 [&>svg]:w-4">
+                        <SquareCheckIcon />
+                      </span>
+                      Approve
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleReject(app.id)}
+                      className="flex items-center gap-2 rounded-lg border border-red-600/50 bg-red-600/80 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                    >
+                      <span className="[&>svg]:h-4 [&>svg]:w-4">
+                        <XIcon />
+                      </span>
+                      Reject
+                    </button>
+                  </>
+                )}
+                <EditorAppActionsDropdown app={app} />
               </div>
             </div>
-            {/* Email row */}
-            <p className="mt-1 pl-16 text-sm text-gray-500">{app.email}</p>
-            {/* Details row - beside each other */}
-            <div className="mt-1 flex flex-wrap items-center gap-x-4 pl-16 text-sm text-gray-400">
-              <span className="flex items-center gap-1.5 shrink-0">
-                <span className="flex h-4 w-4 shrink-0 items-center justify-center [&>svg]:h-4 [&>svg]:w-4">
-                  <ClockIcon />
-                </span>
-                {app.appliedAt}
+            {/* Details in separate row so they don't wrap */}
+            <p className="mt-1 flex items-center gap-1.5 pl-16 text-sm text-gray-400">
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center [&>svg]:h-4 [&>svg]:w-4">
+                <ClockIcon />
               </span>
-              <span className="shrink-0">{app.yearsInPublishing} years in publishing</span>
-              <span className="shrink-0">{app.publishedArticles} published articles</span>
-            </div>
+              Applied {app.appliedAt} {app.yearsInPublishing} years in publishing {app.publishedArticles} published articles
+            </p>
           </div>
         ))}
       </div>
@@ -370,9 +370,7 @@ function PermissionsMatrix() {
     <div className="space-y-4">
       <div>
         <h3 className="text-lg font-bold text-white">Permission Matrix</h3>
-        <p className="mt-1 text-sm text-gray-500">
-          Configure granular permissions for each role
-        </p>
+        <p className="mt-1 text-sm text-gray-500">Configure granular permissions for each role</p>
       </div>
       <div className="overflow-x-auto rounded-xl border border-[#444]">
         <table className="w-full min-w-[600px] border-collapse">
@@ -445,72 +443,73 @@ export function RolesPermissionsContent() {
       {activeTab === "overview" && (
         <div className="rounded-xl border border-[#444] p-6">
           <div className="space-y-8">
-          {/* Role stat cards - octagonal SVG border only, no bg */}
-          <div className="flex flex-nowrap gap-6 overflow-x-auto">
-            {roleStats.map((stat) => {
-              const Icon = stat.icon;
-              return (
-                <div
-                  key={stat.id}
-                  className="relative flex min-w-0 flex-1 flex-col items-center justify-center gap-3 px-4 py-6"
-                >
-                  <svg
-                    className="pointer-events-none absolute inset-0 h-full w-full"
-                    viewBox="0 0 100 100"
-                    preserveAspectRatio="none"
-                  >
-                    <path
-                      d="M14.6 0 L85.4 0 L100 14.6 L100 85.4 L85.4 100 L14.6 100 L0 85.4 L0 14.6 Z"
-                      fill="none"
-                      stroke="#222"
-                      strokeWidth="1.5"
-                    />
-                  </svg>
-                  <span style={{ color: "#E8DDC0" }}>
-                    <Icon />
-                  </span>
-                  <span className="text-2xl font-bold text-white">{stat.value}</span>
-                  <span className="text-center text-sm text-gray-500">{stat.label}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Role Hierarchy */}
-          <div className="rounded-xl border border-[#444] p-6">
-            <h3 className="text-lg font-bold text-white">Role Hierarchy</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Understanding the permission inheritance between roles
-            </p>
-            <div className="mt-6 flex flex-nowrap items-center justify-center gap-0 overflow-x-auto">
-              {roleHierarchy.map((role, index) => {
-                const Icon = role.icon;
+            {/* Role stat cards - octagonal SVG border only, no bg */}
+            <div className="flex flex-nowrap gap-6 overflow-x-auto">
+              {roleStats.map((stat) => {
+                const Icon = stat.icon;
                 return (
-                  <div key={role.id} className="flex items-center">
-                    <div className="flex flex-col items-center gap-2">
-                      <RoleHierarchyHex>
-                        <Icon />
-                      </RoleHierarchyHex>
-                      <span className="text-sm font-medium text-white">{role.label}</span>
-                    </div>
-                    {index < roleHierarchy.length - 1 && (
-                      <div
-                        className="mx-2 h-1 w-12 shrink-0 overflow-hidden rounded-full bg-[#222] sm:mx-4 sm:w-12"
-                        aria-hidden
-                      >
-                        <div
-                          className="h-full w-full rounded-full"
-                          style={{
-                            background: "linear-gradient(to right, rgba(203,161,88,0.35), #CBA158)",
-                          }}
-                        />
-                      </div>
-                    )}
+                  <div
+                    key={stat.id}
+                    className="relative flex min-w-0 flex-1 flex-col items-center justify-center gap-3 px-4 py-6"
+                  >
+                    <svg
+                      className="pointer-events-none absolute inset-0 h-full w-full"
+                      viewBox="0 0 100 100"
+                      preserveAspectRatio="none"
+                    >
+                      <path
+                        d="M14.6 0 L85.4 0 L100 14.6 L100 85.4 L85.4 100 L14.6 100 L0 85.4 L0 14.6 Z"
+                        fill="none"
+                        stroke="#222"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                    <span style={{ color: "#E8DDC0" }}>
+                      <Icon />
+                    </span>
+                    <span className="text-2xl font-bold text-white">{stat.value}</span>
+                    <span className="text-center text-sm text-gray-500">{stat.label}</span>
                   </div>
                 );
               })}
             </div>
-          </div>
+
+            {/* Role Hierarchy */}
+            <div className="rounded-xl border border-[#444] p-6">
+              <h3 className="text-lg font-bold text-white">Role Hierarchy</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Understanding the permission inheritance between roles
+              </p>
+              <div className="mt-6 flex flex-nowrap items-center justify-center gap-0 overflow-x-auto">
+                {roleHierarchy.map((role, index) => {
+                  const Icon = role.icon;
+                  return (
+                    <div key={role.id} className="flex items-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <RoleHierarchyHex>
+                          <Icon />
+                        </RoleHierarchyHex>
+                        <span className="text-sm font-medium text-white">{role.label}</span>
+                      </div>
+                      {index < roleHierarchy.length - 1 && (
+                        <div
+                          className="mx-2 h-1 w-12 shrink-0 overflow-hidden rounded-full bg-[#222] sm:mx-4 sm:w-12"
+                          aria-hidden
+                        >
+                          <div
+                            className="h-full w-full rounded-full"
+                            style={{
+                              background:
+                                "linear-gradient(to right, rgba(203,161,88,0.35), #CBA158)",
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       )}

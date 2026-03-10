@@ -1,8 +1,10 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { theme } from "@/lib/theme";
 import { LogOutIcon } from "@/components/ui/icons";
+import { clearStoredAuth } from "@/services/auth.service";
+import { useStoredAuthUser } from "@/hooks/useStoredAuthUser";
 
 function getInitial(name?: string | null, email?: string | null): string {
   if (name?.trim()) return name.trim()[0].toUpperCase();
@@ -11,10 +13,10 @@ function getInitial(name?: string | null, email?: string | null): string {
 }
 
 export function SidebarUser() {
-  const { data: session } = useSession();
-
-  const name = session?.user?.name;
-  const email = session?.user?.email;
+  const router = useRouter();
+  const user = useStoredAuthUser();
+  const name = user?.full_name || user?.username;
+  const email = user?.email;
   const displayName = name || email || "Super Admin";
 
   return (
@@ -28,7 +30,11 @@ export function SidebarUser() {
       <span className="flex-1 truncate text-sm font-medium text-white">{displayName}</span>
       <button
         type="button"
-        onClick={() => signOut({ callbackUrl: "/auth/login" })}
+        onClick={() => {
+          clearStoredAuth();
+          router.push("/auth/login");
+          router.refresh();
+        }}
         className="shrink-0 text-gray-500 transition-colors hover:text-white"
         aria-label="Sign out"
       >

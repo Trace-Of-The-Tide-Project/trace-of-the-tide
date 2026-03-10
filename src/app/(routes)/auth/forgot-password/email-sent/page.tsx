@@ -5,7 +5,6 @@ import Image from 'next/image'
 import HexBackground from '@/components/ui/HexBackground'
 import { HexagonCard, AuthLinks } from '@/components/auth/shared'
 import { theme } from '@/lib/theme'
-import { authEndpoints } from '@/lib/api'
 
 const RESEND_COOLDOWN_SEC = 48
 
@@ -32,21 +31,15 @@ export default function EmailSentPage() {
     return () => clearInterval(interval)
   }, [secondsLeft])
 
-  async function handleResend() {
+  function handleResend() {
     const email = typeof window !== 'undefined' ? sessionStorage.getItem('forgot-password-email') : null
     if (!email || loading || secondsLeft > 0) return
     setLoading(true)
-    try {
-      await fetch(authEndpoints.forgotPassword(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      })
+    setTimeout(() => {
       sessionStorage.setItem('forgot-password-email-sent-at', String(Date.now()))
       setSecondsLeft(RESEND_COOLDOWN_SEC)
-    } finally {
       setLoading(false)
-    }
+    }, 800)
   }
 
   const canResend = secondsLeft === 0

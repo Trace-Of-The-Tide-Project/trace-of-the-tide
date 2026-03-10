@@ -2,11 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
 import { LockIcon } from '@/components/ui/icons'
 import { AuthInput } from '@/components/ui/AuthInput'
 import { theme } from '@/lib/theme'
-import { authEndpoints } from '@/lib/api'
 
 export function ResetPasswordForm() {
   const router = useRouter()
@@ -17,7 +15,7 @@ export function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
     const form = e.currentTarget
@@ -38,24 +36,11 @@ export function ResetPasswordForm() {
     }
 
     setLoading(true)
-    try {
-      const res = await fetch(authEndpoints.resetPassword(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, password }),
-      })
-      const json = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        setError(json?.message ?? json?.error ?? 'Failed to reset password. The link may have expired.')
-        return
-      }
+    setTimeout(() => {
       router.push('/auth/success')
       router.refresh()
-    } catch {
-      setError('Something went wrong. Please try again.')
-    } finally {
       setLoading(false)
-    }
+    }, 800)
   }
 
   // Allow opening reset password page without token (e.g. for testing/preview)

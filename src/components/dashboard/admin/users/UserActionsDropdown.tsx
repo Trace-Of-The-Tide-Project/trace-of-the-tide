@@ -3,13 +3,19 @@
 import { useState, useRef, useEffect } from "react";
 import { MoreDotsIcon } from "@/components/ui/icons";
 
-const ACTIONS = [
+type ActionItem = {
+  id: string;
+  label: string;
+  destructive?: boolean;
+};
+
+const ACTIONS: ActionItem[] = [
   { id: "view", label: "View Profile" },
   { id: "edit", label: "Edit User" },
   { id: "role", label: "Change Role" },
   { id: "verify", label: "Verify User" },
   { id: "suspend", label: "Suspend User", destructive: true },
-] as const;
+];
 
 type UserActionsDropdownProps = {
   userId: string;
