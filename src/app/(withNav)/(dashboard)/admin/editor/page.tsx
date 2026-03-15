@@ -1,5 +1,7 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+"use client";
+
+import { VisualEditorContent } from "@/components/dashboard/admin/editor/VisualEditorContent";
 
 export default function VisualEditorPage() {
-  return <PlaceholderPage title="Visual Editor (CMS)" subtitle="Create and edit content visually." />;
+  return <VisualEditorContent />;
 }

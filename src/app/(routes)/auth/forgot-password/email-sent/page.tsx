@@ -91,6 +91,7 @@ export default function EmailSentPage() {
                   backgroundColor: canResend ? theme.accentGold : 'transparent',
                   color: canResend ? '#000' : undefined,
                 }}
+                suppressHydrationWarning
               >
                 {loading
                   ? 'Sending…'

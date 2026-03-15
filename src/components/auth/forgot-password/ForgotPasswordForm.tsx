@@ -30,6 +30,7 @@ export function ForgotPasswordForm() {
         disabled={loading}
         className="w-full py-3 rounded-lg font-medium text-black transition-colors disabled:opacity-60 cursor-pointer select-none"
         style={{ backgroundColor: theme.accentGold }}
+        suppressHydrationWarning
       >
         {loading ? "Sending…" : "Send reset email"}
       </button>
