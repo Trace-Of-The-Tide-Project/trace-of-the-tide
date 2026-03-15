@@ -79,8 +79,8 @@ export function BrandingTab() {
               </div>
             ) : (
               <>
-                <span className="text-gray-500">
-                  <CloudUploadIcon className="[&>svg]:h-10 [&>svg]:w-10" />
+                <span className="text-gray-500 [&_svg]:h-10 [&_svg]:w-10">
+                  <CloudUploadIcon />
                 </span>
                 <p className="mt-2 text-sm text-white">
                   Drag and drop files here, or click to browse
@@ -137,8 +137,8 @@ export function BrandingTab() {
               </div>
             ) : (
               <>
-                <span className="text-gray-500">
-                  <CloudUploadIcon className="[&>svg]:h-10 [&>svg]:w-10" />
+                <span className="text-gray-500 [&_svg]:h-10 [&_svg]:w-10">
+                  <CloudUploadIcon />
                 </span>
                 <p className="mt-2 text-sm text-white">
                   Drag and drop files here, or click to browse
