@@ -1,5 +1,7 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+"use client";
+
+import { ContentLibraryContent } from "@/components/dashboard/admin/content/ContentLibraryContent";
 
 export default function ContentLibraryPage() {
-  return <PlaceholderPage title="Content Library" subtitle="Browse, search, and manage all published content." />;
+  return <ContentLibraryContent />;
 }

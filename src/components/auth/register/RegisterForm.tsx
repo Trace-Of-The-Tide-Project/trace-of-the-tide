@@ -77,6 +77,7 @@ export function RegisterForm() {
             onClick={() => setShowPassword((p) => !p)}
             className="text-neutral-500 hover:text-white"
             aria-label={showPassword ? "Hide password" : "Show password"}
+            suppressHydrationWarning
           >
             👁
           </button>
@@ -90,6 +91,7 @@ export function RegisterForm() {
           onChange={(e) => setAgreedToTerms(e.target.checked)}
           className={`mt-1 rounded bg-black text-[${theme.accentGoldFocus}] focus:ring-[${theme.accentGoldFocus}]`}
           style={{ borderColor: theme.inputBorder }}
+          suppressHydrationWarning
         />
         <label htmlFor="terms" className="text-sm text-white cursor-default select-none">
           I agree to the{" "}
@@ -108,6 +110,7 @@ export function RegisterForm() {
         disabled={loading}
         className="w-full py-3 rounded-lg font-medium text-black transition-colors disabled:opacity-60 cursor-pointer select-none"
         style={{ backgroundColor: theme.accentGold }}
+        suppressHydrationWarning
       >
         {loading ? "Creating account…" : "Create a new account"}
       </button>

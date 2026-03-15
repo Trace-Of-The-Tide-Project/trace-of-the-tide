@@ -15,7 +15,7 @@ export function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
     const form = e.currentTarget
@@ -36,11 +36,26 @@ export function ResetPasswordForm() {
     }
 
     setLoading(true)
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, newPassword: password, confirmPassword }),
+      })
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        setError((data.message as string) || 'Something went wrong. Please try again.')
+        setLoading(false)
+        return
+      }
       router.push('/auth/success')
       router.refresh()
+    } catch {
+      setError('Unable to reach the server. Please try again.')
+    } finally {
       setLoading(false)
-    }, 800)
+    }
   }
 
   // Allow opening reset password page without token (e.g. for testing/preview)
@@ -84,6 +99,7 @@ export function ResetPasswordForm() {
             onClick={() => setShowPassword((p) => !p)}
             className="text-neutral-500 hover:text-white"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
+            suppressHydrationWarning
           >
             👁
           </button>
@@ -105,6 +121,7 @@ export function ResetPasswordForm() {
             onClick={() => setShowConfirm((p) => !p)}
             className="text-neutral-500 hover:text-white"
             aria-label={showConfirm ? 'Hide password' : 'Show password'}
+            suppressHydrationWarning
           >
             👁
           </button>
@@ -115,6 +132,7 @@ export function ResetPasswordForm() {
         disabled={loading}
         className="w-full py-3 rounded-lg font-medium text-black transition-colors disabled:opacity-60 cursor-pointer select-none"
         style={{ backgroundColor: theme.accentGold }}
+        suppressHydrationWarning
       >
         {loading ? 'Resetting…' : 'Reset password'}
       </button>

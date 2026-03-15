@@ -60,6 +60,7 @@ export function LoginForm() {
             onClick={() => setShowPassword((p) => !p)}
             className="text-neutral-500 hover:text-white"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
+            suppressHydrationWarning
           >
             👁
           </button>
@@ -73,6 +74,7 @@ export function LoginForm() {
           onChange={(e) => setRememberMe(e.target.checked)}
           className={`rounded bg-black text-[${theme.accentGoldFocus}] focus:ring-[${theme.accentGoldFocus}]`}
           style={{ borderColor: theme.inputBorder }}
+          suppressHydrationWarning
         />
         <label htmlFor="remember" className="text-sm text-white cursor-default select-none">
           Remember me
@@ -83,6 +85,7 @@ export function LoginForm() {
         disabled={loading}
         className="w-full py-3 rounded-lg font-medium text-black transition-colors disabled:opacity-60 cursor-pointer select-none"
         style={{ backgroundColor: theme.accentGold }}
+        suppressHydrationWarning
       >
         {loading ? 'Logging in…' : 'Log in'}
       </button>
