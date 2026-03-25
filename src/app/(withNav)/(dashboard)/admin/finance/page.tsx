@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { FinanceContent } from "@/components/dashboard/admin/finance/FinanceContent";
 
 export default function FinancePage() {
-  return <PlaceholderPage title="Finance & Payout" subtitle="Manage financial transactions and payouts." />;
+  return <FinanceContent />;
 }

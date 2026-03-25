@@ -1,15 +1,34 @@
 "use client";
 
 import { DashboardHeader } from "@/components/dashboard/shared/DashboardHeader";
-import { HeartIcon, MessageSquareIcon, TrendingUpIcon, GiftIcon } from "@/components/ui/icons";
+import { theme } from "@/lib/theme";
+import {
+  ContributeIcon,
+  ClockIcon,
+  MessageSquareIcon,
+  SquareCheckIcon,
+  TrendingUpIcon,
+} from "@/components/ui/icons";
 
-export function EngagementsPageHeader() {
+export function MessagingPageHeader() {
   return (
     <div className="px-6 py-6 sm:px-8 sm:py-8">
       <DashboardHeader
-        title="Engagement"
-        subtitle="Manage community interactions, comments, and recognition"
+        title="Messaging Center"
+        subtitle="Manage communications with users and send broadcasts"
         compactPadding
+        actions={
+          <button
+            type="button"
+            className="inline-flex h-[40px] items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold text-[#111] whitespace-nowrap"
+            style={{ backgroundColor: theme.accentGoldFocus }}
+          >
+            <span className="[&_svg]:h-4 [&_svg]:w-4">
+              <ContributeIcon />
+            </span>
+            New Broadcast
+          </button>
+        }
       />
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -20,19 +39,8 @@ export function EngagementsPageHeader() {
           >
             <MessageSquareIcon />
           </div>
-          <p className="text-xs text-gray-500">Total comments</p>
-          <p className="mt-1 text-xl font-semibold text-white">12,546</p>
-        </div>
-
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
-            <HeartIcon />
-          </div>
-          <p className="text-xs text-gray-500">Total Likes...</p>
-          <p className="mt-1 text-xl font-semibold text-white">89.2k</p>
+          <p className="text-xs text-gray-500">Unread Messages</p>
+          <p className="mt-1 text-xl font-semibold text-white">23</p>
         </div>
 
         <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
@@ -42,8 +50,8 @@ export function EngagementsPageHeader() {
           >
             <TrendingUpIcon />
           </div>
-          <p className="text-xs text-gray-500">Active Discussions</p>
-          <p className="mt-1 text-xl font-semibold text-white">456</p>
+          <p className="text-xs text-gray-500">High Priority...</p>
+          <p className="mt-1 text-xl font-semibold text-white">5</p>
         </div>
 
         <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
@@ -51,12 +59,24 @@ export function EngagementsPageHeader() {
             className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
             style={{ color: "#E8DDC0" }}
           >
-            <GiftIcon />
+            <ClockIcon />
           </div>
-          <p className="text-xs text-gray-500">Badges Awarded...</p>
-          <p className="mt-1 text-xl font-semibold text-white">492</p>
+          <p className="text-xs text-gray-500">Pending Response</p>
+          <p className="mt-1 text-xl font-semibold text-white">12</p>
+        </div>
+
+        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
+          <div
+            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
+            style={{ color: "#E8DDC0" }}
+          >
+            <SquareCheckIcon />
+          </div>
+          <p className="text-xs text-gray-500">Resolved This Week...</p>
+          <p className="mt-1 text-xl font-semibold text-white">156</p>
         </div>
       </div>
     </div>
   );
 }
+
