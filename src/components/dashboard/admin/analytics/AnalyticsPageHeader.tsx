@@ -46,52 +46,40 @@ export function AnalyticsPageHeader() {
       />
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <EyeIcon />
-          </div>
-          <p className="text-xs text-gray-500">Total Page views...</p>
-          <p className="mt-1 text-xl font-semibold text-white">2.4M</p>
-          <p className="mt-1 text-xs text-emerald-400">↗ 18%</p>
+          </span>
+          <span className="text-2xl font-bold text-white">2.4M</span>
+          <span className="text-xs text-gray-500">Total Page views...</span>
+          <span className="text-xs text-emerald-400">↗ 18%</span>
         </div>
 
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <UserCheckIcon />
-          </div>
-          <p className="text-xs text-gray-500">User Retention</p>
-          <p className="mt-1 text-xl font-semibold text-white">68%</p>
-          <p className="mt-1 text-xs text-emerald-400">↗ 5%</p>
+          </span>
+          <span className="text-2xl font-bold text-white">68%</span>
+          <span className="text-xs text-gray-500">User Retention</span>
+          <span className="text-xs text-emerald-400">↗ 5%</span>
         </div>
 
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <ClockIcon />
-          </div>
-          <p className="text-xs text-gray-500">Avg. Session</p>
-          <p className="mt-1 text-xl font-semibold text-white">8m 42s</p>
-          <p className="mt-1 text-xs text-emerald-400">↗ 12%</p>
+          </span>
+          <span className="text-2xl font-bold text-white">8m 42s</span>
+          <span className="text-xs text-gray-500">Avg. Session</span>
+          <span className="text-xs text-emerald-400">↗ 12%</span>
         </div>
 
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <TrendingUpIcon />
-          </div>
-          <p className="text-xs text-gray-500">Bounce Rate</p>
-          <p className="mt-1 text-xl font-semibold text-white">32%</p>
-          <p className="mt-1 text-xs text-red-400">↘ 3%</p>
+          </span>
+          <span className="text-2xl font-bold text-white">32%</span>
+          <span className="text-xs text-gray-500">Bounce Rate</span>
+          <span className="text-xs text-red-400">↘ 3%</span>
         </div>
       </div>
     </div>
