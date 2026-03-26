@@ -77,7 +77,9 @@ export function NavigationsFooterTab() {
           type="button"
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[#444] bg-[#333] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
         >
-          <PlusIcon className="[&>svg]:h-4 [&>svg]:w-4" />
+          <span className="[&_svg]:h-4 [&_svg]:w-4">
+            <PlusIcon />
+          </span>
           Add Link
         </button>
       </div>
@@ -122,7 +124,9 @@ export function NavigationsFooterTab() {
           type="button"
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[#444] bg-[#333] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
         >
-          <PlusIcon className="[&>svg]:h-4 [&>svg]:w-4" />
+          <span className="[&_svg]:h-4 [&_svg]:w-4">
+            <PlusIcon />
+          </span>
           Add Link
         </button>
       </div>
