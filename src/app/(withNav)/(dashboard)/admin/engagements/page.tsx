@@ -1,5 +1,7 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+"use client";
+
+import { EngagementsContent } from "@/components/dashboard/admin/engagements/EngagementsContent";
 
 export default function EngagementsPage() {
-  return <PlaceholderPage title="Engagements" subtitle="Track community interactions and engagement metrics." />;
+  return <EngagementsContent />;
 }

@@ -22,14 +22,30 @@ export function useForgotPasswordForm() {
     }
 
     setLoading(true);
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("forgot-password-email", email);
-    }
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setError((data.message as string) || "Something went wrong. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("forgot-password-email", email);
+      }
       router.push("/auth/forgot-password/email-sent");
       router.refresh();
+    } catch {
+      setError("Unable to reach the server. Please try again.");
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   }
 
   return {

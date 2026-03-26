@@ -7,6 +7,12 @@ import { AdminCommandCenter } from "@/components/dashboard/admin/AdminCommandCen
 import { ArticlesPageHeader } from "@/components/dashboard/admin/articles/articles-main";
 import { UsersPageHeader } from "@/components/dashboard/admin/users/UsersPageHeader";
 import { RolesPageHeader } from "@/components/dashboard/admin/roles/RolesPageHeader";
+import { ContentLibraryPageHeader } from "@/components/dashboard/admin/content/ContentLibraryPageHeader";
+import { VisualEditorPageHeader } from "@/components/dashboard/admin/editor/VisualEditorPageHeader";
+import { EngagementsPageHeader } from "@/components/dashboard/admin/engagements/EngagementsPageHeader";
+import { MessagingPageHeader } from "@/components/dashboard/admin/messaging/MessagingPageHeader";
+import { FinancePageHeader } from "@/components/dashboard/admin/finance/FinancePageHeader";
+import { AnalyticsPageHeader } from "@/components/dashboard/admin/analytics/AnalyticsPageHeader";
 import { adminConfig } from "@/lib/dashboard/admin-config";
 
 function getCommandCenter(pathname: string | null) {
@@ -14,6 +20,12 @@ function getCommandCenter(pathname: string | null) {
   if (pathname === "/admin") return <AdminCommandCenter />;
   if (pathname.startsWith("/admin/users")) return <UsersPageHeader />;
   if (pathname.startsWith("/admin/roles")) return <RolesPageHeader />;
+  if (pathname.startsWith("/admin/content")) return <ContentLibraryPageHeader />;
+  if (pathname.startsWith("/admin/editor")) return <VisualEditorPageHeader />;
+  if (pathname.startsWith("/admin/engagements")) return <EngagementsPageHeader />;
+  if (pathname.startsWith("/admin/messaging")) return <MessagingPageHeader />;
+  if (pathname.startsWith("/admin/finance")) return <FinancePageHeader />;
+  if (pathname.startsWith("/admin/analytics")) return <AnalyticsPageHeader />;
   if (
     pathname.startsWith("/admin/articles") ||
     pathname.startsWith("/admin/supporters") ||

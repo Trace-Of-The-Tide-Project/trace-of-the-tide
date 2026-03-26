@@ -71,6 +71,7 @@ export function AuthInput({
           onChange={onChange}
           className={inputClassName ?? baseWithPr}
           style={{ borderColor: theme.inputBorder }}
+          suppressHydrationWarning
         />
         {rightSlot && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">

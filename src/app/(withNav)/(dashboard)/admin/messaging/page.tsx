@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { MessagingContent } from "@/components/dashboard/admin/messaging/MessagingContent";
 
 export default function MessagingPage() {
-  return <PlaceholderPage title="Messaging" subtitle="Manage platform messaging and communications." />;
+  return <MessagingContent />;
 }
