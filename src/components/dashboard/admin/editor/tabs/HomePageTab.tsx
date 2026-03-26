@@ -98,7 +98,9 @@ export function HomePageTab() {
                   }`}
                   aria-label={sectionVisibility[section.id] ? "Hide section" : "Show section"}
                 >
-                  <EyeIcon className="[&>svg]:h-4 [&>svg]:w-4" />
+                  <span className="[&_svg]:h-4 [&_svg]:w-4">
+                    <EyeIcon />
+                  </span>
                 </button>
               </div>
             );
@@ -108,7 +110,9 @@ export function HomePageTab() {
           type="button"
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[#333] py-2.5 text-sm text-white transition-colors hover:bg-[#3a3a3a]"
         >
-          <PlusIcon className="[&>svg]:h-4 [&>svg]:w-4" />
+          <span className="[&_svg]:h-4 [&_svg]:w-4">
+            <PlusIcon />
+          </span>
           Add Section
         </button>
       </div>
@@ -123,7 +127,9 @@ export function HomePageTab() {
             type="button"
             className="flex items-center gap-1.5 rounded-lg border border-[#444] bg-[#333] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#2a2a2a] hover:text-white"
           >
-            <RefreshCwIcon className="[&>svg]:h-3.5 [&>svg]:w-3.5" />
+            <span className="[&_svg]:h-3.5 [&_svg]:w-3.5">
+              <RefreshCwIcon />
+            </span>
             Reset
           </button>
         </div>
@@ -198,7 +204,9 @@ export function HomePageTab() {
               ) : (
                 <>
                   <span className="text-gray-500">
-                    <CloudUploadIcon className="[&>svg]:h-10 [&>svg]:w-10" />
+                    <span className="[&_svg]:h-10 [&_svg]:w-10">
+                      <CloudUploadIcon />
+                    </span>
                   </span>
                   <p className="mt-2 text-sm text-white">
                     Drag and drop files here, or click to browse
