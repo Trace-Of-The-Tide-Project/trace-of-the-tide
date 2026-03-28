@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { SystemSettingsContent } from "@/components/dashboard/admin/system-settings/SystemSettingsContent";
 
 export default function SystemSettingsPage() {
-  return <PlaceholderPage title="System Settings" subtitle="Configure global platform settings." />;
+  return <SystemSettingsContent />;
 }

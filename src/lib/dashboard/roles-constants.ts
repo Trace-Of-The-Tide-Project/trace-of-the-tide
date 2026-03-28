@@ -34,8 +34,33 @@ export const roleHierarchy: RoleHierarchyItem[] = [
   { id: "contributor", icon: HeartHandshakeIcon, label: "Contributor" },
   { id: "author", icon: FileTextIcon, label: "Author" },
   { id: "editor", icon: BarChartIcon, label: "Editor" },
-  { id: "admin", icon: ShieldIcon, label: "Admin" },
+  { id: "admin", icon: ShieldIcon, label: "Super Admin" },
 ];
+
+export const configureRolePermissionRows = [
+  { id: "manage_users", title: "Manage Users", description: "Create, edit, and delete users" },
+  { id: "manage_content", title: "Manage Content", description: "Create, edit, and publish content" },
+  {
+    id: "financial",
+    title: "Financial Operations",
+    description: "View and manage payments & payouts",
+  },
+  {
+    id: "moderation",
+    title: "Content Moderation",
+    description: "Review and moderate user content",
+  },
+  { id: "analytics", title: "View Analytics", description: "Access analytics and reports" },
+  { id: "settings", title: "System Settings", description: "Modify platform settings" },
+  { id: "security", title: "Security Controls", description: "Manage security and access" },
+  {
+    id: "messaging",
+    title: "Messaging & Broadcasts",
+    description: "Send messages and broadcasts",
+  },
+] as const;
+
+export type ConfigurePermissionId = (typeof configureRolePermissionRows)[number]["id"];
 
 export const MATRIX_ROLES = ["User", "Contributor", "Author", "Editor", "Admin"] as const;
 

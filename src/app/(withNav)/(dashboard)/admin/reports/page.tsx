@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { ReportsContent } from "@/components/dashboard/admin/reports/ReportsContent";
 
 export default function ReportsPage() {
-  return <PlaceholderPage title="Reports & Moderations" subtitle="Review flagged content and user reports." />;
+  return <ReportsContent />;
 }
