@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import {
   ArticlesTable,
   ArticleCardsSection,
@@ -14,11 +15,19 @@ import { articleTabs, articlesTableData } from "@/lib/dashboard/articles-constan
 export default function AdminArticlesPage() {
   return (
     <div className="space-y-8 my-4 mx-10">
-      <ArticlesTable
-        tabs={articleTabs}
-        rows={articlesTableData}
-        addNewHref="/admin/articles/create"
-      />
+      <Suspense
+        fallback={
+          <div className="rounded-lg border border-[#444444] px-5 py-12 text-center text-sm text-gray-500">
+            Loading articles…
+          </div>
+        }
+      >
+        <ArticlesTable
+          tabs={articleTabs}
+          rows={articlesTableData}
+          addNewHref="/admin/articles/create"
+        />
+      </Suspense>
 
       <ArticleCardsSection
         title="Drafted Articles"

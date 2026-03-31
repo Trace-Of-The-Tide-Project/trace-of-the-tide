@@ -12,6 +12,8 @@ import {
 import { BadgeFormModal } from "@/components/dashboard/modals/BadgeFormModal";
 import { CategoryFormModal } from "@/components/dashboard/modals/CategoryFormModal";
 import { TagFormModal } from "@/components/dashboard/modals/TagFormModal";
+import type { MessageTemplate } from "@/components/dashboard/modals/CreateMessageTemplateModal";
+import { EditMessageTemplateModal } from "@/components/dashboard/modals/EditMessageTemplateModal";
 import { BadgeIconRenderer } from "@/components/dashboard/admin/system-settings/badge-icon-options";
 import { TagHexShell } from "@/components/dashboard/admin/system-settings/TagHexShell";
 import {
@@ -24,8 +26,13 @@ import {
   type ContentTagRow,
   type SystemSettingsTabId,
 } from "@/lib/dashboard/system-settings-constants";
+import {
+  sampleEmailTemplates,
+  type EmailTemplateListItem,
+} from "@/lib/dashboard/email-templates-constants";
 
 const ACCENT = "#E8DDC0";
+const PANEL_BG = "#000000";
 
 /** Chamfered row (matches Reports audit log cards). */
 const ROW_CLIP =
@@ -54,6 +61,21 @@ export function SystemSettingsContent() {
   const [tagModal, setTagModal] = useState<TagModalState>({ type: "closed" });
   const [badges, setBadges] = useState<AchievementBadgeRow[]>(() => [...sampleAchievementBadges]);
   const [badgeModal, setBadgeModal] = useState<BadgeModalState>({ type: "closed" });
+  const [emailTemplates, setEmailTemplates] = useState<EmailTemplateListItem[]>(() => [
+    ...sampleEmailTemplates,
+  ]);
+  const [editEmailOpen, setEditEmailOpen] = useState(false);
+  const [selectedEmailTemplate, setSelectedEmailTemplate] = useState<MessageTemplate | null>(null);
+  const [defaultLanguage, setDefaultLanguage] = useState("English");
+  const [timezone, setTimezone] = useState("UTC");
+  const [dateFormat, setDateFormat] = useState("MM/DD/YYYY");
+  const [multiLanguageEnabled, setMultiLanguageEnabled] = useState(false);
+  const [communityGuidelines, setCommunityGuidelines] = useState(
+    "1. Be respectful to all community members\n2. No hate speech or discrimination\n3. Original content only - no plagiarism\n4. Credit sources when applicable\n5. No spam or self-promotion"
+  );
+  const [contentPolicy, setContentPolicy] = useState(
+    "All content must be original or properly licensed. Copyrighted material without permission will be removed. Adult content must be properly tagged."
+  );
 
   const handleCategorySave = (payload: { id?: string; name: string; slug: string }) => {
     if (categoryModal.type === "add") {
@@ -117,10 +139,26 @@ export function SystemSettingsContent() {
   };
 
   const closeBadgeModal = () => setBadgeModal({ type: "closed" });
+  const closeEditEmail = () => setEditEmailOpen(false);
+
+  const formatLastEdited = (iso: string) => {
+    try {
+      return new Date(iso).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return "—";
+    }
+  };
+
+  const inputShell =
+    "mt-2 w-full rounded-lg border border-[#2f2f2f] bg-[#232323] px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none";
 
   return (
     <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
-      <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] p-6 lg:p-8">
+      <div className="rounded-2xl border border-[#2f2f2f] bg-black p-6 lg:p-8">
         <div className="flex flex-col gap-3">
           <div className="flex w-full flex-wrap items-center gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
             {SYSTEM_SETTINGS_TABS.map((tab) => (
@@ -198,15 +236,10 @@ export function SystemSettingsContent() {
               {categories.map((cat) => (
                 <div
                   key={cat.id}
-                  className="flex items-center gap-4 px-4 py-4 sm:gap-5 sm:px-5 sm:py-4"
-                  style={{
-                    clipPath: ROW_CLIP,
-                    backgroundColor: "#1a1a1a",
-                    boxShadow: "inset 0 0 0 1px #2a2a2a",
-                  }}
+                  className="flex items-center gap-4 rounded-lg border border-[#2f2f2f] bg-black px-4 py-4 sm:gap-5 sm:px-5 sm:py-4"
                 >
                   <div
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[#333] bg-[#121212] text-[#E8DDC0]"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[#2f2f2f] bg-black text-[#E8DDC0]"
                     aria-hidden
                   >
                     <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -250,26 +283,14 @@ export function SystemSettingsContent() {
         )}
 
         {activeTab === "tags" && (
-          <div
-            className="mt-8 p-6 sm:p-8"
-            style={{
-              clipPath: ROW_CLIP,
-              backgroundColor: "#1a1a1a",
-              boxShadow: "inset 0 0 0 1px #2a2a2a",
-            }}
-          >
+          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
             <h2 className="text-lg font-bold text-white">Content Tags</h2>
             <p className="mt-1 text-sm text-gray-500">Special tags for content highlighting</p>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
               {tags.map((tag) => (
                 <div
                   key={tag.id}
-                  className="flex items-center gap-4 px-4 py-4 sm:px-5 sm:py-4"
-                  style={{
-                    clipPath: ROW_CLIP,
-                    backgroundColor: "#141414",
-                    boxShadow: "inset 0 0 0 1px #2a2a2a",
-                  }}
+                  className="flex items-center gap-4 rounded-lg border border-[#2f2f2f] bg-black px-4 py-4 sm:px-5 sm:py-4"
                 >
                   <TagHexShell>
                     <LinkIcon />
@@ -304,14 +325,7 @@ export function SystemSettingsContent() {
         )}
 
         {activeTab === "badges" && (
-          <div
-            className="mt-8 p-6 sm:p-8"
-            style={{
-              clipPath: ROW_CLIP,
-              backgroundColor: "#1a1a1a",
-              boxShadow: "inset 0 0 0 1px #2a2a2a",
-            }}
-          >
+          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
             <h2 className="text-lg font-bold text-white">Achievement Badges</h2>
             <p className="mt-1 text-sm text-gray-500">
               Configure user achievement badges and milestones.
@@ -320,12 +334,7 @@ export function SystemSettingsContent() {
               {badges.map((badge) => (
                 <div
                   key={badge.id}
-                  className="flex items-center gap-4 px-4 py-4 sm:px-5 sm:py-4"
-                  style={{
-                    clipPath: ROW_CLIP,
-                    backgroundColor: "#141414",
-                    boxShadow: "inset 0 0 0 1px #2a2a2a",
-                  }}
+                  className="flex items-center gap-4 rounded-lg border border-[#2f2f2f] bg-black px-4 py-4 sm:px-5 sm:py-4"
                 >
                   <TagHexShell>
                     <BadgeIconRenderer iconId={badge.iconId} />
@@ -350,12 +359,237 @@ export function SystemSettingsContent() {
           </div>
         )}
 
-        {activeTab !== "categories" && activeTab !== "tags" && activeTab !== "badges" && (
-          <div className="mt-8 rounded-xl border border-[#2f2f2f] bg-[#121212] px-6 py-12 text-center text-sm text-gray-500">
-            {SYSTEM_SETTINGS_TABS.find((t) => t.id === activeTab)?.label ?? "This section"} — coming
-            soon.
+        {activeTab === "email" && (
+          <div className="mt-8">
+            <h2 className="text-lg font-bold text-white">Email Templates</h2>
+            <p className="mt-1 text-sm text-gray-500">Customize automated email communications</p>
+
+            <div className="mt-6 space-y-4">
+              {emailTemplates.map((tpl) => (
+                <div
+                  key={tpl.id}
+                  className="flex items-center justify-between gap-4 rounded-lg border border-[#2f2f2f] bg-black px-5 py-5"
+                >
+                  <div className="flex min-w-0 items-center gap-4">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#2f2f2f] bg-black text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <path d="M4 6h16v12H4z" />
+                        <path d="m4 7 8 6 8-6" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-lg font-semibold text-white">{tpl.name}</p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Last edited: {formatLastEdited(tpl.lastEditedAt)}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedEmailTemplate(tpl);
+                      setEditEmailOpen(true);
+                    }}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#2f2f2f] bg-[#232323] px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:bg-[#2a2a2a]"
+                  >
+                    <span className="[&_svg]:h-4 [&_svg]:w-4" style={{ color: ACCENT }}>
+                      <ContributeIcon />
+                    </span>
+                    Edit Template
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
+
+        {activeTab === "localisation" && (
+          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-white">Language Settings</h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Configure platform language and regional settings
+            </p>
+
+            <div className="mt-6 space-y-6">
+              <div>
+                <p className="text-sm font-semibold text-white">Default Language</p>
+                <select
+                  value={defaultLanguage}
+                  onChange={(e) => setDefaultLanguage(e.target.value)}
+                  className={inputShell}
+                >
+                  <option value="English">English</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                  <option value="German">German</option>
+                  <option value="Arabic">Arabic</option>
+                </select>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-white">Timezone</p>
+                <select value={timezone} onChange={(e) => setTimezone(e.target.value)} className={inputShell}>
+                  <option value="UTC">UTC</option>
+                  <option value="Eastern Time">Eastern Time</option>
+                  <option value="Pacific Time">Pacific Time</option>
+                  <option value="GMT">GMT</option>
+                </select>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-white">Date Format</p>
+                <select value={dateFormat} onChange={(e) => setDateFormat(e.target.value)} className={inputShell}>
+                  <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                  <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                  <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-between gap-6">
+                <div>
+                  <p className="text-sm font-semibold text-white">Enable Multi-language</p>
+                  <p className="mt-1 text-sm text-gray-500">Allow users to switch between languages</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMultiLanguageEnabled((v) => !v)}
+                  className={`relative h-7 w-12 rounded-full border border-[#2f2f2f] transition-colors ${
+                    multiLanguageEnabled ? "bg-[#E8DDC0]" : "bg-[#232323]"
+                  }`}
+                  aria-pressed={multiLanguageEnabled}
+                  aria-label="Toggle multi-language"
+                >
+                  <span
+                    className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full transition-all ${
+                      multiLanguageEnabled ? "left-6 bg-black" : "left-1 bg-[#111]"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-[#111] transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: ACCENT }}
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <path d="M17 21v-8H7v8" />
+                    <path d="M7 3v5h8" />
+                  </svg>
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "guidelines" && (
+          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-white">Platform Guidelines</h2>
+            <p className="mt-1 text-sm text-gray-500">Community rules and content guidelines</p>
+
+            <div className="mt-6 space-y-6">
+              <div>
+                <p className="text-sm font-semibold text-white">Community Guidelines</p>
+                <textarea
+                  value={communityGuidelines}
+                  onChange={(e) => setCommunityGuidelines(e.target.value)}
+                  rows={4}
+                  className={`${inputShell} resize-y`}
+                />
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-white">Content Policy</p>
+                <textarea
+                  value={contentPolicy}
+                  onChange={(e) => setContentPolicy(e.target.value)}
+                  rows={4}
+                  className={`${inputShell} resize-y`}
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-6">
+                <div>
+                  <p className="text-sm font-semibold text-white">Enable Multi-language</p>
+                  <p className="mt-1 text-sm text-gray-500">Allow users to switch between languages</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMultiLanguageEnabled((v) => !v)}
+                  className={`relative h-7 w-12 rounded-full border border-[#2f2f2f] transition-colors ${
+                    multiLanguageEnabled ? "bg-[#E8DDC0]" : "bg-[#232323]"
+                  }`}
+                  aria-pressed={multiLanguageEnabled}
+                  aria-label="Toggle multi-language"
+                >
+                  <span
+                    className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full transition-all ${
+                      multiLanguageEnabled ? "left-6 bg-black" : "left-1 bg-[#111]"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-[#111] transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: ACCENT }}
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <path d="M17 21v-8H7v8" />
+                    <path d="M7 3v5h8" />
+                  </svg>
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab !== "categories" &&
+          activeTab !== "tags" &&
+          activeTab !== "badges" &&
+          activeTab !== "email" && (
+            <div className="mt-8 rounded-xl border border-[#2f2f2f] bg-black px-6 py-12 text-center text-sm text-gray-500">
+              {SYSTEM_SETTINGS_TABS.find((t) => t.id === activeTab)?.label ?? "This section"} — coming
+              soon.
+            </div>
+          )}
       </div>
 
       <CategoryFormModal
@@ -386,6 +620,24 @@ export function SystemSettingsContent() {
         initialName={badgeModal.type === "edit" ? badgeModal.badge.name : ""}
         initialMilestone={badgeModal.type === "edit" ? badgeModal.badge.milestone : ""}
         onSave={handleBadgeSave}
+      />
+
+      <EditMessageTemplateModal
+        open={editEmailOpen}
+        template={selectedEmailTemplate}
+        onClose={() => {
+          closeEditEmail();
+          setSelectedEmailTemplate(null);
+        }}
+        onSave={(updated) => {
+          setEmailTemplates((prev) =>
+            prev.map((t) =>
+              t.id === updated.id
+                ? { ...(updated as EmailTemplateListItem), lastEditedAt: new Date().toISOString() }
+                : t
+            )
+          );
+        }}
       />
     </div>
   );

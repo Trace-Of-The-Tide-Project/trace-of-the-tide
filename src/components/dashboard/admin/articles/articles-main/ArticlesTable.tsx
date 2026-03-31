@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PlusIcon, MoreDotsIcon } from "@/components/ui/icons";
 
 type Tab = { id: string; label: string };
@@ -28,12 +29,51 @@ const statusColorMap: Record<string, string> = {
   orange: "#E67E22",
 };
 
+const TAB_TO_STATUS: Record<string, ArticleRow["status"] | null> = {
+  all: null,
+  drafts: "Draft",
+  published: "Published",
+  scheduled: "Scheduled",
+};
+
 export function ArticlesTable({
   tabs,
   rows,
   addNewHref = "/admin/articles/create",
 }: ArticlesTableProps) {
-  const [activeTab, setActiveTab] = useState(tabs[0]?.id ?? "all");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const defaultTab = tabs[0]?.id ?? "all";
+  const [activeTab, setActiveTab] = useState(defaultTab);
+
+  useEffect(() => {
+    const fromUrl = searchParams.get("tab");
+    if (fromUrl && tabs.some((t) => t.id === fromUrl)) {
+      setActiveTab(fromUrl);
+    }
+  }, [searchParams, tabs]);
+
+  const selectTab = useCallback(
+    (tabId: string) => {
+      setActiveTab(tabId);
+      const params = new URLSearchParams(searchParams.toString());
+      if (tabId === defaultTab) {
+        params.delete("tab");
+      } else {
+        params.set("tab", tabId);
+      }
+      const q = params.toString();
+      router.replace(q ? `${pathname}?${q}` : pathname, { scroll: false });
+    },
+    [defaultTab, pathname, router, searchParams]
+  );
+
+  const filteredRows = useMemo(() => {
+    const want = TAB_TO_STATUS[activeTab];
+    if (!want) return rows;
+    return rows.filter((r) => r.status === want);
+  }, [rows, activeTab]);
 
   return (
     <div>
@@ -43,7 +83,7 @@ export function ArticlesTable({
           <button
             key={tab.id}
             type="button"
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => selectTab(tab.id)}
             className={`flex-1 rounded-md py-3 text-sm font-medium transition-all ${
               activeTab === tab.id
                 ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
@@ -105,41 +145,52 @@ export function ArticlesTable({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.id}
-                className="border-b border-[#444444] last:border-b-0 transition-colors"
-              >
-                <td className="px-5 pt-3.5 pb-0 font-medium" style={{ color: "#DBC99E" }}>
-                  {row.title}
-                </td>
+            {filteredRows.length === 0 ? (
+              <tr>
                 <td
-                  className="px-4 pt-3.5 pb-0"
-                  style={{ color: statusColorMap[row.statusColor] ?? "#9ca3af" }}
+                  colSpan={6}
+                  className="px-5 py-10 text-center text-sm text-gray-500"
                 >
-                  {row.status}
-                </td>
-                <td className="px-4 pt-3.5 pb-0 font-medium" style={{ color: "#A3A3A3" }}>
-                  {row.lastUpdated}
-                </td>
-                <td className="px-4 pt-3.5 pb-0 font-medium" style={{ color: "#A3A3A3" }}>
-                  {row.views}
-                </td>
-                <td className="px-4 pt-3.5 pb-0 font-medium" style={{ color: "#A3A3A3" }}>
-                  {row.supporters}
-                </td>
-                <td className="px-4 pt-3.5 pb-0">
-                  <button
-                    type="button"
-                    className="rounded p-1.5 transition-colors hover:bg-white/5"
-                    style={{ color: "#A3A3A3" }}
-                    aria-label="More actions"
-                  >
-                    <MoreDotsIcon />
-                  </button>
+                  No articles in this view.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredRows.map((row) => (
+                <tr
+                  key={row.id}
+                  className="border-b border-[#444444] last:border-b-0 transition-colors"
+                >
+                  <td className="px-5 pt-3.5 pb-0 font-medium" style={{ color: "#DBC99E" }}>
+                    {row.title}
+                  </td>
+                  <td
+                    className="px-4 pt-3.5 pb-0"
+                    style={{ color: statusColorMap[row.statusColor] ?? "#9ca3af" }}
+                  >
+                    {row.status}
+                  </td>
+                  <td className="px-4 pt-3.5 pb-0 font-medium" style={{ color: "#A3A3A3" }}>
+                    {row.lastUpdated}
+                  </td>
+                  <td className="px-4 pt-3.5 pb-0 font-medium" style={{ color: "#A3A3A3" }}>
+                    {row.views}
+                  </td>
+                  <td className="px-4 pt-3.5 pb-0 font-medium" style={{ color: "#A3A3A3" }}>
+                    {row.supporters}
+                  </td>
+                  <td className="px-4 pt-3.5 pb-0">
+                    <button
+                      type="button"
+                      className="rounded p-1.5 transition-colors hover:bg-white/5"
+                      style={{ color: "#A3A3A3" }}
+                      aria-label="More actions"
+                    >
+                      <MoreDotsIcon />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

@@ -23,7 +23,7 @@ const navItems = [
   { href: "/fields", label: "Fields", icon: GridIcon },
   { href: "/be-a-neighbor", label: "Be a neighbor", icon: PersonPlusIcon },
   { href: "/gift-a-trace", label: "Gift a trace", icon: GiftIcon },
-  { href: "/trace-a-story", label: "Trace a story", icon: PenLineIcon },
+  { href: "/contribute", label: "Trace a story", icon: PenLineIcon },
 ];
 
 function getInitial(name: string | null | undefined, email: string | null | undefined): string {

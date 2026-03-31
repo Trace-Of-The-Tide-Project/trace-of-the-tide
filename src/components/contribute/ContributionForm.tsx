@@ -14,6 +14,7 @@ import {
   CONTRIBUTION_FORM_INPUT_BASE as inputBase,
   COUNTRY_CODES,
 } from "@/lib/constants";
+import { createContribution } from "@/services/contributions.service";
 
 type UploadedFile = { id: string; file: File; sizeLabel: string };
 
@@ -23,10 +24,15 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function ContributionForm() {
+type ContributionFormProps = {
+  selectedTypeId: string | null;
+};
+
+export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
   const router = useRouter();
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addFiles = useCallback((fileList: FileList | null) => {
     if (!fileList?.length) return;
@@ -61,13 +67,42 @@ export function ContributionForm() {
     setIsDragging(false);
   }, []);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const form = e.currentTarget;
+    const title = (form.elements.namedItem("title") as HTMLInputElement | null)?.value ?? "";
+    const description =
+      (form.elements.namedItem("description") as HTMLTextAreaElement | null)?.value ?? "";
+    const contributorName = (form.elements.namedItem("name") as HTMLInputElement | null)?.value ?? "";
+    const contributorEmail =
+      (form.elements.namedItem("email") as HTMLInputElement | null)?.value ?? "";
+    const countryCode =
+      (form.elements.namedItem("countryCode") as HTMLSelectElement | null)?.value ?? "";
+    const mobile = (form.elements.namedItem("mobile") as HTMLInputElement | null)?.value ?? "";
+
+    const phone = `${countryCode}${mobile}`.trim();
+
+    const fd = new FormData();
+    fd.append("title", title.trim());
+    fd.append("description", description.trim());
+    fd.append("contributor_name", contributorName.trim());
+    fd.append("contributor_email", contributorEmail.trim());
+    fd.append("consent_given", "true");
+
+    if (selectedTypeId) fd.append("type_id", selectedTypeId);
+    if (phone && phone !== countryCode) fd.append("contributor_phone", phone);
+
+    for (const f of files) fd.append("files", f.file);
+
+    setIsSubmitting(true);
     try {
-      // Form submission can be wired to API later; on failure redirect to /contribute/error
+      await createContribution(fd);
       router.push("/contribute/success");
     } catch {
       router.push("/contribute/error");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -258,13 +293,14 @@ export function ContributionForm() {
       <div className="pt-2">
         <button
           type="submit"
-          className="w-full select-none cursor-pointer rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black sm:px-6 sm:py-3.5 sm:text-base"
+          disabled={isSubmitting}
+          className="w-full select-none cursor-pointer rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3.5 sm:text-base"
           style={{
             backgroundColor: theme.accentGold,
             boxShadow: `0 0 0 1px ${theme.accentGold}`,
           }}
         >
-          Submit Contribution
+          {isSubmitting ? "Submitting..." : "Submit Contribution"}
         </button>
       </div>
     </form>

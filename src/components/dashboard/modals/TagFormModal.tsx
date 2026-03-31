@@ -71,7 +71,7 @@ export function TagFormModal({
       />
 
       <div
-        className="relative w-full max-w-lg rounded-2xl border border-[#333] bg-[#1a1a1a] shadow-xl"
+        className="relative w-full max-w-lg rounded-2xl border border-[#333] bg-black shadow-xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -105,7 +105,7 @@ export function TagFormModal({
             value={label}
             onChange={(e) => setLabel(e.target.value)}
             placeholder={mode === "add" ? "e.g Featured" : undefined}
-            className="mt-2 w-full rounded-lg border border-[#2f2f2f] bg-[#121212] px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+            className="mt-2 w-full rounded-lg border border-[#2f2f2f] bg-black px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
           />
         </div>
 
@@ -113,7 +113,7 @@ export function TagFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-[#444] bg-[#2a2a2a] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#333]"
+            className="rounded-lg border border-[#444] bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
           >
             Cancel
           </button>

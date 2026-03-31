@@ -1,37 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import HexBackground from "@/components/ui/HexBackground";
 import { ContributionHexCard } from "@/components/contribute/ContributionHexCard";
 import { ContributionForm } from "@/components/contribute/ContributionForm";
-import {
-  ContributeIcon,
-  PersonalStoryIcon,
-  PenLineIcon,
-  PaletteIcon,
-  MusicIcon,
-  BookIcon,
-  CameraIcon,
-  FileTextIcon,
-  IdCardIcon,
-  GlobeIcon,
-} from "@/components/ui/icons";
+import { ContributeIcon } from "@/components/ui/icons";
 import { theme } from "@/lib/theme";
-
-const CONTRIBUTION_TYPES = [
-  { id: "personal-story", label: "Personal Story", icon: PersonalStoryIcon },
-  { id: "testimony", label: "Testimony", icon: PenLineIcon },
-  { id: "biography", label: "Biography", icon: IdCardIcon },
-  { id: "artwork", label: "Artwork", icon: PaletteIcon },
-  { id: "music", label: "Music", icon: MusicIcon },
-  { id: "literature", label: "Literature", icon: BookIcon },
-  { id: "photography", label: "Photography", icon: CameraIcon },
-  { id: "history-document", label: "History document", icon: FileTextIcon },
-  { id: "other", label: "Other", icon: GlobeIcon },
-] as const;
+import {
+  CONTRIBUTION_TYPE_ORDER,
+  getContributionTypeIcon,
+} from "@/lib/contributions/contribution-type-icons";
+import {
+  fetchContributionTypes,
+  type ContributionType,
+} from "@/services/contributions.service";
 
 export default function ContributePage() {
-  const [selectedId, setSelectedId] = useState<string | null>("personal-story");
+  const [types, setTypes] = useState<ContributionType[]>([]);
+  const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
+  const [isLoadingTypes, setIsLoadingTypes] = useState(true);
+  const [typesError, setTypesError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setIsLoadingTypes(true);
+      setTypesError(null);
+      try {
+        const list = await fetchContributionTypes();
+        if (cancelled) return;
+        setTypes(list);
+        const preferred =
+          list.find((t) => t.name === "Personal Story")?.id ?? list[0]?.id ?? null;
+        setSelectedTypeId(preferred);
+      } catch (err) {
+        if (cancelled) return;
+        setTypesError(err instanceof Error ? err.message : "Failed to load contribution types");
+        setTypes([]);
+        setSelectedTypeId(null);
+      } finally {
+        if (!cancelled) setIsLoadingTypes(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const orderedTypes = useMemo(() => {
+    if (!types.length) return [];
+    const index = new Map<string, number>();
+    CONTRIBUTION_TYPE_ORDER.forEach((n, i) => index.set(n, i));
+    return [...types].sort((a, b) => {
+      const ai = index.get(a.name) ?? 999;
+      const bi = index.get(b.name) ?? 999;
+      if (ai !== bi) return ai - bi;
+      return a.name.localeCompare(b.name);
+    });
+  }, [types]);
 
   return (
     <div className="relative min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
@@ -64,62 +90,80 @@ export default function ContributePage() {
       {/* What would you like to contribute? + hex cards (honeycomb layout) */}
       <section>
         <div className="flex flex-col items-center gap-0">
+          {typesError && (
+            <div className="mb-6 w-full max-w-3xl rounded-lg border border-red-900/50 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+              {typesError}
+            </div>
+          )}
+
           {/* Row 1: 3 cards */}
           <div className="flex justify-center gap-0">
-            {CONTRIBUTION_TYPES.slice(0, 3).map(({ id, label, icon: Icon }) => (
-              <ContributionHexCard
-                key={id}
-                icon={<Icon />}
-                label={label}
-                selected={selectedId === id}
-                onClick={() => setSelectedId(id)}
-              />
-            ))}
+            {(isLoadingTypes ? [] : orderedTypes).slice(0, 3).map((t) => {
+              const Icon = getContributionTypeIcon(t.name);
+              return (
+                <ContributionHexCard
+                  key={t.id}
+                  icon={<Icon />}
+                  label={t.name}
+                  selected={selectedTypeId === t.id}
+                  onClick={() => setSelectedTypeId(t.id)}
+                />
+              );
+            })}
           </div>
           {/* Row 2: 2 cards (offset for honeycomb) */}
           <div
             className="flex justify-center gap-0"
             style={{ marginLeft: "35px"}}
           >
-            {CONTRIBUTION_TYPES.slice(3, 5).map(({ id, label, icon: Icon }) => (
-              <ContributionHexCard
-                key={id}
-                icon={<Icon />}
-                label={label}
-                selected={selectedId === id}
-                onClick={() => setSelectedId(id)}
-              />
-            ))}
+            {(isLoadingTypes ? [] : orderedTypes).slice(3, 5).map((t) => {
+              const Icon = getContributionTypeIcon(t.name);
+              return (
+                <ContributionHexCard
+                  key={t.id}
+                  icon={<Icon />}
+                  label={t.name}
+                  selected={selectedTypeId === t.id}
+                  onClick={() => setSelectedTypeId(t.id)}
+                />
+              );
+            })}
           </div>
           {/* Row 3: 3 cards */}
           <div className="flex justify-center gap-0" >
-            {CONTRIBUTION_TYPES.slice(5, 8).map(({ id, label, icon: Icon }) => (
-              <ContributionHexCard
-                key={id}
-                icon={<Icon />}
-                label={label}
-                selected={selectedId === id}
-                onClick={() => setSelectedId(id)}
-              />
-            ))}
+            {(isLoadingTypes ? [] : orderedTypes).slice(5, 8).map((t) => {
+              const Icon = getContributionTypeIcon(t.name);
+              return (
+                <ContributionHexCard
+                  key={t.id}
+                  icon={<Icon />}
+                  label={t.name}
+                  selected={selectedTypeId === t.id}
+                  onClick={() => setSelectedTypeId(t.id)}
+                />
+              );
+            })}
           </div>
           {/* Row 4: 1 card */}
           <div className="flex justify-center gap-0" style={{ marginLeft: "150px" }}>
-            {CONTRIBUTION_TYPES.slice(8, 9).map(({ id, label, icon: Icon }) => (
-              <ContributionHexCard
-                key={id}
-                icon={<Icon />}
-                label={label}
-                selected={selectedId === id}
-                onClick={() => setSelectedId(id)}
-              />
-            ))}
+            {(isLoadingTypes ? [] : orderedTypes).slice(8, 9).map((t) => {
+              const Icon = getContributionTypeIcon(t.name);
+              return (
+                <ContributionHexCard
+                  key={t.id}
+                  icon={<Icon />}
+                  label={t.name}
+                  selected={selectedTypeId === t.id}
+                  onClick={() => setSelectedTypeId(t.id)}
+                />
+              );
+            })}
           </div>
         </div>
 
         {/* Contribution form */}
         <section className="  pt-12 pb-20">
-          <ContributionForm />
+          <ContributionForm selectedTypeId={selectedTypeId} />
         </section>
       </section>
     </div>
