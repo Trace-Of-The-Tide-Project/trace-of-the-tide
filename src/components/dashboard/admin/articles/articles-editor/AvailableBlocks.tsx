@@ -32,14 +32,21 @@ const BLOCKS: { id: BlockType; label: string; icon: React.ReactNode }[] = [
 
 type AvailableBlocksProps = {
   onAddBlock: (type: BlockType) => void;
+  /** If set, only these block types are offered (e.g. Open Call omits heading). */
+  allowedBlockTypes?: BlockType[];
 };
 
-export function AvailableBlocks({ onAddBlock }: AvailableBlocksProps) {
+export function AvailableBlocks({ onAddBlock, allowedBlockTypes }: AvailableBlocksProps) {
+  const blocksToShow =
+    allowedBlockTypes && allowedBlockTypes.length
+      ? BLOCKS.filter((b) => allowedBlockTypes.includes(b.id))
+      : BLOCKS;
+
   return (
     <div className="shrink-0 rounded-lg border border-[#444444] p-4">
       <h3 className="mb-4 text-base font-bold text-white">Available Blocks</h3>
       <div className="flex flex-col gap-2">
-        {BLOCKS.map((block) => (
+        {blocksToShow.map((block) => (
           <button
             key={block.id}
             type="button"

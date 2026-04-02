@@ -81,7 +81,7 @@ export const createTemplates: (TemplateCardProps & { category: string })[] = [
     title: "Open Call",
     description: placeholderDesc,
     icon: <MegaphoneIcon />,
-    href: "/open-call",
+    href: "/admin/articles/create/open-call",
     category: "articles",
   },
 ];

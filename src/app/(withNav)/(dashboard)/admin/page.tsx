@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertsList } from "@/components/dashboard/admin/mainDashboard/AlertsList";
+import { DashboardNotifications } from "@/components/dashboard/admin/mainDashboard/DashboardNotifications";
 import { QuickActions } from "@/components/dashboard/admin/mainDashboard/QuickActions";
 import { EditorApplications } from "@/components/dashboard/admin/mainDashboard/EditorApplications";
 import { ContentOverview } from "@/components/dashboard/admin/mainDashboard/ContentOverview";
@@ -9,7 +9,6 @@ import { UsersByRole } from "@/components/dashboard/admin/mainDashboard/UsersByR
 import { FinanceSnapshot } from "@/components/dashboard/admin/mainDashboard/FinanceSnapshot";
 import { RecentActivity } from "@/components/dashboard/admin/mainDashboard/RecentActivity";
 import {
-  alerts,
   quickActions,
   editorApps,
   contentRows,
@@ -38,8 +37,8 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-8 p-4">
-      {/* Alerts */}
-      <AlertsList items={alerts} onDismissAll={() => {}} />
+      {/* Notifications from GET /notifications (scoped to signed-in user) */}
+      <DashboardNotifications />
 
       {/* Quick Actions + Editor Applications */}
       <div className="grid gap-6 lg:grid-cols-2">

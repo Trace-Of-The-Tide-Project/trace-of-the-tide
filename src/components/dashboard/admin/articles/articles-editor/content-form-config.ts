@@ -1,6 +1,17 @@
 import type { ContentBlock } from "./ContentBlocks";
 import type { BlockType } from "./AvailableBlocks";
 
+/** Block types allowed for Open Call (API has no `heading`). */
+export const openCallAllowedBlockTypes: BlockType[] = [
+  "paragraph",
+  "quote",
+  "image",
+  "gallery",
+  "callout",
+  "author-note",
+  "divider",
+];
+
 export type ContentFormConfig = {
   contentType: string;
   titlePlaceholder: string;
@@ -9,6 +20,28 @@ export type ContentFormConfig = {
   iconBlockType: "paragraph" | "image";
   settingsTitle: string;
   primaryButtonLabel: string;
+};
+
+/** Open Call: same block set as article but no heading (API enum). */
+export const openCallConfig: ContentFormConfig = {
+  contentType: "open-call",
+  titlePlaceholder: "Enter your open call title...",
+  defaultBlocks: [
+    { id: "1", type: "paragraph", content: "" },
+    { id: "2", type: "quote", content: "", quoteAttribution: "" },
+    { id: "3", type: "image" },
+    { id: "4", type: "callout", content: "", calloutTitle: "" },
+    { id: "5", type: "author-note", content: "" },
+  ],
+  blockLabels: {
+    paragraph: "Describe this open call...",
+    quote: "Quote",
+    callout: "Callout",
+    "author-note": "Author note",
+  },
+  iconBlockType: "paragraph",
+  settingsTitle: "Open Call Settings",
+  primaryButtonLabel: "Publish Now",
 };
 
 export const articleConfig: ContentFormConfig = {
@@ -108,5 +141,6 @@ export function contentFormConfigForType(contentType: string | undefined): Conte
   if (t === "video") return videoConfig;
   if (t === "thread") return threadConfig;
   if (t === "audio") return audioConfig;
+  if (t === "open_call" || t === "opencall") return openCallConfig;
   return articleConfig;
 }
