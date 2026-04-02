@@ -9,6 +9,16 @@ const iconProps = {
   strokeLinejoin: "round" as const,
 };
 
+/** Section / flow title */
+export function HeadingIcon() {
+  return (
+    <svg {...iconProps} viewBox="0 0 24 24">
+      <path d="M6 4h12M6 12h8M6 20h12" strokeWidth={2.2} />
+      <path d="M4 4v16" strokeWidth={2.2} />
+    </svg>
+  );
+}
+
 export function FileTextIcon() {
   return (
     <svg {...iconProps}>

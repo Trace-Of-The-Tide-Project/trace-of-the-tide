@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
 import { AdminTopbar } from "@/components/dashboard/admin/AdminTopbar";
@@ -44,6 +45,21 @@ function getCommandCenter(pathname: string | null) {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const commandCenter = getCommandCenter(pathname);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div
+        className="min-h-screen w-full bg-[#191919]"
+        aria-busy="true"
+        aria-label="Loading admin"
+      />
+    );
+  }
 
   return (
     <DashboardLayout config={adminConfig} header={<AdminTopbar />} commandCenter={commandCenter}>

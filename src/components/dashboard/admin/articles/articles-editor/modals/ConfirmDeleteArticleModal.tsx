@@ -1,0 +1,105 @@
+"use client";
+
+import { useCallback, useEffect } from "react";
+import { XIcon } from "@/components/ui/icons";
+
+type ConfirmDeleteArticleModalProps = {
+  open: boolean;
+  articleTitle: string;
+  busy: boolean;
+  error?: string | null;
+  onClose: () => void;
+  onConfirm: () => void;
+};
+
+export function ConfirmDeleteArticleModal({
+  open,
+  articleTitle,
+  busy,
+  error,
+  onClose,
+  onConfirm,
+}: ConfirmDeleteArticleModalProps) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !busy) onClose();
+    },
+    [busy, onClose],
+  );
+
+  useEffect(() => {
+    if (!open) return;
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [open, handleKeyDown]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-60 flex items-center justify-center">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+        onClick={() => !busy && onClose()}
+        aria-label="Close dialog"
+      />
+
+      <div
+        className="relative mx-4 w-full max-w-md rounded-xl border border-[#444444] bg-[#1a1a1a] p-6 shadow-xl"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-article-title"
+        aria-describedby="delete-article-desc"
+      >
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <h2 id="delete-article-title" className="text-lg font-bold text-white">
+            Delete article?
+          </h2>
+          <button
+            type="button"
+            onClick={() => !busy && onClose()}
+            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-40"
+            aria-label="Close"
+            disabled={busy}
+          >
+            <XIcon />
+          </button>
+        </div>
+
+        <p id="delete-article-desc" className="text-sm text-gray-400">
+          <span className="font-medium text-gray-200">&ldquo;{articleTitle}&rdquo;</span> will be
+          removed permanently. This cannot be undone.
+        </p>
+
+        {error ? (
+          <p className="mt-3 rounded-lg border border-red-900/50 bg-red-950/30 px-3 py-2 text-sm text-red-200">
+            {error}
+          </p>
+        ) : null}
+
+        <div className="mt-6 flex justify-end gap-2">
+          <button
+            type="button"
+            disabled={busy}
+            onClick={onClose}
+            className="rounded-lg border border-[#444444] bg-transparent px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-[#333333] disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={onConfirm}
+            className="rounded-lg border border-red-900/60 bg-red-950/50 px-4 py-2 text-sm font-medium text-red-200 transition-colors hover:bg-red-950/80 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {busy ? "Deleting…" : "Delete"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/icons";
 import { useStoredAuthUser } from "@/hooks/useStoredAuthUser";
 import { clearStoredAuth } from "@/services/auth.service";
+import { getNavAccountHref } from "@/lib/auth/nav-account-href";
 import { theme } from "@/lib/theme";
 
 const navItems = [
@@ -38,6 +39,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const user = useStoredAuthUser();
   const displayName = user?.full_name || user?.username || user?.email || "Username";
+  const accountHref = user ? getNavAccountHref(user) : "/profile";
 
   const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), []);
   const handleLogout = useCallback(() => {
@@ -73,20 +75,22 @@ export function Navbar() {
     >
       <nav className="flex h-14 w-full items-center justify-between gap-8 px-6">
         {/* Part 1: Brand - left */}
-        <Link
-          href="/"
-          className="flex shrink-0 items-center gap-3 text-white transition-opacity hover:opacity-90"
-        >
-          <Image
-            src="/images/Logo.png"
-            alt="Trace of The Tide"
-            width={100}
-            height={24}
-            className="h-6 w-auto object-contain"
-          />
+        <div className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-3">
+          <Link
+            href="/"
+            className="flex shrink-0 items-center gap-3 text-white transition-opacity hover:opacity-90"
+          >
+            <Image
+              src="/images/Logo.png"
+              alt="Trace of The Tide"
+              width={100}
+              height={24}
+              className="h-6 w-auto object-contain"
+            />
 
-          <span className="font-medium">Trace of The Tide</span>
-        </Link>
+            <span className="font-medium">Trace of The Tide</span>
+          </Link>
+        </div>
 
         {/* Part 2: Links + auth - right. From 900px down: auth + hamburger only */}
         <div className="flex items-center justify-end gap-2 lg:gap-4">
@@ -134,7 +138,7 @@ export function Navbar() {
               </Link>
               {/* 901px and up: full profile button */}
               <Link
-                href="/profile"
+                href={accountHref}
                 className="hidden lg:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white"
                 style={{
                   backgroundColor: theme.cardBorder,
@@ -237,19 +241,21 @@ export function Navbar() {
           }}
         >
           <div
-            className="flex items-center justify-between border-b p-4"
+            className="flex flex-col gap-1 border-b p-4"
             style={{ borderColor: theme.cardBorder }}
           >
-            <span className="font-medium text-white">Menu</span>
-            <button
-              type="button"
-              onClick={closeMobileMenu}
-              className="rounded-md p-2 text-gray-400 transition-colors hover:text-white"
-              style={{ backgroundColor: theme.cardBorder }}
-              aria-label="Close menu"
-            >
-              <XIcon />
-            </button>
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-medium text-white">Menu</span>
+              <button
+                type="button"
+                onClick={closeMobileMenu}
+                className="rounded-md p-2 text-gray-400 transition-colors hover:text-white"
+                style={{ backgroundColor: theme.cardBorder }}
+                aria-label="Close menu"
+              >
+                <XIcon />
+              </button>
+            </div>
           </div>
           <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
             {navItems.map(({ href, label, icon: Icon }) => (
@@ -275,7 +281,7 @@ export function Navbar() {
             {user ? (
               <>
                 <Link
-                  href="/profile"
+                  href={accountHref}
                   onClick={closeMobileMenu}
                   className="flex items-center gap-3 rounded-md px-4 py-3 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
                 >

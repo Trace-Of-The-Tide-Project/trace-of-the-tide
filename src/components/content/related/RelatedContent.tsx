@@ -1,9 +1,6 @@
 import Link from "next/link";
 import { theme } from "@/lib/theme";
-import {
-  RelatedContentCard,
-  type RelatedContentCardData,
-} from "./RelatedContentCard";
+import { RelatedContentCard, type RelatedContentCardData } from "./RelatedContentCard";
 
 type RelatedContentProps = {
   items: RelatedContentCardData[];
@@ -46,20 +43,14 @@ function RelatedContentHexBackground() {
   );
 }
 
-export function RelatedContent({
-  items,
-  viewMoreHref = "#",
-}: RelatedContentProps) {
+export function RelatedContent({ items, viewMoreHref = "#" }: RelatedContentProps) {
   return (
     <section className="relative py-10 sm:py-14" style={{ backgroundColor: theme.bgDark }}>
       <RelatedContentHexBackground />
       <div className="relative mx-auto max-w-6xl px-6 sm:px-10">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2
-              className="text-lg font-bold"
-              style={{ color: theme.accentGold }}
-            >
+            <h2 className="text-lg font-bold" style={{ color: theme.accentGold }}>
               Related content
             </h2>
             <p className="mt-1 text-sm text-gray-500">
