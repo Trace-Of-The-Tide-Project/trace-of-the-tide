@@ -5,10 +5,14 @@ import type {
   AuthResponse,
   AuthUser,
 } from "@/types/auth.types"
+import {
+  AUTH_TOKEN_KEY,
+  AUTH_USER_KEY,
+  AUTH_STATE_CHANGED_EVENT,
+  clearAuthStorageSync,
+} from "@/lib/auth/storage-keys"
 
-const AUTH_TOKEN_KEY = "access_token"
-const AUTH_USER_KEY = "auth_user"
-export const AUTH_STATE_CHANGED_EVENT = "auth-state-changed"
+export { AUTH_STATE_CHANGED_EVENT } from "@/lib/auth/storage-keys"
 type AuthStorageMode = "local" | "session"
 
 function emitAuthStateChanged(): void {
@@ -67,12 +71,7 @@ export function setStoredUser(user: AuthUser, mode: AuthStorageMode = "local"): 
 }
 
 export function clearStoredAuth(): void {
-  if (typeof window === "undefined") return
-  localStorage.removeItem(AUTH_TOKEN_KEY)
-  localStorage.removeItem(AUTH_USER_KEY)
-  sessionStorage.removeItem(AUTH_TOKEN_KEY)
-  sessionStorage.removeItem(AUTH_USER_KEY)
-  emitAuthStateChanged()
+  clearAuthStorageSync()
 }
 
 /** Raw API response may wrap in data and use camelCase or snake_case */

@@ -3,14 +3,14 @@ import { ShareYourStory } from "@/components/contribute/ShareYourStory";
 import { ContentBreadcrumb } from "./related/ContentBreadcrumb";
 import { ContentMediaPlayer } from "./media/ContentMediaPlayer";
 import { ContentArticleHeader } from "./article/ContentArticleHeader";
-import { ContentArticleBody } from "./article/ContentArticleBody";
+import { ContentArticleBody, type ContentArticleSection } from "./article/ContentArticleBody";
 import { ContentAuthorCard } from "./sidebar/ContentAuthorCard";
 import { ContentContributors } from "./sidebar/ContentContributors";
 import { ContentCollection } from "./sidebar/ContentCollection";
 import { RelatedContent } from "./related/RelatedContent";
 import type { RelatedContentCardData } from "./related/RelatedContentCard";
 
-type ContentPageLayoutProps = {
+export type ContentPageLayoutProps = {
   breadcrumbs: { label: string; href?: string }[];
   media: {
     type: "video" | "audio" | "image" | "gallery";
@@ -18,7 +18,15 @@ type ContentPageLayoutProps = {
     thumbnail?: string;
     duration?: string;
     title?: string;
-    items?: { type: "image" | "video" | "audio"; src: string; thumbnail?: string; title?: string; duration?: string }[];
+    /** Shown on hero image (e.g. article cover). */
+    coverLabel?: string;
+    items?: {
+      type: "image" | "video" | "audio";
+      src: string;
+      thumbnail?: string;
+      title?: string;
+      duration?: string;
+    }[];
   };
   article: {
     title: string;
@@ -26,7 +34,9 @@ type ContentPageLayoutProps = {
     category?: string;
     publishedDate?: string;
     readingTime?: string;
-    sections: { heading?: string; paragraphs: string[]; quote?: string }[];
+    /** Shown in article header (e.g. after POST /articles/:id/view). */
+    viewCount?: number;
+    sections: ContentArticleSection[];
   };
   author: {
     name: string;
@@ -95,6 +105,7 @@ export function ContentPageLayout({
             category={article.category}
             publishedDate={article.publishedDate}
             readingTime={article.readingTime}
+            viewCount={article.viewCount}
           />
         </div>
       </div>

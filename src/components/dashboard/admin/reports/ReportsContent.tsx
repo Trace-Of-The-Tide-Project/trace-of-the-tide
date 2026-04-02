@@ -1,0 +1,335 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import {
+  AlertTriangleIcon,
+  ClockIcon,
+  EyeIcon,
+  FlagIcon,
+  MessageSquareIcon,
+  SearchIcon,
+  ShieldIcon,
+} from "@/components/ui/icons";
+import {
+  sampleAuditLog,
+  sampleReportedUsers,
+  sampleReports,
+  type AuditLogEntry,
+  type ReportItem,
+  type ReportedUserItem,
+} from "@/lib/dashboard/reports-constants";
+
+const AVATAR_GOLD = "#E8DDC0";
+
+const REPORT_TABS = ["Reported Content", "Reported Users", "Audit Log"] as const;
+type ReportTab = (typeof REPORT_TABS)[number];
+
+const FILTERS = ["All", "Pending", "Under review"] as const;
+type Filter = (typeof FILTERS)[number];
+
+export function ReportsContent() {
+  const [activeTab, setActiveTab] = useState<ReportTab>("Reported Content");
+  const [filter, setFilter] = useState<Filter>("All");
+  const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const filteredReports = useMemo(() => {
+    return sampleReports.filter((r) => {
+      const q = query.trim().toLowerCase();
+      const matchesQuery =
+        !q ||
+        r.title.toLowerCase().includes(q) ||
+        r.reporter.toLowerCase().includes(q);
+      const matchesFilter =
+        filter === "All" ||
+        (filter === "Pending" && r.status === "Pending") ||
+        (filter === "Under review" && r.status === "Under review");
+      return matchesQuery && matchesFilter;
+    });
+  }, [query, filter]);
+
+  const selected = filteredReports.find((r) => r.id === selectedId) ?? null;
+
+  return (
+    <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
+      <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] p-6 lg:p-8">
+        <div className="flex w-fit gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+          {REPORT_TABS.map((tab) => {
+            const label =
+              tab === "Reported Content"
+                ? "Reported Content (3)"
+                : tab === "Reported Users"
+                  ? "Reported Users (2)"
+                  : tab;
+            return (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`rounded-md px-5 py-2.5 text-sm font-medium transition-all ${
+                  activeTab === tab
+                    ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                    : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        {activeTab === "Reported Content" ? (
+          <>
+            <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div className="relative flex-1">
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#E8DDC0]">
+                  <SearchIcon />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Search reports..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="w-full rounded-lg border border-[#2f2f2f] bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {FILTERS.map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setFilter(f)}
+                    className={`rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors ${
+                      filter === f
+                        ? "border-[#555] bg-[#333] text-white"
+                        : "border-[#444] bg-transparent text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+              <div className="space-y-3">
+                {filteredReports.map((report) => (
+                  <ReportListCard
+                    key={report.id}
+                    report={report}
+                    selected={selectedId === report.id}
+                    onSelect={() => setSelectedId(report.id)}
+                  />
+                ))}
+                {filteredReports.length === 0 && (
+                  <p className="py-8 text-center text-sm text-gray-500">No reports match your filters.</p>
+                )}
+              </div>
+
+              <div className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-[#2f2f2f] bg-[#0f0f0f] px-6 py-12 text-center">
+                {selected ? (
+                  <div className="w-full max-w-md text-left">
+                    <h3 className="text-lg font-semibold text-white">{selected.title}</h3>
+                    <p className="mt-2 text-sm text-gray-500">{selected.timeAgo}</p>
+                    <p className="mt-4 text-sm text-gray-400">
+                      Reported by: <span className="text-white">{selected.reporter}</span>
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <span className="rounded-full border border-[#444] bg-[#1a1a1a] px-3 py-1 text-xs text-gray-300">
+                        {selected.typeLabel}
+                      </span>
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${
+                          selected.status === "Pending"
+                            ? "border border-amber-500/40 bg-amber-500/10 text-amber-400"
+                            : "border border-blue-500/40 bg-blue-500/10 text-blue-400"
+                        }`}
+                      >
+                        {selected.status}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#333] bg-[#1a1a1a] text-[#E8DDC0]">
+                      <FlagIcon />
+                    </div>
+                    <p className="mt-4 text-sm text-gray-500">Select a report to review</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        ) : activeTab === "Reported Users" ? (
+          <div className="mt-6 space-y-3">
+            {sampleReportedUsers.map((user) => (
+              <ReportedUserCard key={user.id} user={user} />
+            ))}
+          </div>
+        ) : (
+          <AuditLogSection entries={sampleAuditLog} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Chamfered / “technical” card corners (clip-path). */
+const AUDIT_CARD_CLIP =
+  "polygon(11px 0, calc(100% - 11px) 0, 100% 11px, 100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%, 0 calc(100% - 11px), 0 11px)";
+
+function AuditLogSection({ entries }: { entries: AuditLogEntry[] }) {
+  return (
+    <div className="mt-6">
+      <h2 className="text-lg font-bold text-white sm:text-xl">Audit Log</h2>
+      <p className="mt-1 text-sm text-[#a0a0a0]">Track all moderation actions</p>
+      <div className="mt-6 space-y-3">
+        {entries.map((entry) => (
+          <AuditLogCard key={entry.id} entry={entry} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AuditLogCard({ entry }: { entry: AuditLogEntry }) {
+  return (
+    <div
+      className="flex items-center gap-4 px-4 py-4 sm:gap-5 sm:px-5 sm:py-4"
+      style={{
+        clipPath: AUDIT_CARD_CLIP,
+        backgroundColor: "#1a1a1a",
+        boxShadow: "inset 0 0 0 1px #2a2a2a",
+      }}
+    >
+      <div
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#333] bg-[#121212] text-[#E8DDC0]"
+        aria-hidden
+      >
+        <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
+          <ShieldIcon />
+        </span>
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="font-semibold text-white">{entry.title}</p>
+        <p className="mt-0.5 text-sm text-[#a0a0a0]">{entry.meta}</p>
+      </div>
+      <p className="shrink-0 text-right text-sm text-[#a0a0a0]">{entry.timeAgo}</p>
+    </div>
+  );
+}
+
+function ReportedUserCard({ user }: { user: ReportedUserItem }) {
+  return (
+    <div className="flex flex-col gap-4 rounded-xl border border-[#2f2f2f] bg-[#121212] p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex min-w-0 gap-4">
+        <div
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-bold text-[#111]"
+          style={{ backgroundColor: AVATAR_GOLD }}
+        >
+          {user.avatarInitial}
+        </div>
+        <div className="min-w-0">
+          <p className="font-semibold text-white">{user.displayName}</p>
+          <p className="text-sm text-gray-500">{user.email}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="text-[#E8DDC0] [&_svg]:h-3.5 [&_svg]:w-3.5">
+                <FlagIcon />
+              </span>
+              {user.reportCount} reports
+            </span>
+            <span className="hidden text-gray-600 sm:inline">·</span>
+            <span>{user.reasonSummary}</span>
+            <span className="hidden text-gray-600 sm:inline">·</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="text-[#E8DDC0] [&_svg]:h-3.5 [&_svg]:w-3.5">
+                <ClockIcon />
+              </span>
+              {user.timeAgo}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:justify-end">
+        <span className="rounded-full border border-amber-500/35 bg-[#1a1a1a] px-3 py-1 text-xs font-medium text-amber-400">
+          {user.status}
+        </span>
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 rounded-lg border border-[#444] bg-[#232323] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
+        >
+          <span className="text-[#E8DDC0] [&_svg]:h-4 [&_svg]:w-4">
+            <EyeIcon />
+          </span>
+          View profile
+        </button>
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 rounded-lg border border-[#444] bg-[#232323] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
+        >
+          <span className="text-[#E8DDC0] [&_svg]:h-4 [&_svg]:w-4">
+            <MessageSquareIcon />
+          </span>
+          Warn
+        </button>
+        <button
+          type="button"
+          className="rounded-lg border border-[#444] bg-[#232323] px-3 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-[#2a2a2a]"
+        >
+          Suspend
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ReportListCard({
+  report,
+  selected,
+  onSelect,
+}: {
+  report: ReportItem;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={`w-full rounded-xl border px-4 py-4 text-left transition-colors ${
+        selected
+          ? "border-[#5a4a2a] bg-[#151515]"
+          : "border-[#2f2f2f] bg-[#121212] hover:bg-[#151515]"
+      }`}
+    >
+      <div className="flex gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#333] bg-[#1a1a1a] text-[#E8DDC0]">
+          <AlertTriangleIcon />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-white">{report.title}</p>
+          <p className="mt-1 text-xs text-gray-500">{report.timeAgo}</p>
+          <p className="mt-2 text-xs text-gray-400">
+            Reported by: <span className="text-gray-300">{report.reporter}</span>
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <span className="rounded-full border border-[#444] bg-[#1a1a1a] px-2 py-0.5 text-[11px] text-gray-400">
+              {report.typeLabel}
+            </span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                report.status === "Pending"
+                  ? "bg-amber-500/15 text-amber-400"
+                  : "bg-blue-500/15 text-blue-400"
+              }`}
+            >
+              {report.status}
+            </span>
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}

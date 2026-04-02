@@ -12,7 +12,7 @@ export function useLoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const registered = searchParams.get("registered")
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/admin"
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [rememberMe, setRememberMe] = useState(false)

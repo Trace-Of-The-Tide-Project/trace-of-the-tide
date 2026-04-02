@@ -1,5 +1,7 @@
-import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { NavbarDynamic } from "@/components/layout/NavbarDynamic";
+import { ArticleReadingHeaderProvider } from "@/components/layout/ArticleReadingHeaderContext";
+import { WithNavAuthGate } from "@/components/layout/WithNavAuthGate";
 
 export default function WithNavLayout({
   children,
@@ -7,10 +9,12 @@ export default function WithNavLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <Navbar />
-      {children}
-      <Footer />
-    </>
+    <WithNavAuthGate>
+      <ArticleReadingHeaderProvider>
+        <NavbarDynamic />
+        {children}
+        <Footer />
+      </ArticleReadingHeaderProvider>
+    </WithNavAuthGate>
   );
 }

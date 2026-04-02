@@ -17,6 +17,7 @@ const CATEGORY_OPTIONS: Array<{ value: MessageTemplateCategory; label: string }>
   { value: "payment", label: "payment" },
   { value: "moderation", label: "moderation" },
   { value: "broadcast", label: "broadcast" },
+  { value: "support", label: "support" },
 ];
 
 export function EditMessageTemplateModal({ open, template, onClose, onSave }: EditMessageTemplateModalProps) {

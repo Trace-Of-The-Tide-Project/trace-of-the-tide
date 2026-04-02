@@ -20,6 +20,8 @@ import {
   ClockIcon,
   MoreDotsIcon,
 } from "@/components/ui/icons";
+import { ConfigureRoleModal } from "@/components/dashboard/modals/ConfigureRoleModal";
+import { PermissionToggle } from "@/components/dashboard/admin/roles/PermissionToggle";
 
 function hexPath(cx: number, cy: number, r: number) {
   const corners = Array.from({ length: 6 }, (_, i) => {
@@ -92,36 +94,6 @@ function getInitialMatrix(): MatrixState {
     });
   });
   return matrix;
-}
-
-function PermissionToggle({
-  checked,
-  onChange,
-  checkedColor,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  checkedColor?: string;
-}) {
-  const bgColor = checked ? (checkedColor ?? theme.accentGoldFocus) : undefined;
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-        checked ? "" : "bg-[#333]"
-      }`}
-      style={checked ? { backgroundColor: bgColor } : undefined}
-    >
-      <span
-        className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${
-          checked ? "left-6" : "left-1"
-        }`}
-      />
-    </button>
-  );
 }
 
 const STATUS_FILTERS: { value: EditorAppStatus | "all"; label: string }[] = [
@@ -419,6 +391,7 @@ function PermissionsMatrix() {
 
 export function RolesPermissionsContent() {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("overview");
+  const [configureRoleOpen, setConfigureRoleOpen] = useState(false);
 
   return (
     <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
@@ -478,19 +451,35 @@ export function RolesPermissionsContent() {
             <div className="rounded-xl border border-[#444] p-6">
               <h3 className="text-lg font-bold text-white">Role Hierarchy</h3>
               <p className="mt-1 text-sm text-gray-500">
-                Understanding the permission inheritance between roles
+                Understanding the permission inheritance between roles. Click Super Admin to edit
+                permissions.
               </p>
               <div className="mt-6 flex flex-nowrap items-center justify-center gap-0 overflow-x-auto">
                 {roleHierarchy.map((role, index) => {
                   const Icon = role.icon;
+                  const isSuperAdmin = role.id === "admin";
+                  const inner = (
+                    <>
+                      <RoleHierarchyHex>
+                        <Icon />
+                      </RoleHierarchyHex>
+                      <span className="text-sm font-medium text-white">{role.label}</span>
+                    </>
+                  );
                   return (
                     <div key={role.id} className="flex items-center">
-                      <div className="flex flex-col items-center gap-2">
-                        <RoleHierarchyHex>
-                          <Icon />
-                        </RoleHierarchyHex>
-                        <span className="text-sm font-medium text-white">{role.label}</span>
-                      </div>
+                      {isSuperAdmin ? (
+                        <button
+                          type="button"
+                          onClick={() => setConfigureRoleOpen(true)}
+                          className="flex flex-col items-center gap-2 rounded-xl p-1 transition-colors hover:bg-white/6 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E8DDC0]/40"
+                          aria-label="Configure Super Admin permissions"
+                        >
+                          {inner}
+                        </button>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2">{inner}</div>
+                      )}
                       {index < roleHierarchy.length - 1 && (
                         <div
                           className="mx-2 h-1 w-12 shrink-0 overflow-hidden rounded-full bg-[#222] sm:mx-4 sm:w-12"
@@ -525,6 +514,12 @@ export function RolesPermissionsContent() {
           <EditorApplications />
         </div>
       )}
+
+      <ConfigureRoleModal
+        open={configureRoleOpen}
+        onClose={() => setConfigureRoleOpen(false)}
+        roleDisplayName="Super Admin"
+      />
     </div>
   );
 }

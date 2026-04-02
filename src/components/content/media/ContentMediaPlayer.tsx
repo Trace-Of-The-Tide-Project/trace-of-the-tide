@@ -12,6 +12,7 @@ export type ContentMediaPlayerProps = {
   thumbnail?: string;
   duration?: string;
   title?: string;
+  coverLabel?: string;
   items?: GalleryItem[];
 };
 
@@ -21,10 +22,13 @@ export function ContentMediaPlayer({
   thumbnail,
   duration,
   title,
+  coverLabel,
   items,
 }: ContentMediaPlayerProps) {
   if (type === "gallery" && items) return <ContentGalleryPlayer items={items} />;
-  if (type === "image" && src) return <ContentImageDisplay src={src} />;
+  if (type === "image") {
+    return <ContentImageDisplay src={src ?? ""} coverLabel={coverLabel} />;
+  }
   if (type === "audio" && src) {
     return (
       <ContentAudioPlayer

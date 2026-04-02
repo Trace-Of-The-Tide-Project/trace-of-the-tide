@@ -32,48 +32,36 @@ export function MessagingPageHeader() {
       />
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <MessageSquareIcon />
-          </div>
-          <p className="text-xs text-gray-500">Unread Messages</p>
-          <p className="mt-1 text-xl font-semibold text-white">23</p>
+          </span>
+          <span className="text-2xl font-bold text-white">23</span>
+          <span className="text-xs text-gray-500">Unread Messages</span>
         </div>
 
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <TrendingUpIcon />
-          </div>
-          <p className="text-xs text-gray-500">High Priority...</p>
-          <p className="mt-1 text-xl font-semibold text-white">5</p>
+          </span>
+          <span className="text-2xl font-bold text-white">5</span>
+          <span className="text-xs text-gray-500">High Priority...</span>
         </div>
 
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <ClockIcon />
-          </div>
-          <p className="text-xs text-gray-500">Pending Response</p>
-          <p className="mt-1 text-xl font-semibold text-white">12</p>
+          </span>
+          <span className="text-2xl font-bold text-white">12</span>
+          <span className="text-xs text-gray-500">Pending Response</span>
         </div>
 
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] px-6 py-5">
-          <div
-            className="mb-3 inline-flex items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a] p-2"
-            style={{ color: "#E8DDC0" }}
-          >
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+          <span style={{ color: "#E8DDC0" }}>
             <SquareCheckIcon />
-          </div>
-          <p className="text-xs text-gray-500">Resolved This Week...</p>
-          <p className="mt-1 text-xl font-semibold text-white">156</p>
+          </span>
+          <span className="text-2xl font-bold text-white">156</span>
+          <span className="text-xs text-gray-500">Resolved This Week...</span>
         </div>
       </div>
     </div>

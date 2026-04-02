@@ -1,4 +1,5 @@
 import { theme } from "@/lib/theme";
+import { formatViewCount } from "@/lib/format-view-count";
 
 type ContentArticleHeaderProps = {
   title: string;
@@ -6,6 +7,7 @@ type ContentArticleHeaderProps = {
   category?: string;
   publishedDate?: string;
   readingTime?: string;
+  viewCount?: number;
 };
 
 export function ContentArticleHeader({
@@ -14,6 +16,7 @@ export function ContentArticleHeader({
   category,
   publishedDate,
   readingTime,
+  viewCount,
 }: ContentArticleHeaderProps) {
   return (
     <div>
@@ -46,6 +49,12 @@ export function ContentArticleHeader({
           <>
             <span className="text-gray-600">·</span>
             <span>Reading Time: {readingTime}</span>
+          </>
+        )}
+        {viewCount != null && viewCount >= 0 && (
+          <>
+            <span className="text-gray-600">·</span>
+            <span>{formatViewCount(viewCount)}</span>
           </>
         )}
       </div>

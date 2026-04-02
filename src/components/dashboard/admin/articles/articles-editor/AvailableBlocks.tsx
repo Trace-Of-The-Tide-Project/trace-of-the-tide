@@ -7,9 +7,11 @@ import {
   GalleryIcon,
   StarIcon,
   MoreDotsIcon,
+  HeadingIcon,
 } from "./ArticleEditorIcons";
 export type BlockType =
   | "paragraph"
+  | "heading"
   | "quote"
   | "image"
   | "gallery"
@@ -19,6 +21,7 @@ export type BlockType =
 
 const BLOCKS: { id: BlockType; label: string; icon: React.ReactNode }[] = [
   { id: "paragraph", label: "Paragraph", icon: <FileTextIcon /> },
+  { id: "heading", label: "Title", icon: <HeadingIcon /> },
   { id: "quote", label: "Quote", icon: <QuoteIcon /> },
   { id: "image", label: "Image", icon: <ImageIcon /> },
   { id: "gallery", label: "Gallery", icon: <GalleryIcon /> },

@@ -43,7 +43,7 @@ export function useRegisterForm() {
     setLoading(true);
     try {
       await signup(data);
-      router.push("/");
+      router.push("/admin");
       router.refresh();
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
