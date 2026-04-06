@@ -213,8 +213,7 @@ export async function getArticles(params?: Record<string, string | number | bool
   const o = data && typeof data === "object" ? (data as Record<string, unknown>) : {};
   const results =
     typeof o.results === "number" && Number.isFinite(o.results) ? o.results : list.length;
-  const status =
-    typeof o.status === "number" && Number.isFinite(o.status) ? o.status : 200;
+  const status = typeof o.status === "number" && Number.isFinite(o.status) ? o.status : 200;
   return { status, results, data: list };
 }
 
@@ -262,6 +261,7 @@ export type ArticleDetail = {
   contributors?: unknown[];
   author?: ArticleDetailAuthor | null;
   view_count?: number;
+  createdAt?: string;
 };
 
 function unwrapArticleDetailPayload(raw: unknown): ArticleDetail | null {

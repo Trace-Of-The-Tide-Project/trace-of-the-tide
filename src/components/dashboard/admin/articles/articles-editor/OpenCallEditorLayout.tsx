@@ -12,10 +12,12 @@ import {
 import { ContentEditorFooter } from "./ContentEditorFooter";
 import { ScheduleArticleModal } from "./modals/ScheduleArticleModal";
 import { buildOpenCallContentBlocksAndMainMedia } from "./lib/build-open-call-payload";
+import { buildArticleBlocksFromEditor } from "./lib/build-api-blocks";
 import { openCallConfig, openCallAllowedBlockTypes } from "./content-form-config";
 import { ApplicationFormBuilder } from "./open-call/ApplicationFormBuilder";
 import { invalidateAdminArticlesListCache } from "@/lib/dashboard/admin-articles-list-cache";
 import { getAdminTags } from "@/services/admin-tags.service";
+import { createArticle } from "@/services/articles.service";
 import {
   createOpenCall,
   DEFAULT_OPEN_CALL_APPLICATION_FIELDS,
@@ -129,19 +131,22 @@ export function OpenCallEditorLayout() {
     setBlocks((prev) => prev.map((b) => (b.id === id ? { ...b, ...patch } : b)));
   }, []);
 
-  const buildPayload = useCallback(
+  const buildPayloads = useCallback(
     async (opts: {
       action: "publish" | "draft" | "schedule";
       scheduled_at: string | null;
       settingsStatus: "draft" | "published" | "scheduled";
-    }): Promise<CreateOpenCallPayload> => {
-      const { content_blocks, main_media } = await buildOpenCallContentBlocksAndMainMedia(blocks);
-      const adminTags = await getAdminTags();
+    }): Promise<{ openCall: CreateOpenCallPayload; articleBlocks: Awaited<ReturnType<typeof buildArticleBlocksFromEditor>> }> => {
+      const [{ content_blocks, main_media }, articleBlocks, adminTags] = await Promise.all([
+        buildOpenCallContentBlocksAndMainMedia(blocks),
+        buildArticleBlocksFromEditor(blocks),
+        getAdminTags(),
+      ]);
       const tags = tagIds
         .map((id) => adminTags.find((t) => t.id === id)?.name)
         .filter((n): n is string => Boolean(n?.trim()));
 
-      return {
+      const openCall: CreateOpenCallPayload = {
         title: title.trim(),
         content_blocks,
         main_media,
@@ -160,8 +165,28 @@ export function OpenCallEditorLayout() {
         action: opts.action,
         scheduled_at: opts.scheduled_at,
       };
+
+      return { openCall, articleBlocks };
     },
     [blocks, title, applicationFields, category, language, visibility, seoTitle, metaDescription, tagIds],
+  );
+
+  const createArticleFromBlocks = useCallback(
+    async (articleBlocks: Awaited<ReturnType<typeof buildArticleBlocksFromEditor>>) => {
+      await createArticle({
+        title: title.trim(),
+        content_type: "open_call",
+        category: category.trim(),
+        language: apiLanguage(language),
+        visibility,
+        seo_title: seoTitle.trim() || title.trim(),
+        meta_description: metaDescription.trim(),
+        collection_id: collectionId.trim() || undefined,
+        tag_ids: tagIds.length ? tagIds : undefined,
+        blocks: articleBlocks,
+      });
+    },
+    [title, category, language, visibility, seoTitle, metaDescription, collectionId, tagIds],
   );
 
   const validateBeforeSubmit = useCallback(() => {
@@ -179,16 +204,19 @@ export function OpenCallEditorLayout() {
     setError(null);
     setBusy(true);
     try {
-      const payload = await buildPayload({
+      const { openCall, articleBlocks } = await buildPayloads({
         action: "draft",
         scheduled_at: null,
         settingsStatus: "draft",
       });
-      if (payload.content_blocks.length === 0) {
+      if (openCall.content_blocks.length === 0) {
         setError("Add at least one content block with content.");
         return;
       }
-      await createOpenCall(payload);
+      await Promise.all([
+        createOpenCall(openCall),
+        createArticleFromBlocks(articleBlocks),
+      ]);
       invalidateAdminArticlesListCache();
       router.push(ADMIN_ARTICLES_PATH);
     } catch (e) {
@@ -196,7 +224,7 @@ export function OpenCallEditorLayout() {
     } finally {
       setBusy(false);
     }
-  }, [validateBeforeSubmit, buildPayload, router]);
+  }, [validateBeforeSubmit, buildPayloads, createArticleFromBlocks, router]);
 
   const handlePublish = useCallback(async () => {
     if (workflowStatus !== "published" && workflowStatus !== "scheduled") return;
@@ -208,23 +236,27 @@ export function OpenCallEditorLayout() {
     setError(null);
     setBusy(true);
     try {
-      const payload = await buildPayload({
+      const { openCall, articleBlocks } = await buildPayloads({
         action: "publish",
         scheduled_at: null,
         settingsStatus: "published",
       });
-      if (payload.content_blocks.length === 0) {
+      if (openCall.content_blocks.length === 0) {
         setError("Publishing requires at least one content block with content.");
         return;
       }
-      await createOpenCall(payload);
+      await Promise.all([
+        createOpenCall(openCall),
+        createArticleFromBlocks(articleBlocks),
+      ]);
+      invalidateAdminArticlesListCache();
       router.push(ADMIN_ARTICLES_PATH);
     } catch (e) {
       setError(errMessage(e));
     } finally {
       setBusy(false);
     }
-  }, [workflowStatus, validateBeforeSubmit, buildPayload, router]);
+  }, [workflowStatus, validateBeforeSubmit, buildPayloads, createArticleFromBlocks, router]);
 
   const handleScheduleConfirm = useCallback(
     async (iso: string) => {
@@ -238,17 +270,20 @@ export function OpenCallEditorLayout() {
       setError(null);
       setBusy(true);
       try {
-        const payload = await buildPayload({
+        const { openCall, articleBlocks } = await buildPayloads({
           action: "schedule",
           scheduled_at: iso,
           settingsStatus: "scheduled",
         });
-        if (payload.content_blocks.length === 0) {
+        if (openCall.content_blocks.length === 0) {
           setError("Scheduling requires at least one content block with content.");
           setScheduleModalOpen(false);
           return;
         }
-        await createOpenCall(payload);
+        await Promise.all([
+          createOpenCall(openCall),
+          createArticleFromBlocks(articleBlocks),
+        ]);
         invalidateAdminArticlesListCache();
         setScheduleModalOpen(false);
         router.push(ADMIN_ARTICLES_PATH);
@@ -259,7 +294,7 @@ export function OpenCallEditorLayout() {
         setBusy(false);
       }
     },
-    [workflowStatus, validateBeforeSubmit, buildPayload, router],
+    [workflowStatus, validateBeforeSubmit, buildPayloads, createArticleFromBlocks, router],
   );
 
   useEffect(() => {

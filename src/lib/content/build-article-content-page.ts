@@ -87,6 +87,8 @@ export function buildArticleContentPageProps(article: ArticleDetail): ContentPag
       };
 
   return {
+    articleId: article.id,
+    contentType: article.content_type,
     breadcrumbs: articleContentBreadcrumbs(article),
     media,
     article: {

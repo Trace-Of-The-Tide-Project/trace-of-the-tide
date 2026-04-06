@@ -25,7 +25,7 @@ export type ContentFormConfig = {
 /** Open Call: same block set as article but no heading (API enum). */
 export const openCallConfig: ContentFormConfig = {
   contentType: "open-call",
-  titlePlaceholder: "Enter your open call title...",
+  titlePlaceholder: "Enter your content title here...",
   defaultBlocks: [
     { id: "1", type: "paragraph", content: "" },
     { id: "2", type: "quote", content: "", quoteAttribution: "" },
@@ -34,13 +34,13 @@ export const openCallConfig: ContentFormConfig = {
     { id: "5", type: "author-note", content: "" },
   ],
   blockLabels: {
-    paragraph: "Describe this open call...",
+    paragraph: "Describe your content...",
     quote: "Quote",
     callout: "Callout",
     "author-note": "Author note",
   },
   iconBlockType: "paragraph",
-  settingsTitle: "Open Call Settings",
+  settingsTitle: "Content Settings",
   primaryButtonLabel: "Publish Now",
 };
 

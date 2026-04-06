@@ -108,6 +108,46 @@ export function validateOpenCallApplicationFields(fields: ApplicationFormField[]
   return null;
 }
 
+export type OpenCallDetail = {
+  id: string;
+  title: string;
+  category?: string;
+  content_blocks: OpenCallContentBlock[];
+  main_media: OpenCallMainMedia | null;
+  application_form: { fields: ApplicationFormField[] };
+  settings?: OpenCallSettings;
+  seo?: OpenCallSeo;
+  status?: string;
+  created_at?: string;
+  createdAt?: string;
+  published_at?: string;
+  creator?: {
+    id: string;
+    username: string;
+    full_name?: string;
+    email?: string;
+  };
+};
+
+function unwrapOpenCallPayload(raw: unknown): OpenCallDetail | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const inner = o.data ?? o;
+  if (inner && typeof inner === "object" && "id" in inner && "application_form" in inner) {
+    return inner as unknown as OpenCallDetail;
+  }
+  return null;
+}
+
+export async function getOpenCallById(id: string): Promise<OpenCallDetail | null> {
+  try {
+    const { data } = await api.get<unknown>(`/open-calls/${encodeURIComponent(id)}`);
+    return unwrapOpenCallPayload(data);
+  } catch {
+    return null;
+  }
+}
+
 export async function createOpenCall(payload: CreateOpenCallPayload): Promise<unknown> {
   const { data } = await api.post<unknown>("/open-calls", payload);
   return data;

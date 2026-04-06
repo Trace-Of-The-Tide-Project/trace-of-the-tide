@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { theme } from "@/lib/theme";
 import { ShareYourStory } from "@/components/contribute/ShareYourStory";
 import { ContentBreadcrumb } from "./related/ContentBreadcrumb";
@@ -11,6 +12,8 @@ import { RelatedContent } from "./related/RelatedContent";
 import type { RelatedContentCardData } from "./related/RelatedContentCard";
 
 export type ContentPageLayoutProps = {
+  articleId?: string;
+  contentType?: string;
   breadcrumbs: { label: string; href?: string }[];
   media: {
     type: "video" | "audio" | "image" | "gallery";
@@ -65,6 +68,8 @@ export type ContentPageLayoutProps = {
 };
 
 export function ContentPageLayout({
+  articleId,
+  contentType,
   breadcrumbs,
   media,
   article,
@@ -73,6 +78,8 @@ export function ContentPageLayout({
   collection,
   relatedContent,
 }: ContentPageLayoutProps) {
+  const isOpenCall =
+    contentType === "open_call" || contentType === "open-call" || contentType === "opencall";
   return (
     <div className="min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
       {/* Gradient overlay: header + media only (stops before article); white center, fades to outer */}
@@ -116,6 +123,19 @@ export function ContentPageLayout({
           {/* Left — article body */}
           <div className="flex min-w-0 flex-1 flex-col gap-8">
             <ContentArticleBody sections={article.sections} />
+            {isOpenCall && articleId && (
+              <Link
+                href={`/open-calls/${articleId}`}
+                className="inline-flex w-fit items-center gap-2 rounded-lg px-8 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+                style={{ backgroundColor: theme.accentGold }}
+              >
+                Join Call
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </Link>
+            )}
           </div>
 
           {/* Right — sidebar */}

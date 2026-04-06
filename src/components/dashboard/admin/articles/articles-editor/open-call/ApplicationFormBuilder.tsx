@@ -1,12 +1,15 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import type { ApplicationFormField } from "@/services/open-calls.service";
 import { DEFAULT_OPEN_CALL_APPLICATION_FIELDS } from "@/services/open-calls.service";
+import { GripIcon } from "../ArticleEditorIcons";
 import { ApplicationFormPreview } from "./ApplicationFormPreview";
 
 const inputClass =
   "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500";
+
+const FIELD_DRAG_MIME = "application/x-tott-field-index";
 
 type Props = {
   fields: ApplicationFormField[];
@@ -43,16 +46,49 @@ function newFieldForType(type: ApplicationFormField["type"]): ApplicationFormFie
 }
 
 export function ApplicationFormBuilder({ fields, onChange }: Props) {
-  const move = useCallback(
-    (index: number, dir: -1 | 1) => {
-      const j = index + dir;
-      if (j < 0 || j >= fields.length) return;
+  const [showPreview, setShowPreview] = useState(false);
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
+  const reorder = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      if (fromIndex === toIndex) return;
       const next = [...fields];
-      [next[index], next[j]] = [next[j]!, next[index]!];
+      const [item] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, item!);
       onChange(next);
     },
     [fields, onChange],
   );
+
+  const handleDragStart = useCallback((e: React.DragEvent, index: number) => {
+    e.dataTransfer.setData(FIELD_DRAG_MIME, String(index));
+    e.dataTransfer.effectAllowed = "move";
+    setDraggingIdx(index);
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
+    if (!e.dataTransfer.types.includes(FIELD_DRAG_MIME)) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverIdx(index);
+  }, []);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent, toIndex: number) => {
+      e.preventDefault();
+      const fromIndex = Number(e.dataTransfer.getData(FIELD_DRAG_MIME));
+      if (!Number.isNaN(fromIndex)) reorder(fromIndex, toIndex);
+      setDraggingIdx(null);
+      setDragOverIdx(null);
+    },
+    [reorder],
+  );
+
+  const handleDragEnd = useCallback(() => {
+    setDraggingIdx(null);
+    setDragOverIdx(null);
+  }, []);
 
   const remove = useCallback(
     (index: number) => {
@@ -85,49 +121,94 @@ export function ApplicationFormBuilder({ fields, onChange }: Props) {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-bold text-white">Edit form fields</h3>
-        <button
-          type="button"
-          onClick={resetDefaults}
-          className="text-xs font-medium text-[#C9A96E] underline hover:text-[#DBC99E]"
-        >
-          Reset to default template
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowPreview(true)}
+            className="rounded-lg border border-[#C9A96E] px-4 py-1.5 text-xs font-medium text-[#C9A96E] transition-colors hover:bg-[#C9A96E]/10"
+          >
+            Preview form
+          </button>
+          <button
+            type="button"
+            onClick={resetDefaults}
+            className="text-xs font-medium text-[#C9A96E] underline hover:text-[#DBC99E]"
+          >
+            Reset to default template
+          </button>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-6">
-        <div className="min-w-0 flex-1 space-y-3">
-          {fields.map((field, index) => (
-            <FieldRow
-              key={`${index}-${field.name}`}
-              field={field}
-              index={index}
-              total={fields.length}
-              onMove={move}
-              onRemove={remove}
-              onReplace={replace}
-            />
+      <div className="space-y-3">
+        {fields.map((field, index) => (
+          <FieldRow
+            key={index}
+            field={field}
+            index={index}
+            isDragging={draggingIdx === index}
+            isDragOver={dragOverIdx === index && draggingIdx !== index}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onDragEnd={handleDragEnd}
+            onRemove={remove}
+            onReplace={replace}
+          />
+        ))}
+
+        <div className="flex flex-wrap items-center gap-2 pt-2">
+          <span className="text-xs text-gray-500">Add field:</span>
+          {(
+            ["text", "email", "phone", "textarea", "select", "checkbox", "file_multiple"] as const
+          ).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => addField(t)}
+              className="rounded border border-[#444] bg-[#333] px-2 py-1 text-xs text-gray-300 hover:border-gray-500"
+            >
+              + {t}
+            </button>
           ))}
-
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <span className="text-xs text-gray-500">Add field:</span>
-            {(
-              ["text", "email", "phone", "textarea", "select", "checkbox", "file_multiple"] as const
-            ).map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => addField(t)}
-                className="rounded border border-[#444] bg-[#333] px-2 py-1 text-xs text-gray-300 hover:border-gray-500"
-              >
-                + {t}
-              </button>
-            ))}
-          </div>
         </div>
+      </div>
 
-        <div className="w-full shrink-0 lg:w-[320px]">
-          <ApplicationFormPreview fields={fields} />
+      {showPreview && (
+        <PreviewModal fields={fields} onClose={() => setShowPreview(false)} />
+      )}
+    </div>
+  );
+}
+
+function PreviewModal({
+  fields,
+  onClose,
+}: {
+  fields: ApplicationFormField[];
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="relative mx-4 max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-[#333] bg-[#0a0a0a] p-6 shadow-2xl">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-white">Form Preview</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-[#333] hover:text-white"
+          >
+            <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
         </div>
+        <ApplicationFormPreview fields={fields} />
       </div>
     </div>
   );
@@ -136,18 +217,33 @@ export function ApplicationFormBuilder({ fields, onChange }: Props) {
 function FieldRow({
   field,
   index,
-  total,
-  onMove,
+  isDragging,
+  isDragOver,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
   onRemove,
   onReplace,
 }: {
   field: ApplicationFormField;
   index: number;
-  total: number;
-  onMove: (i: number, d: -1 | 1) => void;
+  isDragging: boolean;
+  isDragOver: boolean;
+  onDragStart: (e: React.DragEvent, index: number) => void;
+  onDragOver: (e: React.DragEvent, index: number) => void;
+  onDrop: (e: React.DragEvent, index: number) => void;
+  onDragEnd: () => void;
   onRemove: (i: number) => void;
   onReplace: (i: number, f: ApplicationFormField) => void;
 }) {
+  const [localOptions, setLocalOptions] = useState(
+    field.type === "select" ? field.options.join("\n") : "",
+  );
+  const [localAllowedTypes, setLocalAllowedTypes] = useState(
+    field.type === "file_multiple" ? field.allowed_types.join(", ") : "",
+  );
+
   const setName = (name: string) => {
     onReplace(index, { ...field, name } as ApplicationFormField);
   };
@@ -156,32 +252,39 @@ function FieldRow({
   };
 
   return (
-    <div className="rounded-lg border border-[#444] bg-[#141414] p-4">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          disabled={index <= 0}
-          onClick={() => onMove(index, -1)}
-          className="rounded bg-[#333] px-2 py-1 text-xs text-white disabled:opacity-30"
+    <div
+      className={`flex gap-3 rounded-lg border bg-[#141414] p-4 transition-all ${
+        isDragging ? "border-[#C9A96E]/40 opacity-50" : isDragOver ? "border-[#C9A96E] bg-[#1a1a1a]" : "border-[#444]"
+      }`}
+      onDragOver={(e) => onDragOver(e, index)}
+      onDrop={(e) => onDrop(e, index)}
+    >
+      <div className="flex shrink-0 items-center self-stretch">
+        <div
+          role="button"
+          tabIndex={0}
+          draggable
+          aria-label="Drag to reorder"
+          title="Drag to reorder"
+          onDragStart={(e) => onDragStart(e, index)}
+          onDragEnd={onDragEnd}
+          className={`flex h-8 w-8 cursor-grab items-center justify-center rounded bg-[#333333] text-white transition-colors select-none hover:bg-[#3d3d3d] active:cursor-grabbing ${
+            isDragging ? "opacity-50" : ""
+          }`}
         >
-          Up
-        </button>
-        <button
-          type="button"
-          disabled={index >= total - 1}
-          onClick={() => onMove(index, 1)}
-          className="rounded bg-[#333] px-2 py-1 text-xs text-white disabled:opacity-30"
-        >
-          Down
-        </button>
-        <button
-          type="button"
-          onClick={() => onRemove(index)}
-          className="ml-auto rounded bg-red-900/40 px-2 py-1 text-xs text-red-200 hover:bg-red-900/60"
-        >
-          Remove
-        </button>
+          <GripIcon />
+        </div>
       </div>
+      <div className="min-w-0 flex-1">
+        <div className="mb-3 flex items-center">
+          <button
+            type="button"
+            onClick={() => onRemove(index)}
+            className="ml-auto rounded bg-red-900/40 px-2 py-1 text-xs text-red-200 hover:bg-red-900/60"
+          >
+            Remove
+          </button>
+        </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-xs text-gray-500">Field name (API key)</label>
@@ -223,12 +326,15 @@ function FieldRow({
           <label className="mb-1 block text-xs text-gray-500">Options (one per line)</label>
           <textarea
             className={`${inputClass} min-h-[80px] font-mono text-xs`}
-            value={field.options.join("\n")}
-            onChange={(e) => {
-              const options = e.target.value
+            value={localOptions}
+            onChange={(e) => setLocalOptions(e.target.value)}
+            onBlur={() => {
+              const parsed = localOptions
                 .split("\n")
                 .map((s) => s.trim())
                 .filter(Boolean);
+              const options = parsed.length > 0 ? parsed : ["Option A", "Option B"];
+              if (parsed.length === 0) setLocalOptions(options.join("\n"));
               onReplace(index, { ...field, type: "select", options });
             }}
           />
@@ -273,9 +379,10 @@ function FieldRow({
             <label className="mb-1 block text-xs text-gray-500">Allowed types (comma-separated)</label>
             <input
               className={inputClass}
-              value={field.allowed_types.join(", ")}
-              onChange={(e) => {
-                const allowed_types = e.target.value
+              value={localAllowedTypes}
+              onChange={(e) => setLocalAllowedTypes(e.target.value)}
+              onBlur={() => {
+                const allowed_types = localAllowedTypes
                   .split(",")
                   .map((s) => s.trim().toLowerCase())
                   .filter(Boolean);
@@ -285,6 +392,7 @@ function FieldRow({
           </div>
         </div>
       ) : null}
+      </div>
     </div>
   );
 }
