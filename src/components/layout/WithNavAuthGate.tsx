@@ -10,6 +10,7 @@ import { AUTH_STATE_CHANGED_EVENT, getStoredToken } from "@/services/auth.servic
 export function WithNavAuthGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+
   const [checked, setChecked] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
@@ -46,10 +47,10 @@ export function WithNavAuthGate({ children }: { children: React.ReactNode }) {
   if (!checked) {
     return (
       <div
-        className="flex min-h-[50vh] items-center justify-center px-6 text-sm text-gray-500"
+        className="flex min-h-screen items-center justify-center"
         style={{ backgroundColor: "#191919" }}
       >
-        Checking session…
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-700 border-t-[#C9A96E]" />
       </div>
     );
   }

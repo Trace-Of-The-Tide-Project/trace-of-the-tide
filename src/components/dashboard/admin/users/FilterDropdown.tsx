@@ -7,9 +7,10 @@ type FilterDropdownProps = {
   options: { value: string; label: string }[];
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 };
 
-export function FilterDropdown({ options, value, onChange }: FilterDropdownProps) {
+export function FilterDropdown({ options, value, onChange, className = "" }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -26,7 +27,7 @@ export function FilterDropdown({ options, value, onChange }: FilterDropdownProps
   const displayValue = options.find((o) => o.value === value)?.label ?? value;
 
   return (
-    <div ref={ref} className="relative w-[180px]">
+    <div ref={ref} className={`relative w-full min-w-0 sm:w-[180px]${className ? ` ${className}` : ""}`}>
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}

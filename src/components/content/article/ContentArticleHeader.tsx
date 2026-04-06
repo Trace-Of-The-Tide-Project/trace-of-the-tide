@@ -20,9 +20,7 @@ export function ContentArticleHeader({
 }: ContentArticleHeaderProps) {
   return (
     <div>
-      <h1 className="text-2xl font-bold leading-snug text-white sm:text-3xl">
-        {title}
-      </h1>
+      <h1 className="text-2xl font-bold leading-snug text-white sm:text-3xl">{title}</h1>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-400">
         {edition && (

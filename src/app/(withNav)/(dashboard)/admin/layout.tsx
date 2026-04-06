@@ -7,6 +7,7 @@ import { AdminTopbar } from "@/components/dashboard/admin/AdminTopbar";
 import { AdminCommandCenter } from "@/components/dashboard/admin/AdminCommandCenter";
 import { ArticlesPageHeader } from "@/components/dashboard/admin/articles/articles-main";
 import { UsersPageHeader } from "@/components/dashboard/admin/users/UsersPageHeader";
+import { NotificationsPageHeader } from "@/components/dashboard/admin/notifications/NotificationsPageHeader";
 import { RolesPageHeader } from "@/components/dashboard/admin/roles/RolesPageHeader";
 import { ContentLibraryPageHeader } from "@/components/dashboard/admin/content/ContentLibraryPageHeader";
 import { VisualEditorPageHeader } from "@/components/dashboard/admin/editor/VisualEditorPageHeader";
@@ -23,6 +24,7 @@ function getCommandCenter(pathname: string | null) {
   if (!pathname) return null;
   if (pathname === "/admin") return <AdminCommandCenter />;
   if (pathname.startsWith("/admin/users")) return <UsersPageHeader />;
+  if (pathname.startsWith("/admin/notifications")) return <NotificationsPageHeader />;
   if (pathname.startsWith("/admin/roles")) return <RolesPageHeader />;
   if (pathname.startsWith("/admin/content")) return <ContentLibraryPageHeader />;
   if (pathname.startsWith("/admin/editor")) return <VisualEditorPageHeader />;
