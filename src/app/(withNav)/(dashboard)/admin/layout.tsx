@@ -37,6 +37,7 @@ function getCommandCenter(pathname: string | null) {
   if (pathname.startsWith("/admin/settings")) return <SystemSettingsPageHeader />;
   if (
     pathname.startsWith("/admin/articles") ||
+    pathname.startsWith("/admin/trips") ||
     pathname.startsWith("/admin/supporters") ||
     pathname.startsWith("/admin/contributions-analytics")
   )

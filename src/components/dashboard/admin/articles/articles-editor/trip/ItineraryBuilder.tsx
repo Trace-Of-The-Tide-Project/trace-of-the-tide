@@ -84,11 +84,8 @@ function StopEntry({
 }: StopEntryProps) {
   return (
     <div
-      draggable
-      onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      onDragEnd={onDragEnd}
       className={`rounded-lg border bg-[#1a1a1a] transition-all ${
         isDragOver
           ? "border-[#C9A96E]"
@@ -98,7 +95,12 @@ function StopEntry({
       }`}
     >
       <div className="flex items-center gap-2 px-3 py-2">
-        <span className="cursor-grab text-gray-500 hover:text-gray-300">
+        <span
+          draggable
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          className="cursor-grab text-gray-500 hover:text-gray-300"
+        >
           <GripIcon />
         </span>
         <button
@@ -193,10 +195,8 @@ function StopEntry({
                     longitude: sel.longitude,
                   };
                   if (sel.name) {
-                    if (!stop.locationName.trim()) patch.locationName = sel.name;
-                    if (!stop.title.trim()) {
-                      patch.title = sel.name.split(",")[0]!.trim();
-                    }
+                    patch.locationName = sel.name;
+                    patch.title = sel.name.split(",")[0]!.trim();
                   }
                   onChange(patch);
                 }}

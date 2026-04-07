@@ -74,7 +74,7 @@ export const createTemplates: (TemplateCardProps & { category: string })[] = [
     title: "Trip",
     description: "Plan and publish guided travel experiences",
     icon: <MapPinIcon />,
-    href: "/admin/articles/create/trip",
+    href: "/admin/trips",
     category: "articles",
   },
   {

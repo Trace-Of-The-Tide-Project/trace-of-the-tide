@@ -88,6 +88,7 @@ export function buildArticleContentPageProps(article: ArticleDetail): ContentPag
 
   return {
     articleId: article.id,
+    openCallId: article.open_call_id ?? undefined,
     contentType: article.content_type,
     breadcrumbs: articleContentBreadcrumbs(article),
     media,

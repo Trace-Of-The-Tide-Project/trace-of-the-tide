@@ -20,6 +20,7 @@ import { getAdminTags } from "@/services/admin-tags.service";
 import { createArticle } from "@/services/articles.service";
 import {
   createOpenCall,
+  extractOpenCallId,
   DEFAULT_OPEN_CALL_APPLICATION_FIELDS,
   validateOpenCallApplicationFields,
   type ApplicationFormField,
@@ -136,7 +137,12 @@ export function OpenCallEditorLayout() {
       action: "publish" | "draft" | "schedule";
       scheduled_at: string | null;
       settingsStatus: "draft" | "published" | "scheduled";
-    }): Promise<{ openCall: CreateOpenCallPayload; articleBlocks: Awaited<ReturnType<typeof buildArticleBlocksFromEditor>> }> => {
+    }): Promise<{
+      openCall: CreateOpenCallPayload;
+      articleBlocks: Awaited<ReturnType<typeof buildArticleBlocksFromEditor>>;
+      coverImage?: string;
+      excerpt?: string;
+    }> => {
       const [{ content_blocks, main_media }, articleBlocks, adminTags] = await Promise.all([
         buildOpenCallContentBlocksAndMainMedia(blocks),
         buildArticleBlocksFromEditor(blocks),
@@ -145,6 +151,15 @@ export function OpenCallEditorLayout() {
       const tags = tagIds
         .map((id) => adminTags.find((t) => t.id === id)?.name)
         .filter((n): n is string => Boolean(n?.trim()));
+
+      const coverImage = main_media?.type === "image" ? main_media.url : undefined;
+      const firstParagraph = content_blocks.find(
+        (cb) => cb.type === "paragraph" && typeof cb.value === "string" && cb.value.trim(),
+      );
+      const excerpt =
+        firstParagraph && typeof firstParagraph.value === "string"
+          ? firstParagraph.value.slice(0, 300)
+          : undefined;
 
       const openCall: CreateOpenCallPayload = {
         title: title.trim(),
@@ -166,13 +181,21 @@ export function OpenCallEditorLayout() {
         scheduled_at: opts.scheduled_at,
       };
 
-      return { openCall, articleBlocks };
+      return { openCall, articleBlocks, coverImage, excerpt };
     },
     [blocks, title, applicationFields, category, language, visibility, seoTitle, metaDescription, tagIds],
   );
 
   const createArticleFromBlocks = useCallback(
-    async (articleBlocks: Awaited<ReturnType<typeof buildArticleBlocksFromEditor>>) => {
+    async (
+      articleBlocks: Awaited<ReturnType<typeof buildArticleBlocksFromEditor>>,
+      extra: {
+        openCallId?: string;
+        coverImage?: string;
+        excerpt?: string;
+        scheduledAt?: string | null;
+      } = {},
+    ) => {
       await createArticle({
         title: title.trim(),
         content_type: "open_call",
@@ -184,6 +207,10 @@ export function OpenCallEditorLayout() {
         collection_id: collectionId.trim() || undefined,
         tag_ids: tagIds.length ? tagIds : undefined,
         blocks: articleBlocks,
+        open_call_id: extra.openCallId,
+        cover_image: extra.coverImage,
+        excerpt: extra.excerpt,
+        scheduled_at: extra.scheduledAt,
       });
     },
     [title, category, language, visibility, seoTitle, metaDescription, collectionId, tagIds],
@@ -204,7 +231,7 @@ export function OpenCallEditorLayout() {
     setError(null);
     setBusy(true);
     try {
-      const { openCall, articleBlocks } = await buildPayloads({
+      const { openCall, articleBlocks, coverImage, excerpt } = await buildPayloads({
         action: "draft",
         scheduled_at: null,
         settingsStatus: "draft",
@@ -213,10 +240,9 @@ export function OpenCallEditorLayout() {
         setError("Add at least one content block with content.");
         return;
       }
-      await Promise.all([
-        createOpenCall(openCall),
-        createArticleFromBlocks(articleBlocks),
-      ]);
+      const ocRes = await createOpenCall(openCall);
+      const ocId = extractOpenCallId(ocRes) ?? undefined;
+      await createArticleFromBlocks(articleBlocks, { openCallId: ocId, coverImage, excerpt });
       invalidateAdminArticlesListCache();
       router.push(ADMIN_ARTICLES_PATH);
     } catch (e) {
@@ -236,7 +262,7 @@ export function OpenCallEditorLayout() {
     setError(null);
     setBusy(true);
     try {
-      const { openCall, articleBlocks } = await buildPayloads({
+      const { openCall, articleBlocks, coverImage, excerpt } = await buildPayloads({
         action: "publish",
         scheduled_at: null,
         settingsStatus: "published",
@@ -245,10 +271,9 @@ export function OpenCallEditorLayout() {
         setError("Publishing requires at least one content block with content.");
         return;
       }
-      await Promise.all([
-        createOpenCall(openCall),
-        createArticleFromBlocks(articleBlocks),
-      ]);
+      const ocRes = await createOpenCall(openCall);
+      const ocId = extractOpenCallId(ocRes) ?? undefined;
+      await createArticleFromBlocks(articleBlocks, { openCallId: ocId, coverImage, excerpt });
       invalidateAdminArticlesListCache();
       router.push(ADMIN_ARTICLES_PATH);
     } catch (e) {
@@ -270,7 +295,7 @@ export function OpenCallEditorLayout() {
       setError(null);
       setBusy(true);
       try {
-        const { openCall, articleBlocks } = await buildPayloads({
+        const { openCall, articleBlocks, coverImage, excerpt } = await buildPayloads({
           action: "schedule",
           scheduled_at: iso,
           settingsStatus: "scheduled",
@@ -280,10 +305,14 @@ export function OpenCallEditorLayout() {
           setScheduleModalOpen(false);
           return;
         }
-        await Promise.all([
-          createOpenCall(openCall),
-          createArticleFromBlocks(articleBlocks),
-        ]);
+        const ocRes = await createOpenCall(openCall);
+        const ocId = extractOpenCallId(ocRes) ?? undefined;
+        await createArticleFromBlocks(articleBlocks, {
+          openCallId: ocId,
+          coverImage,
+          excerpt,
+          scheduledAt: iso,
+        });
         invalidateAdminArticlesListCache();
         setScheduleModalOpen(false);
         router.push(ADMIN_ARTICLES_PATH);

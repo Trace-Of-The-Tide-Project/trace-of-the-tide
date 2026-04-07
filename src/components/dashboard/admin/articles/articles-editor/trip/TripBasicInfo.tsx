@@ -57,7 +57,7 @@ export function TripBasicInfo({
             type="text"
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
-            placeholder="Twitter URL"
+            placeholder="e.g., Heritage Walk: Old Jerusalem"
             className={inputClass}
           />
         </div>
@@ -69,7 +69,7 @@ export function TripBasicInfo({
             type="text"
             value={moderatorName}
             onChange={(e) => onModeratorNameChange(e.target.value)}
-            placeholder="Twitter URL"
+            placeholder="e.g., John Doe"
             className={inputClass}
           />
         </div>
@@ -82,7 +82,7 @@ export function TripBasicInfo({
         <textarea
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
-          placeholder="© 2024 TTT. All rights reserved."
+          placeholder="Describe the trip experience..."
           rows={4}
           className={inputClass}
         />

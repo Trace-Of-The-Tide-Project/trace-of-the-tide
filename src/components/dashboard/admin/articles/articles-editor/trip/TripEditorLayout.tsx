@@ -12,6 +12,7 @@ import { TripPricing } from "./TripPricing";
 import { TripLanguages } from "./TripLanguages";
 import { ItineraryBuilder, emptyEditorStop, editorStopsToTripStops, type EditorStop } from "./ItineraryBuilder";
 import { TripSummary } from "./TripSummary";
+import { TripPreviewModal } from "./TripPreviewModal";
 import { createTrip, type CreateTripPayload } from "@/services/trips.service";
 
 const ADMIN_ARTICLES_PATH = "/admin/articles";
@@ -66,6 +67,7 @@ export function TripEditorLayout() {
   // Workflow
   const [workflowStatus, setWorkflowStatus] = useState<ArticleWorkflowStatus>("draft");
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -175,6 +177,28 @@ export function TripEditorLayout() {
         onConfirm={handleScheduleConfirm}
       />
 
+      <TripPreviewModal
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        data={{
+          title,
+          description,
+          moderatorName,
+          category,
+          difficulty,
+          startDate,
+          endDate,
+          durationHours,
+          maxParticipants,
+          minParticipants,
+          price,
+          currency,
+          languages,
+          highlights,
+          stops,
+        }}
+      />
+
       <div className="flex flex-1 gap-6 overflow-hidden">
         {/* Main column */}
         <div className="min-w-0 flex-1 space-y-6 overflow-y-auto">
@@ -238,15 +262,16 @@ export function TripEditorLayout() {
           <div className="flex flex-col gap-2">
             <button
               type="button"
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#444444] bg-[#1a1a1a] py-2 text-sm text-gray-400 hover:text-white"
+              onClick={() => setPreviewOpen(true)}
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#CBA158]/30 bg-[#CBA158]/10 py-2 text-sm font-medium text-[#CBA158] transition-colors hover:bg-[#CBA158]/20"
             >
-              Duplicate Trip
+              Preview Trip
             </button>
             <button
               type="button"
               className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#444444] bg-[#1a1a1a] py-2 text-sm text-gray-400 hover:text-white"
             >
-              Publish on...
+              Duplicate Trip
             </button>
             <button
               type="button"

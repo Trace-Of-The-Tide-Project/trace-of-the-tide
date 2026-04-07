@@ -13,6 +13,7 @@ import type { RelatedContentCardData } from "./related/RelatedContentCard";
 
 export type ContentPageLayoutProps = {
   articleId?: string;
+  openCallId?: string;
   contentType?: string;
   breadcrumbs: { label: string; href?: string }[];
   media: {
@@ -69,6 +70,7 @@ export type ContentPageLayoutProps = {
 
 export function ContentPageLayout({
   articleId,
+  openCallId,
   contentType,
   breadcrumbs,
   media,
@@ -123,9 +125,9 @@ export function ContentPageLayout({
           {/* Left — article body */}
           <div className="flex min-w-0 flex-1 flex-col gap-8">
             <ContentArticleBody sections={article.sections} />
-            {isOpenCall && articleId && (
+            {isOpenCall && (openCallId || articleId) && (
               <Link
-                href={`/open-calls/${articleId}`}
+                href={`/open-calls/${openCallId || articleId}`}
                 className="inline-flex w-fit items-center gap-2 rounded-lg px-8 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90"
                 style={{ backgroundColor: theme.accentGold }}
               >

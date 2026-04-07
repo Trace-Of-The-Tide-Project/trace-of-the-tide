@@ -163,7 +163,7 @@ export default function LocationMapPicker({
   return (
     <div className="space-y-2">
       {/* Search box */}
-      <div className="relative">
+      <div className="relative z-10">
         <input
           type="text"
           value={searchQuery}
@@ -177,7 +177,7 @@ export default function LocationMapPicker({
           </span>
         )}
         {results.length > 0 && (
-          <ul className="absolute left-0 right-0 top-full z-1000 mt-1 max-h-40 overflow-y-auto rounded-lg border border-[#444444] bg-[#222222]">
+          <ul className="absolute left-0 right-0 top-full z-50 mt-1 max-h-40 overflow-y-auto rounded-lg border border-[#444444] bg-[#222222]">
             {results.map((r, i) => (
               <li key={i}>
                 <button

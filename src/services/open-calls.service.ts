@@ -148,7 +148,18 @@ export async function getOpenCallById(id: string): Promise<OpenCallDetail | null
   }
 }
 
-export async function createOpenCall(payload: CreateOpenCallPayload): Promise<unknown> {
-  const { data } = await api.post<unknown>("/open-calls", payload);
+export type CreateOpenCallResponse = {
+  id?: string;
+  data?: { id?: string };
+};
+
+export function extractOpenCallId(res: CreateOpenCallResponse): string | null {
+  if (typeof res?.id === "string") return res.id;
+  if (typeof res?.data?.id === "string") return res.data.id;
+  return null;
+}
+
+export async function createOpenCall(payload: CreateOpenCallPayload): Promise<CreateOpenCallResponse> {
+  const { data } = await api.post<CreateOpenCallResponse>("/open-calls", payload);
   return data;
 }
