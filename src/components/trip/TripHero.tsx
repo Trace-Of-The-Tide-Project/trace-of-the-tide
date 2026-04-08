@@ -18,6 +18,7 @@ export function TripHero({
   from,
   to,
 }: TripHeroProps) {
+  const remote = /^https?:\/\//i.test(image);
   return (
     <div className="relative h-[340px] w-full sm:h-[400px]">
       <Image
@@ -27,6 +28,7 @@ export function TripHero({
         className="object-cover"
         priority
         sizes="100vw"
+        unoptimized={remote}
       />
       <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
 

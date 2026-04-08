@@ -196,6 +196,7 @@ export function TripEditorLayout() {
           languages,
           highlights,
           stops,
+          status: workflowStatus === "published" || workflowStatus === "scheduled" ? "published" : "draft",
         }}
       />
 

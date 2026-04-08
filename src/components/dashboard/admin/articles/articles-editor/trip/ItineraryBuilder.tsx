@@ -112,7 +112,12 @@ function StopEntry({
             {stop.title.trim() || stop.locationName.trim() || `Stop ${index + 1}`}
           </span>
           <svg
-            width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+            width={12}
+            height={12}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
             className={`ml-auto transition-transform ${expanded ? "rotate-180" : ""}`}
           >
             <polyline points="6 9 12 15 18 9" />
@@ -133,9 +138,7 @@ function StopEntry({
           <div className="flex gap-4">
             <div className="min-w-0 flex-1 space-y-3">
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-400">
-                  Stop Title
-                </label>
+                <label className="mb-1 block text-xs font-medium text-gray-400">Stop Title</label>
                 <input
                   type="text"
                   value={stop.title}
@@ -146,9 +149,7 @@ function StopEntry({
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-400">
-                  Description
-                </label>
+                <label className="mb-1 block text-xs font-medium text-gray-400">Description</label>
                 <textarea
                   value={stop.description}
                   onChange={(e) => onChange({ description: e.target.value })}
@@ -215,9 +216,7 @@ type ItineraryBuilderProps = {
 };
 
 export function ItineraryBuilder({ stops, onChange }: ItineraryBuilderProps) {
-  const [expandedIdx, setExpandedIdx] = useState<number | null>(
-    stops.length > 0 ? 0 : null,
-  );
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(stops.length > 0 ? 0 : null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
 
@@ -232,14 +231,14 @@ export function ItineraryBuilder({ stops, onChange }: ItineraryBuilderProps) {
       onChange(stops.filter((_, i) => i !== idx));
       if (expandedIdx === idx) setExpandedIdx(null);
     },
-    [stops, onChange, expandedIdx],
+    [stops, onChange, expandedIdx]
   );
 
   const updateStop = useCallback(
     (idx: number, patch: Partial<EditorStop>) => {
       onChange(stops.map((s, i) => (i === idx ? { ...s, ...patch } : s)));
     },
-    [stops, onChange],
+    [stops, onChange]
   );
 
   const reorder = useCallback(
@@ -251,7 +250,7 @@ export function ItineraryBuilder({ stops, onChange }: ItineraryBuilderProps) {
       onChange(next);
       if (expandedIdx === from) setExpandedIdx(to);
     },
-    [stops, onChange, expandedIdx],
+    [stops, onChange, expandedIdx]
   );
 
   const handleDragStart = useCallback(
@@ -260,7 +259,7 @@ export function ItineraryBuilder({ stops, onChange }: ItineraryBuilderProps) {
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData(DRAG_MIME, String(idx));
     },
-    [],
+    []
   );
 
   const handleDragOver = useCallback(
@@ -270,7 +269,7 @@ export function ItineraryBuilder({ stops, onChange }: ItineraryBuilderProps) {
       e.dataTransfer.dropEffect = "move";
       setDragOverIdx(idx);
     },
-    [],
+    []
   );
 
   const handleDrop = useCallback(
@@ -281,7 +280,7 @@ export function ItineraryBuilder({ stops, onChange }: ItineraryBuilderProps) {
       setDraggingIdx(null);
       setDragOverIdx(null);
     },
-    [reorder],
+    [reorder]
   );
 
   const handleDragEnd = useCallback(() => {

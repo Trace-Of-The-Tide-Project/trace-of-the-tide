@@ -31,7 +31,7 @@ async function reverseGeocode(lat: number, lng: number): Promise<string | undefi
   try {
     const res = await fetch(
       `${NOMINATIM_BASE}/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&addressdetails=0`,
-      { headers: { "Accept-Language": "en" } },
+      { headers: { "Accept-Language": "en" } }
     );
     const data = await res.json();
     return data?.display_name ?? undefined;
@@ -41,11 +41,13 @@ async function reverseGeocode(lat: number, lng: number): Promise<string | undefi
 }
 
 /* ── Forward-geocode a search query into results ── */
-async function forwardGeocode(query: string): Promise<{ lat: number; lng: number; name: string }[]> {
+async function forwardGeocode(
+  query: string
+): Promise<{ lat: number; lng: number; name: string }[]> {
   try {
     const res = await fetch(
       `${NOMINATIM_BASE}/search?format=json&q=${encodeURIComponent(query)}&limit=5`,
-      { headers: { "Accept-Language": "en" } },
+      { headers: { "Accept-Language": "en" } }
     );
     const data = await res.json();
     if (!Array.isArray(data)) return [];
@@ -106,12 +108,17 @@ export default function LocationMapPicker({
             longitude: pos.lng.toFixed(6),
           });
           reverseGeocode(pos.lat, pos.lng).then((name) => {
-            if (name) onLocationSelect({ latitude: pos.lat.toFixed(6), longitude: pos.lng.toFixed(6), name });
+            if (name)
+              onLocationSelect({
+                latitude: pos.lat.toFixed(6),
+                longitude: pos.lng.toFixed(6),
+                name,
+              });
           });
         }
       },
     }),
-    [onLocationSelect],
+    [onLocationSelect]
   );
 
   const handleMapClick = useCallback(
@@ -127,24 +134,21 @@ export default function LocationMapPicker({
         }
       });
     },
-    [onLocationSelect],
+    [onLocationSelect]
   );
 
-  const handleSearch = useCallback(
-    (q: string) => {
-      setSearchQuery(q);
-      setResults([]);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      if (!q.trim()) return;
-      debounceRef.current = setTimeout(async () => {
-        setSearching(true);
-        const r = await forwardGeocode(q);
-        setResults(r);
-        setSearching(false);
-      }, 500);
-    },
-    [],
-  );
+  const handleSearch = useCallback((q: string) => {
+    setSearchQuery(q);
+    setResults([]);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!q.trim()) return;
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true);
+      const r = await forwardGeocode(q);
+      setResults(r);
+      setSearching(false);
+    }, 500);
+  }, []);
 
   const selectResult = useCallback(
     (r: { lat: number; lng: number; name: string }) => {
@@ -157,7 +161,7 @@ export default function LocationMapPicker({
       setSearchQuery("");
       setResults([]);
     },
-    [onLocationSelect],
+    [onLocationSelect]
   );
 
   return (
@@ -208,12 +212,7 @@ export default function LocationMapPicker({
           <ClickHandler onClick={handleMapClick} />
           {flyTarget && <FlyToPosition lat={flyTarget.lat} lng={flyTarget.lng} />}
           {hasPosition && (
-            <Marker
-              position={[lat, lng]}
-              draggable
-              ref={markerRef}
-              eventHandlers={eventHandlers}
-            />
+            <Marker position={[lat, lng]} draggable ref={markerRef} eventHandlers={eventHandlers} />
           )}
         </MapContainer>
       </div>
