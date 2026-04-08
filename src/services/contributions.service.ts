@@ -5,6 +5,8 @@ export type ContributionType = {
   id: string;
   name: string;
   description: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type ContributionFile = {
@@ -22,6 +24,46 @@ export type ContributionFile = {
   transcript: string | null;
   participant_id: string | null;
   uploaded_by: string | null;
+};
+
+export type ContributionUser = {
+  id: string;
+  username: string;
+  full_name: string;
+  email?: string;
+};
+
+export type ContributionCollection = {
+  id: string;
+  name: string;
+  description: string;
+  cover_image: string | null;
+  created_by: string;
+  created_date: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ContributionListItem = {
+  id: string;
+  title: string;
+  description: string;
+  type_id: string | null;
+  user_id: string | null;
+  submission_date: string;
+  status: string;
+  contributor_name: string | null;
+  contributor_email: string | null;
+  contributor_phone: string | null;
+  phone_number: string | null;
+  consent_given: boolean;
+  open_call_id: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user: ContributionUser | null;
+  type: ContributionType | null;
+  files: ContributionFile[];
+  collections: ContributionCollection[];
 };
 
 export type CreatedContribution = {
@@ -51,6 +93,28 @@ export type ApiEnvelope<T> = {
   results: number;
   data: T;
 };
+
+export type ContributionListMeta = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
+type ContributionListResponse = {
+  data: ContributionListItem[];
+  meta: ContributionListMeta;
+};
+
+export async function getContributions(
+  page = 1,
+  limit = 10,
+): Promise<{ items: ContributionListItem[]; meta: ContributionListMeta }> {
+  const { data } = await api.get<ContributionListResponse>("/contributions", {
+    params: { page, limit },
+  });
+  return { items: data.data ?? [], meta: data.meta };
+}
 
 export async function fetchContributionTypes(): Promise<ContributionType[]> {
   const { data } = await api.get<ApiEnvelope<ContributionType[]>>("/contributions/types");

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { theme } from "@/lib/theme";
+import { useState, type ReactNode } from "react";
 
 type TimelineEntry = {
   title: string;
@@ -13,6 +12,8 @@ type TimelineEntry = {
 
 type TripTimelineProps = {
   entries: TimelineEntry[];
+  /** When set, replaces the decorative map in the Route map tab (e.g. real Leaflet map). */
+  mapSlot?: ReactNode;
 };
 
 function CalendarSmall() {
@@ -44,7 +45,7 @@ function PinSmall() {
   );
 }
 
-export function TripTimeline({ entries }: TripTimelineProps) {
+export function TripTimeline({ entries, mapSlot }: TripTimelineProps) {
   const [tab, setTab] = useState<"timeline" | "map">("timeline");
 
   return (
@@ -140,56 +141,55 @@ export function TripTimeline({ entries }: TripTimelineProps) {
         </div>
       )}
 
-      {tab === "map" && (
-        <div className="relative overflow-hidden rounded-xl border border-gray-700/30">
-          {/* Dark map background */}
-          <div
-            className="relative h-72 w-full sm:h-80"
-            style={{
-              backgroundColor: "#2a2a2a",
-              backgroundImage: `
+      {tab === "map" &&
+        (mapSlot ?? (
+          <div className="relative overflow-hidden rounded-xl border border-gray-700/30">
+            <div
+              className="relative h-72 w-full sm:h-80"
+              style={{
+                backgroundColor: "#2a2a2a",
+                backgroundImage: `
                 linear-gradient(rgba(60,60,60,0.3) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(60,60,60,0.3) 1px, transparent 1px),
                 linear-gradient(rgba(60,60,60,0.15) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(60,60,60,0.15) 1px, transparent 1px)
               `,
-              backgroundSize: "100px 100px, 100px 100px, 20px 20px, 20px 20px",
-            }}
-          >
-            <svg
-              className="absolute inset-0 h-full w-full"
-              viewBox="0 0 800 320"
-              preserveAspectRatio="xMidYMid meet"
-              fill="none"
+                backgroundSize: "100px 100px, 100px 100px, 20px 20px, 20px 20px",
+              }}
             >
-              {/* Route path */}
-              <path
-                d="M600 160 Q560 160 500 190 Q440 220 400 210 Q360 200 320 190 Q280 180 240 170 Q200 160 180 130"
-                stroke="#CBA158"
-                strokeWidth="3"
-                strokeLinecap="round"
+              <svg
+                className="absolute inset-0 h-full w-full"
+                viewBox="0 0 800 320"
+                preserveAspectRatio="xMidYMid meet"
                 fill="none"
-              />
-
-              {/* Waypoint 1 */}
-              <circle cx="600" cy="160" r="14" fill="#CBA158" />
-              <text x="600" y="165" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">1</text>
-
-              {/* Waypoint 2 */}
-              <circle cx="420" cy="205" r="14" fill="#CBA158" />
-              <text x="420" y="210" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">2</text>
-
-              {/* Waypoint 3 */}
-              <circle cx="280" cy="180" r="14" fill="#CBA158" />
-              <text x="280" y="185" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">3</text>
-
-              {/* Waypoint 4 */}
-              <circle cx="180" cy="130" r="14" fill="#CBA158" />
-              <text x="180" y="135" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">4</text>
-            </svg>
+              >
+                <path
+                  d="M600 160 Q560 160 500 190 Q440 220 400 210 Q360 200 320 190 Q280 180 240 170 Q200 160 180 130"
+                  stroke="#CBA158"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <circle cx="600" cy="160" r="14" fill="#CBA158" />
+                <text x="600" y="165" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">
+                  1
+                </text>
+                <circle cx="420" cy="205" r="14" fill="#CBA158" />
+                <text x="420" y="210" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">
+                  2
+                </text>
+                <circle cx="280" cy="180" r="14" fill="#CBA158" />
+                <text x="280" y="185" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">
+                  3
+                </text>
+                <circle cx="180" cy="130" r="14" fill="#CBA158" />
+                <text x="180" y="135" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="600">
+                  4
+                </text>
+              </svg>
+            </div>
           </div>
-        </div>
-      )}
+        ))}
     </div>
   );
 }

@@ -213,7 +213,7 @@ export function UsersManagementContent() {
             className="w-full min-w-0 rounded-lg border border-[#444] bg-[#232323] py-2.5 pl-10 pr-3 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none sm:pr-4"
           />
         </div>
-        <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch sm:gap-2 lg:items-center">
+        <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch sm:gap-2 lg:flex-nowrap lg:items-center">
           <FilterDropdown
             options={[...STATUS_OPTIONS]}
             value={statusFilter}

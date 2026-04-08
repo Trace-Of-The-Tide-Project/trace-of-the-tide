@@ -27,6 +27,13 @@ export type CreateArticlePayload = {
   collection_id?: string;
   tag_ids?: string[];
   blocks: CreateArticleBlock[];
+  excerpt?: string;
+  cover_image?: string;
+  media_url?: string;
+  media_duration?: number;
+  edition?: string;
+  scheduled_at?: string | null;
+  open_call_id?: string;
 };
 
 export type ArticleCreateResponse = {
@@ -69,6 +76,13 @@ function toCreateArticleBody(payload: CreateArticlePayload): Record<string, unkn
   if (payload.meta_description) body.meta_description = payload.meta_description;
   if (payload.collection_id?.trim()) body.collection_id = payload.collection_id.trim();
   if (payload.tag_ids?.length) body.tag_ids = payload.tag_ids;
+  if (payload.excerpt) body.excerpt = payload.excerpt;
+  if (payload.cover_image) body.cover_image = payload.cover_image;
+  if (payload.media_url) body.media_url = payload.media_url;
+  if (payload.media_duration != null) body.media_duration = payload.media_duration;
+  if (payload.edition) body.edition = payload.edition;
+  if (payload.scheduled_at !== undefined) body.scheduled_at = payload.scheduled_at;
+  if (payload.open_call_id) body.open_call_id = payload.open_call_id;
 
   return body;
 }
@@ -262,6 +276,7 @@ export type ArticleDetail = {
   author?: ArticleDetailAuthor | null;
   view_count?: number;
   createdAt?: string;
+  open_call_id?: string | null;
 };
 
 function unwrapArticleDetailPayload(raw: unknown): ArticleDetail | null {
