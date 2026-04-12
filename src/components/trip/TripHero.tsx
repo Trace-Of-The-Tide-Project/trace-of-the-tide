@@ -10,14 +10,7 @@ type TripHeroProps = {
   to: string;
 };
 
-export function TripHero({
-  image,
-  title,
-  price,
-  difficulty,
-  from,
-  to,
-}: TripHeroProps) {
+export function TripHero({ image, title, price, difficulty, from, to }: TripHeroProps) {
   const remote = /^https?:\/\//i.test(image);
   return (
     <div className="relative h-[340px] w-full sm:h-[400px]">
@@ -46,9 +39,7 @@ export function TripHero({
             </span>
           </div>
 
-          <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl">
-            {title}
-          </h1>
+          <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl">{title}</h1>
 
           <p className="mt-2 flex items-center gap-2 text-sm text-gray-300">
             <span>{from}</span>

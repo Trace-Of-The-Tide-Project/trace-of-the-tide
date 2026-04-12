@@ -16,7 +16,7 @@ export function PermissionToggle({ checked, onChange, checkedColor }: Permission
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? "" : "bg-[#333]"}`}
+      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? "" : "bg-[var(--tott-dash-control-bg)]"}`}
       style={checked ? { backgroundColor: bgColor } : undefined}
     >
       <span

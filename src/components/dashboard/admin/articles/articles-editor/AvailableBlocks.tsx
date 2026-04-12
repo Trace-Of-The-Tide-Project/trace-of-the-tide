@@ -43,18 +43,20 @@ export function AvailableBlocks({ onAddBlock, allowedBlockTypes }: AvailableBloc
       : BLOCKS;
 
   return (
-    <div className="shrink-0 rounded-lg border border-[#444444] p-4">
-      <h3 className="mb-4 text-base font-bold text-white">Available Blocks</h3>
+    <div className="shrink-0 rounded-lg border border-[var(--tott-card-border)] p-4">
+      <h3 className="mb-4 text-base font-bold text-foreground">Available Blocks</h3>
       <div className="flex flex-col gap-2">
         {blocksToShow.map((block) => (
           <button
             key={block.id}
             type="button"
             onClick={() => onAddBlock(block.id)}
-            className="flex items-center justify-between gap-3 rounded-lg border border-[#444444] bg-[#333333] px-3 py-2.5 text-left text-gray-400 transition-colors hover:border-gray-500 hover:text-gray-300"
+            className="flex items-center justify-between gap-3 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-3 py-2.5 text-left text-gray-400 transition-colors hover:border-gray-500 hover:text-gray-300"
           >
             <div className="flex items-center gap-3">
-              <span className="text-gray-400">{block.icon}</span>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-gray-500">
+                {block.icon}
+              </span>
               <span className="text-sm font-medium text-gray-400">{block.label}</span>
             </div>
             <span className="shrink-0 text-gray-400">+</span>

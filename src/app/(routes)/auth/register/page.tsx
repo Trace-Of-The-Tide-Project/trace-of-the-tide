@@ -9,7 +9,7 @@ export default function RegisterPage() {
   return (
     <div
       className="min-h-screen relative overflow-x-hidden overflow-y-auto"
-      style={{ background: theme.bgDark }}
+      style={{ background: theme.pageBackground }}
     >
       <div
         className="absolute top-0 left-0 right-0 z-0"
@@ -20,7 +20,7 @@ export default function RegisterPage() {
       >
         <HexBackground />
       </div>
-      <div className="fixed inset-0 -z-10" style={{ background: theme.bgDark }} />
+      <div className="fixed inset-0 -z-10" style={{ background: theme.pageBackground }} />
       <div className="relative min-h-screen flex flex-col items-center justify-center px-8 py-12 pt-16 sm:px-8 md:px-10">
         <div className="w-full max-w-5xl">
           <div className="text-center mb-8">
@@ -34,7 +34,7 @@ export default function RegisterPage() {
               />
             </div>
           </div>
-          <h1 className="text-xl font-semibold text-white text-center mb-6 cursor-crosshair select-none">
+          <h1 className="text-xl font-semibold text-foreground text-center mb-6 cursor-crosshair select-none">
             {" "}
             Join Trace of the Tide
           </h1>

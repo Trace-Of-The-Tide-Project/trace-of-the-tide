@@ -121,7 +121,7 @@ function ArticleByIdLoader({ id }: { id: string }) {
     return (
       <div
         className="flex min-h-[50vh] items-center justify-center px-6 text-sm text-gray-500"
-        style={{ backgroundColor: theme.bgDark }}
+        style={{ backgroundColor: theme.pageBackground }}
       >
         Loading article…
       </div>
@@ -196,7 +196,7 @@ export function ContentArticlePageClient() {
       fallback={
         <div
           className="flex min-h-[50vh] items-center justify-center text-sm text-gray-500"
-          style={{ backgroundColor: theme.bgDark }}
+          style={{ backgroundColor: theme.pageBackground }}
         >
           Loading…
         </div>

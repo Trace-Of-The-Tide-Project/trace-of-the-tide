@@ -33,8 +33,8 @@ function HexIcon({ children }: { children: React.ReactNode }) {
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 48 48" fill="none">
         <path
           d="M24 2L44 14V34L24 46L4 34V14Z"
-          fill="#1a1a1a"
-          stroke="#333"
+          fill="var(--tott-dash-icon-bg)"
+          stroke="var(--tott-card-border)"
           strokeWidth="1"
         />
       </svg>
@@ -101,7 +101,7 @@ export function DashboardNotifications() {
   return (
     <div>
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-lg font-bold text-white">Alerts &amp; Notifications</h3>
+        <h3 className="text-lg font-bold text-foreground">Alerts &amp; Notifications</h3>
         <Link
           href="/admin/notifications"
           className="shrink-0 text-xs font-medium text-[#C9A96E] transition-colors hover:text-[#DBC99E]"
@@ -111,7 +111,7 @@ export function DashboardNotifications() {
       </div>
 
       {!user?.id ? (
-        <p className="rounded-xl border border-[#333] bg-[#0a0a0a] px-5 py-8 text-center text-sm text-gray-500">
+        <p className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-5 py-8 text-center text-sm text-gray-500">
           Sign in to see your notifications.
         </p>
       ) : null}
@@ -130,13 +130,13 @@ export function DashboardNotifications() {
       ) : null}
 
       {user?.id && !error && loading ? (
-        <p className="rounded-xl border border-[#333] bg-[#0a0a0a] px-5 py-8 text-center text-sm text-gray-500">
+        <p className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-5 py-8 text-center text-sm text-gray-500">
           Loading notifications…
         </p>
       ) : null}
 
       {user?.id && !error && !loading && items.length === 0 ? (
-        <p className="rounded-xl border border-[#333] bg-[#0a0a0a] px-5 py-8 text-center text-sm text-gray-500">
+        <p className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-5 py-8 text-center text-sm text-gray-500">
           No notifications yet.
         </p>
       ) : null}
@@ -149,13 +149,13 @@ export function DashboardNotifications() {
             return (
               <div
                 key={n.id}
-                className="flex items-center gap-4 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-4 sm:px-5"
+                className="flex items-center gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-4 sm:px-5"
               >
                 <HexIcon>
                   <Icon />
                 </HexIcon>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-white">{n.message}</p>
+                  <p className="text-sm font-medium text-foreground">{n.message}</p>
                   <p className="mt-0.5 text-xs text-gray-500">
                     <span className="capitalize">{n.type}</span>
                     {n.status === "unread" ? (
@@ -166,7 +166,7 @@ export function DashboardNotifications() {
                 </div>
                 <Link
                   href="/admin/notifications"
-                  className="shrink-0 text-xs font-medium text-gray-400 transition-colors hover:text-white"
+                  className="shrink-0 text-xs font-medium text-gray-400 transition-colors hover:text-foreground"
                 >
                   Open &rsaquo;
                 </Link>

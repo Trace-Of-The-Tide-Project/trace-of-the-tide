@@ -47,12 +47,12 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
         aria-label="Close modal"
       />
 
-      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[#333] bg-[#0a0a0a] p-6">
+      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6">
         {/* Header */}
-        <div className="mb-5 flex items-start justify-between border-b border-[#333] pb-5">
+        <div className="mb-5 flex items-start justify-between border-b border-[var(--tott-card-border)] pb-5">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-white">Send Broadcast Message</h2>
+              <h2 className="text-lg font-bold text-foreground">Send Broadcast Message</h2>
               <span
                 className="rounded px-2 py-0.5 text-[10px] font-semibold uppercase"
                 style={{ backgroundColor: "rgba(156, 163, 175, 0.2)", color: "#9ca3af" }}
@@ -67,7 +67,7 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
             aria-label="Close"
           >
             <XIcon />
@@ -76,14 +76,14 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">
+            <label className="mb-1.5 block text-sm font-medium text-foreground">
               Target Audience
             </label>
             <div className="relative">
               <select
                 value={audience}
                 onChange={(e) => setAudience(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-[#333] bg-[#1a1a1a] py-2.5 pl-5 pr-10 text-sm outline-none transition-colors focus:border-gray-500"
+                className="w-full appearance-none rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] py-2.5 pl-5 pr-10 text-sm outline-none transition-colors focus:border-gray-500"
               style={{ color: "#6b7280" }}
               >
                 <option value="All Users">All Users</option>
@@ -100,7 +100,7 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">
+            <label className="mb-1.5 block text-sm font-medium text-foreground">
               Subject
             </label>
             <input
@@ -108,13 +108,13 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Enter Broadcast subject..."
-              className="w-full rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#6b7280" }}
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">
+            <label className="mb-1.5 block text-sm font-medium text-foreground">
               Message
             </label>
             <textarea
@@ -122,7 +122,7 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your Broadcast message..."
               rows={5}
-              className="w-full resize-y rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#6b7280" }}
             />
           </div>
@@ -131,7 +131,7 @@ export function BroadcastModal({ open, onClose }: BroadcastModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-foreground"
             >
               Close
             </button>

@@ -31,7 +31,7 @@ export function FilterDropdown({ options, value, onChange, className = "" }: Fil
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        className="flex w-full items-center justify-between gap-2 rounded-lg border border-[#444] bg-[#232323] py-2.5 px-4 text-left text-sm text-white hover:bg-[#2a2a2a] focus:border-[#555] focus:outline-none"
+        className="flex w-full items-center justify-between gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-2.5 px-4 text-left text-sm text-foreground hover:bg-[var(--tott-dash-surface-inset)] focus:border-[#555] focus:outline-none"
       >
         <span className="truncate">{displayValue}</span>
 
@@ -41,7 +41,7 @@ export function FilterDropdown({ options, value, onChange, className = "" }: Fil
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full z-20 mt-1 rounded-lg border border-[#444] bg-[#232323] py-1 shadow-lg">
+        <div className="absolute left-0 right-0 top-full z-20 mt-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-1 shadow-lg">
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -50,7 +50,7 @@ export function FilterDropdown({ options, value, onChange, className = "" }: Fil
                 onChange(opt.value);
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-2 text-left text-sm text-white hover:bg-[#2a2a2a]"
+              className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-[var(--tott-dash-surface-inset)]"
             >
               {opt.label}
             </button>

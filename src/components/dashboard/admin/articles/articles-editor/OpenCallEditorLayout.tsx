@@ -28,7 +28,7 @@ import {
 } from "@/services/open-calls.service";
 
 const titleClass =
-  "w-full border-0 bg-transparent px-0 py-2 text-lg text-white placeholder:text-white outline-none";
+  "w-full border-0 bg-transparent px-0 py-2 text-lg text-foreground placeholder:text-foreground outline-none";
 
 const ADMIN_ARTICLES_PATH = "/admin/articles";
 

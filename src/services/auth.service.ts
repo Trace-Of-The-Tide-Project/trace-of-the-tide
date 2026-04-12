@@ -4,6 +4,7 @@ import type {
   LoginRequest,
   AuthResponse,
   AuthUser,
+  SignupResult,
 } from "@/types/auth.types"
 import {
   AUTH_TOKEN_KEY,
@@ -139,9 +140,11 @@ function normalizeAuthResponse(
 
 /**
  * POST /auth/signup - Register a new user
- * Stores access_token in localStorage and returns normalized AuthResponse
+ * When the API returns an access token, it is stored and AuthResponse is returned.
+ * When no token is returned (email verification required), nothing is stored and
+ * `{ pendingEmailVerification, email }` is returned instead.
  */
-export async function signup(data: SignupRequest): Promise<AuthResponse> {
+export async function signup(data: SignupRequest): Promise<SignupResult> {
   const payload = {
     username: data.username,
     email: data.email,
@@ -164,7 +167,58 @@ export async function signup(data: SignupRequest): Promise<AuthResponse> {
     const response = await api.post<SignupApiResponse>("/auth/signup", payload)
     raw = response.data
   }
+
+  const inner = raw?.data ?? raw
+  const token =
+    inner?.access_token ?? inner?.accessToken ?? raw?.access_token ?? raw?.accessToken
+  if (!token) {
+    return { pendingEmailVerification: true, email: data.email }
+  }
   return normalizeAuthResponse(raw, "local")
+}
+
+export type VerifyEmailResult = { loggedIn: true } | { loggedIn: false }
+
+/**
+ * POST /auth/verify-email — completes signup verification using the emailed token.
+ * If the API returns a session, it is stored like login; otherwise the caller should send the user to log in.
+ */
+export async function verifyEmail(token: string): Promise<VerifyEmailResult> {
+  const res = await fetch("/api/auth/verify-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token }),
+  })
+  if (!res.ok) {
+    throw await createHttpError(res)
+  }
+  const raw = (await res.json().catch(() => ({}))) as SignupApiResponse
+  const inner = raw?.data ?? raw
+  const access =
+    inner?.access_token ?? inner?.accessToken ?? raw?.access_token ?? raw?.accessToken
+  if (access) {
+    normalizeAuthResponse(raw, "local")
+    return { loggedIn: true }
+  }
+  return { loggedIn: false }
+}
+
+/**
+ * POST /auth/resend-verification — asks the backend to send another verification email.
+ */
+export async function resendVerificationEmail(email: string): Promise<void> {
+  const trimmed = email.trim();
+  if (!trimmed) {
+    throw new Error("Enter your email address.");
+  }
+  const res = await fetch("/api/auth/resend-verification", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: trimmed }),
+  });
+  if (!res.ok) {
+    throw await createHttpError(res);
+  }
 }
 
 /**

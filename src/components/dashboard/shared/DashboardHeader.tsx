@@ -37,7 +37,7 @@ export function DashboardHeader({
           </span>
         )}
         <div>
-          <h1 className="text-xl font-bold text-white sm:text-2xl">{profile?.name ?? title}</h1>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">{profile?.name ?? title}</h1>
           {profile?.meta && (
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
               {profile.meta.map((m, i) => (

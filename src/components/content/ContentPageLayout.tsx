@@ -83,7 +83,7 @@ export function ContentPageLayout({
   const isOpenCall =
     contentType === "open_call" || contentType === "open-call" || contentType === "opencall";
   return (
-    <div className="min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
+    <div className="min-h-screen w-full" style={{ backgroundColor: theme.pageBackground }}>
       {/* Gradient overlay: header + media only (stops before article); white center, fades to outer */}
       <div
         className="relative overflow-hidden"
@@ -144,7 +144,7 @@ export function ContentPageLayout({
           <aside className="flex w-full shrink-0 flex-col gap-6 lg:sticky lg:top-6 lg:w-[24rem] lg:self-start">
             <div
               className="rounded-2xl border border-gray-800 p-5"
-              style={{ backgroundColor: theme.bgDark }}
+              style={{ backgroundColor: theme.pageBackground }}
             >
               <ContentAuthorCard {...author} />
               <div className="my-5 h-px bg-gray-800" />

@@ -35,7 +35,12 @@ export function TagHexShell({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex h-11 w-11 shrink-0 items-center justify-center">
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 48 48" fill="none">
-        <path d={hexPath(24, 24, 20)} fill="#333" stroke="#555" strokeWidth="1.5" />
+        <path
+          d={hexPath(24, 24, 20)}
+          fill="var(--tott-dash-icon-bg)"
+          stroke="var(--tott-card-border)"
+          strokeWidth="1.5"
+        />
       </svg>
       <span className="relative z-10 flex items-center justify-center text-[#E8DDC0] [&>svg]:h-[18px] [&>svg]:w-[18px]">
         {children}

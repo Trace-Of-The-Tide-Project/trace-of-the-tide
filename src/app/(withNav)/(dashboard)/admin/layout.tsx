@@ -57,7 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!mounted) {
     return (
       <div
-        className="min-h-screen w-full bg-[#191919]"
+        className="min-h-screen w-full bg-background"
         aria-busy="true"
         aria-label="Loading admin"
       />

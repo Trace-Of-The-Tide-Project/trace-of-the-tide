@@ -63,7 +63,7 @@ export default function OpenCallByIdPage() {
     return (
       <div
         className="flex min-h-screen items-center justify-center text-sm text-gray-500"
-        style={{ backgroundColor: theme.bgDark }}
+        style={{ backgroundColor: theme.pageBackground }}
       >
         Loading open call…
       </div>
@@ -73,8 +73,8 @@ export default function OpenCallByIdPage() {
   if (phase === "missing" || phase === "error") {
     return (
       <div
-        className="flex min-h-screen flex-col items-center justify-center gap-4 text-center text-white"
-        style={{ backgroundColor: theme.bgDark }}
+        className="flex min-h-screen flex-col items-center justify-center gap-4 text-center text-foreground"
+        style={{ backgroundColor: theme.pageBackground }}
       >
         <h1 className="text-xl font-semibold">
           {phase === "missing" ? "Open call not found" : "Could not load open call"}
@@ -99,7 +99,7 @@ export default function OpenCallByIdPage() {
   const firstParagraph = firstParagraphFromBlocks(openCall.content_blocks);
 
   return (
-    <div className="relative min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
+    <div className="relative min-h-screen w-full" style={{ backgroundColor: theme.pageBackground }}>
       <div className="absolute inset-0">
         <HexBackground />
       </div>
@@ -140,7 +140,7 @@ export default function OpenCallByIdPage() {
                 )}
               </div>
 
-              <h1 className="text-2xl font-bold leading-snug text-white sm:text-3xl">
+              <h1 className="text-2xl font-bold leading-snug text-foreground sm:text-3xl">
                 {openCall.title}
               </h1>
 
@@ -153,15 +153,25 @@ export default function OpenCallByIdPage() {
 
             {/* Application form from open call fields */}
             {formFields.length > 0 && (
-              <div className="rounded-xl border border-gray-700/50 bg-[#1a1a1a]/60 p-6 sm:p-8">
+              <div
+                className="rounded-xl border p-6 sm:p-8"
+                style={{
+                  backgroundColor: theme.panelBackground,
+                  borderColor: theme.cardBorder,
+                  color: theme.panelForeground,
+                }}
+              >
                 <DynamicOpenCallForm fields={formFields} />
               </div>
             )}
 
             {/* Support this trace */}
             <div
-              className="flex items-center gap-4 rounded-xl border border-gray-700/50 px-5 py-4"
-              style={{ backgroundColor: "rgba(26,26,26,0.6)" }}
+              className="flex items-center gap-4 rounded-xl border px-5 py-4"
+              style={{
+                backgroundColor: theme.panelBackground,
+                borderColor: theme.cardBorder,
+              }}
             >
               <div
                 className="flex h-12 w-12 shrink-0 items-center justify-center"
@@ -175,7 +185,7 @@ export default function OpenCallByIdPage() {
                 </span>
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold text-white">Support this trace</h3>
+                <h3 className="text-sm font-semibold text-foreground">Support this trace</h3>
                 <p className="mt-0.5 text-xs leading-relaxed text-gray-400">
                   Lorem ipsum dolor sit amet adipiscing elit suscipit aliquam et porttitor purus.
                 </p>

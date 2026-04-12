@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
+
+const THEME_BOOTSTRAP = `(function(){try{var k='tott-color-scheme',s=localStorage.getItem(k),m=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light',t=s==='light'||s==='dark'?s:m;document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t==='dark'?'dark':'light';}catch(e){}})();`;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,10 +30,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-foreground antialiased`}
         suppressHydrationWarning
       >
-        <SessionProvider>{children}</SessionProvider>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
+        <SessionProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

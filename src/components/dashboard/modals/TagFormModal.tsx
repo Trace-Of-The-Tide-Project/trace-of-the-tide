@@ -71,14 +71,14 @@ export function TagFormModal({
       />
 
       <div
-        className="relative w-full max-w-lg rounded-2xl border border-[#333] bg-black shadow-xl"
+        className="relative w-full max-w-lg rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] shadow-xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
       >
-        <div className="flex items-start justify-between border-b border-[#2a2a2a] px-6 py-5">
+        <div className="flex items-start justify-between border-b border-[var(--tott-card-border)] px-6 py-5">
           <div>
-            <h2 id={titleId} className="text-lg font-bold text-white">
+            <h2 id={titleId} className="text-lg font-bold text-foreground">
               {title}
             </h2>
             <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
@@ -86,7 +86,7 @@ export function TagFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-white transition-colors hover:bg-white/10"
+            className="rounded-lg p-2 text-foreground transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
             aria-label="Close"
           >
             <span className="[&_svg]:h-5 [&_svg]:w-5">
@@ -96,7 +96,7 @@ export function TagFormModal({
         </div>
 
         <div className="px-6 py-5">
-          <label htmlFor="tag-label" className="block text-sm font-medium text-white">
+          <label htmlFor="tag-label" className="block text-sm font-medium text-foreground">
             Tag Name
           </label>
           <input
@@ -105,15 +105,15 @@ export function TagFormModal({
             value={label}
             onChange={(e) => setLabel(e.target.value)}
             placeholder={mode === "add" ? "e.g Featured" : undefined}
-            className="mt-2 w-full rounded-lg border border-[#2f2f2f] bg-black px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+            className="mt-2 w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-3 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
           />
         </div>
 
-        <div className="flex justify-end gap-3 border-t border-[#2a2a2a] px-6 py-4">
+        <div className="flex justify-end gap-3 border-t border-[var(--tott-card-border)] px-6 py-4">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-[#444] bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
+            className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
           >
             Cancel
           </button>

@@ -212,7 +212,7 @@ export function ArticlesTable({
             <ul
               id={`article-actions-${openMenuRow.id}`}
               data-article-actions-menu
-              className="fixed z-300 min-w-[148px] rounded-lg border border-[#444444] bg-[#252525] py-1 shadow-lg"
+              className="fixed z-300 min-w-[148px] rounded-lg border border-[var(--tott-card-border)] bg-[#252525] py-1 shadow-lg"
               style={{ top: menuPosition.top, left: menuPosition.left }}
               role="menu"
               aria-label={`Actions for ${openMenuRow.title}`}
@@ -221,7 +221,7 @@ export function ArticlesTable({
                 <Link
                   role="menuitem"
                   href={`/content/article?id=${encodeURIComponent(openMenuRow.id)}`}
-                  className="block px-3 py-2 text-sm text-gray-200 transition-colors hover:bg-white/5 hover:text-white"
+                  className="block px-3 py-2 text-sm text-gray-200 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
                   onClick={closeArticleMenu}
                 >
                   Preview
@@ -231,7 +231,7 @@ export function ArticlesTable({
                 <Link
                   role="menuitem"
                   href={`/admin/articles/edit/${encodeURIComponent(openMenuRow.id)}`}
-                  className="block px-3 py-2 text-sm text-gray-200 transition-colors hover:bg-white/5 hover:text-white"
+                  className="block px-3 py-2 text-sm text-gray-200 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
                   onClick={closeArticleMenu}
                 >
                   Edit
@@ -262,7 +262,7 @@ export function ArticlesTable({
         onConfirm={() => void confirmDelete()}
       />
       {/* Tabs - segment control with gray effect on selected */}
-      <div className="mb-4 flex w-full gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+      <div className="mb-4 flex w-full gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -270,7 +270,7 @@ export function ArticlesTable({
             onClick={() => selectTab(tab.id)}
             className={`flex-1 rounded-md py-3 text-sm font-medium transition-all ${
               activeTab === tab.id
-                ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                 : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
             }`}
           >
@@ -291,10 +291,10 @@ export function ArticlesTable({
       </div>
 
       {/* Table - borders #444444 at top and bottom */}
-      <div className="overflow-x-auto rounded-lg border border-[#444444]">
+      <div className="overflow-x-auto rounded-lg border border-[var(--tott-card-border)]">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-[#444444]">
+            <tr className="border-b border-[var(--tott-card-border)]">
               <th
                 className="bg-transparent px-5 py-2 text-xs font-semibold"
                 style={{ color: "#C9A96E" }}
@@ -342,7 +342,7 @@ export function ArticlesTable({
               filteredRows.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-[#444444] last:border-b-0 transition-colors"
+                  className="border-b border-[var(--tott-card-border)] last:border-b-0 transition-colors"
                 >
                   <td className="px-5 pt-3.5 pb-0 font-medium" style={{ color: "#DBC99E" }}>
                     {row.title}
@@ -367,7 +367,7 @@ export function ArticlesTable({
                       <button
                         type="button"
                         data-article-menu-trigger={row.id}
-                        className="rounded p-1.5 transition-colors hover:bg-white/5 disabled:opacity-40"
+                        className="rounded p-1.5 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] disabled:opacity-40"
                         style={{ color: "#A3A3A3" }}
                         aria-label="Article actions"
                         aria-expanded={openMenuId === row.id}

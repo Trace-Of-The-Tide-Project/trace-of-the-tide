@@ -33,7 +33,7 @@ export function Footer() {
   return (
     <footer
       className="w-full select-none"
-      style={{ backgroundColor: theme.bgDark, color: "#e5e5e5" }}
+      style={{ backgroundColor: theme.pageBackground, color: "var(--foreground)" }}
     >
       {/* Top section - 4 columns */}
       <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-10">
@@ -47,8 +47,8 @@ export function Footer() {
               height={24}
               className="h-6 w-auto object-contain"
             />
-            <p className="max-w-xs text-sm text-gray-400">
-              <span className="font-bold text-white">Trace of the tide</span> Preserving our
+            <p className="max-w-xs text-sm text-gray-500">
+              <span className="font-bold text-foreground">Trace of the tide</span> Preserving our
               collective memory through stories, testimonies, and cultural artifacts.
             </p>
             <div className="flex gap-3">
@@ -58,7 +58,7 @@ export function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-colors hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:text-foreground"
                   style={{ backgroundColor: theme.cardBorder }}
                   aria-label={label}
                 >
@@ -82,7 +82,7 @@ export function Footer() {
                   >
                     <span className="shrink-0 text-lg leading-none">{emoji}</span>
                     <span>
-                      <span className="font-semibold text-white">{title}</span>{" "}
+                      <span className="font-semibold text-foreground">{title}</span>{" "}
                       <span className="text-gray-400">{description}</span>
                     </span>
                   </Link>
@@ -103,7 +103,7 @@ export function Footer() {
                   >
                     <span className="shrink-0 text-lg leading-none">{emoji}</span>
                     <span>
-                      <span className="font-semibold text-white">{title}</span>{" "}
+                      <span className="font-semibold text-foreground">{title}</span>{" "}
                       <span className="text-gray-400">{description}</span>
                     </span>
                   </Link>
@@ -119,7 +119,7 @@ export function Footer() {
               <li>
                 <a
                   href="mailto:director@traceofthetides.org"
-                  className="flex items-center gap-2 text-sm transition-colors hover:text-white"
+                  className="flex items-center gap-2 text-sm transition-colors hover:text-foreground"
                 >
                   <span className="shrink-0 ">
                     <EmailIcon />

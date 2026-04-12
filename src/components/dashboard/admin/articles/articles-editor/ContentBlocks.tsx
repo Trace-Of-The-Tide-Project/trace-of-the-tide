@@ -23,10 +23,10 @@ export type ContentBlock = {
 };
 
 const inputClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-4 py-3 text-sm text-white placeholder:text-white outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-3 text-sm text-foreground placeholder:text-foreground outline-none focus:border-gray-500";
 
 const blockActionsClass =
-  "flex h-8 w-8 items-center justify-center rounded bg-[#333333] text-white transition-colors hover:bg-[#3d3d3d]";
+  "flex h-8 w-8 items-center justify-center rounded border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]";
 
 type BlockActionsMode = "copy-delete" | "delete-only";
 
@@ -101,7 +101,7 @@ function BlockDragHandle({
         aria-grabbed={isDragging}
         onDragStart={(e) => onDragStart(e, blockId)}
         onDragEnd={onDragEnd}
-        className={`flex h-8 w-8 cursor-grab items-center justify-center rounded bg-[#333333] text-white transition-colors select-none hover:bg-[#3d3d3d] active:cursor-grabbing ${
+        className={`flex h-8 w-8 cursor-grab items-center justify-center rounded border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-foreground transition-colors select-none hover:bg-[var(--tott-dash-control-hover)] active:cursor-grabbing ${
           isDragging ? "opacity-50" : ""
         }`}
       >
@@ -155,7 +155,7 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
     case "quote":
       return (
         <div
-          className="flex flex-col gap-2 rounded-lg border-l-4 bg-[#333333] pl-4"
+          className="flex flex-col gap-2 rounded-lg border-l-4 bg-[var(--tott-dash-control-bg)] pl-4"
           style={{ borderLeftColor: "#C9A96E" }}
         >
           <textarea
@@ -178,8 +178,8 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
     case "image":
       return (
         <div className="space-y-3">
-          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[#444444] bg-[#333333] px-6 py-10 transition-colors hover:border-[#C9A96E]">
-            <span className="text-white">
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-10 transition-colors hover:border-[#C9A96E]">
+            <span className="text-foreground">
               <CloudUploadIcon />
             </span>
             {isCoverImageBlock ? (
@@ -190,7 +190,7 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
                 <span className="text-xs text-gray-400">
                   Click to choose an image — this is the article hero on the public page
                 </span>
-                <span className="text-xs text-white">Recommended: 1200×630px</span>
+                <span className="text-xs text-foreground">Recommended: 1200×630px</span>
               </span>
             ) : (
               <>
@@ -198,7 +198,7 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
                   <span className="text-gray-400">choose file</span>{" "}
                   <span style={{ color: "#C9A96E" }}>to upload</span>
                 </span>
-                <span className="text-xs text-white">Recommended: 1200x630px</span>
+                <span className="text-xs text-foreground">Recommended: 1200x630px</span>
               </>
             )}
             <input
@@ -243,11 +243,11 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
     case "gallery":
       return (
         <div className="space-y-3">
-          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[#444444] bg-[#333333] px-6 py-10 transition-colors hover:border-[#C9A96E]">
-            <span className="text-white">
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-10 transition-colors hover:border-[#C9A96E]">
+            <span className="text-foreground">
               <CloudUploadIcon />
             </span>
-            <span className="text-sm font-medium text-white">Add images to gallery</span>
+            <span className="text-sm font-medium text-foreground">Add images to gallery</span>
             <input
               type="file"
               accept="image/*"
@@ -287,7 +287,7 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
 
     case "callout":
       return (
-        <div className="space-y-3 rounded-2xl border border-[#3a3a3a] bg-[#262626] p-6">
+        <div className="space-y-3 rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-panel-bg)] p-6">
           <div>
             <p className="mb-1 text-xs font-medium text-gray-500">Title</p>
             <input
@@ -295,7 +295,7 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
               value={block.calloutTitle ?? ""}
               onChange={(e) => onChange({ calloutTitle: e.target.value })}
               placeholder="e.g. 35%"
-              className={`${inputClass} text-xl font-bold text-white`}
+              className={`${inputClass} text-xl font-bold text-foreground`}
             />
           </div>
           <div>
@@ -305,7 +305,7 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
               onChange={(e) => onChange({ content: e.target.value })}
               placeholder={l.callout ?? "Callout"}
               rows={4}
-              className={`${inputClass} resize-y text-base text-gray-300`}
+              className={`${inputClass} resize-y text-base text-foreground/85`}
             />
           </div>
         </div>
@@ -318,12 +318,12 @@ function BlockRenderer({ block, labels, isCoverImageBlock, onChange }: BlockRend
           onChange={(e) => onChange({ content: e.target.value })}
           placeholder={l["author-note"] ?? "Author note"}
           rows={4}
-          className="w-full resize-y rounded-lg border border-[#444444] bg-[#333333] px-4 py-3 text-sm text-white placeholder:text-white outline-none focus:border-gray-500"
+          className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-3 text-sm text-foreground placeholder:text-foreground outline-none focus:border-gray-500"
         />
       );
 
     case "divider":
-      return <hr className="w-full border-[#444444]" />;
+      return <hr className="w-full border-[var(--tott-card-border)]" />;
 
     default:
       return null;
@@ -389,9 +389,9 @@ export function ContentBlocks({
   );
 
   return (
-    <div className="space-y-6 border-b border-[#444444] pb-4">
+    <div className="space-y-6 border-b border-[var(--tott-card-border)] pb-4">
       {!hasImageBlock ? (
-        <div className="rounded-lg border border-dashed border-[#444444] bg-[#2a2a2a]/40 px-4 py-4 sm:px-5">
+        <div className="rounded-lg border border-dashed border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)]/40 px-4 py-4 sm:px-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-gray-400">
               No cover image. Add a cover block — it becomes the public hero (first image in this
@@ -400,7 +400,7 @@ export function ContentBlocks({
             <button
               type="button"
               onClick={onAddCoverBlock}
-              className="shrink-0 rounded-lg border border-[#C9A96E]/50 bg-[#333333] px-4 py-2.5 text-sm font-medium text-[#C9A96E] transition-colors hover:border-[#C9A96E] hover:bg-[#3d3d3d]"
+              className="shrink-0 rounded-lg border border-[#C9A96E]/50 bg-[var(--tott-dash-control-bg)] px-4 py-2.5 text-sm font-medium text-[#C9A96E] transition-colors hover:border-[#C9A96E] hover:bg-[var(--tott-dash-control-hover)]"
             >
               Add cover block
             </button>

@@ -6,7 +6,10 @@ import { XIcon } from "@/components/ui/icons";
 import type { EditorStop } from "./ItineraryBuilder";
 import {
   parseTripHighlights,
-  parseTripTags,
+  parseTripLanguages,
+  tripDisplayPriceLabel,
+  tripMaxPrice,
+  tripStopImageUrl,
   type TripStop,
   type TripListItem,
 } from "@/services/trips.service";
@@ -16,7 +19,7 @@ import type { RouteMapPoint } from "./TripPreviewRouteMap";
 const TripPreviewRouteMap = dynamic(() => import("./TripPreviewRouteMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex min-h-[280px] items-center justify-center rounded-xl border border-[#333] bg-[#1a1a1a] text-xs text-gray-500">
+    <div className="flex min-h-[280px] items-center justify-center rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] text-xs text-gray-500">
       Loading map…
     </div>
   ),
@@ -30,9 +33,12 @@ type PreviewStop = {
   locationName: string;
   latitude: string;
   longitude: string;
+  /** When set, timeline shows this image; otherwise no image block */
+  imageUrl: string | null;
 };
 
 function editorStopToPreview(s: EditorStop): PreviewStop {
+  const img = s.imageUrl?.trim() || null;
   return {
     title: s.title,
     description: s.description,
@@ -40,6 +46,7 @@ function editorStopToPreview(s: EditorStop): PreviewStop {
     locationName: s.locationName,
     latitude: s.latitude,
     longitude: s.longitude,
+    imageUrl: img,
   };
 }
 
@@ -51,6 +58,7 @@ function tripStopToPreview(s: TripStop): PreviewStop {
     locationName: s.location.name,
     latitude: String(s.location.latitude),
     longitude: String(s.location.longitude),
+    imageUrl: tripStopImageUrl(s),
   };
 }
 
@@ -290,19 +298,12 @@ function SummaryCell({
   value: string;
 }) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 border-r border-[#2a2a2a] px-2 py-1 last:border-r-0 sm:px-3">
+    <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 border-r border-[var(--tott-card-border)] px-2 py-1 last:border-r-0 sm:px-3">
       <div className={`${ACCENT}`}>{icon}</div>
       <span className="text-center text-[10px] uppercase tracking-wide text-gray-500">{label}</span>
-      <span className="text-center text-xs font-medium text-white">{value}</span>
+      <span className="text-center text-xs font-medium text-foreground">{value}</span>
     </div>
   );
-}
-
-function hexImageStyle(url?: string | null): React.CSSProperties {
-  return {
-    clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-    background: url ? `url(${url}) center/cover no-repeat` : "linear-gradient(145deg, #2a2a2a, #1a1a1a)",
-  };
 }
 
 function StopTimeline({
@@ -327,13 +328,13 @@ function StopTimeline({
   return (
     <div className="relative flex gap-4">
       <div className="flex w-8 shrink-0 flex-col items-center pt-0.5">
-        <div className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[#2a2a2a] text-xs font-semibold text-gray-300">
+        <div className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--tott-dash-surface-inset)] text-xs font-semibold text-gray-300">
           {index + 1}
         </div>
       </div>
 
       <div className="min-w-0 flex-1 pb-10">
-        <h4 className="text-sm font-semibold text-white">{title}</h4>
+        <h4 className="text-sm font-semibold text-foreground">{title}</h4>
 
         {stop.arrivalTime && (
           <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-gray-500">
@@ -352,10 +353,14 @@ function StopTimeline({
           <p className="mt-2 text-xs leading-relaxed text-gray-400">{stop.description}</p>
         )}
 
-        <div
-          className="mt-3 aspect-video w-full max-w-md rounded-lg bg-[#252525] ring-1 ring-[#333]"
-          aria-hidden
-        />
+        {stop.imageUrl?.trim() ? (
+          // eslint-disable-next-line @next/next/no-img-element -- arbitrary admin/API image URLs
+          <img
+            src={stop.imageUrl}
+            alt=""
+            className="mt-3 aspect-video w-full max-w-md rounded-lg object-cover ring-1 ring-[#333]"
+          />
+        ) : null}
 
         {hasCoords && (
           <div className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-500">
@@ -403,11 +408,11 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
         minParticipants: data.minParticipants,
         price: data.price,
         currency: data.currency,
+        priceCapFromApi: null,
         languages: data.languages,
         highlights: data.highlights,
         stops: data.stops.map(editorStopToPreview),
         routeSummary: null as string | null,
-        coverImage: null as string | null,
         dataStatus: data.status,
       };
     }
@@ -422,14 +427,14 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
         endDate: trip.end_date ?? "",
         durationHours: trip.duration_hours,
         maxParticipants: trip.max_participants,
-        minParticipants: 0,
+        minParticipants: trip.min_participants ?? 0,
         price: trip.price,
         currency: trip.currency,
-        languages: parseTripTags(trip.tags),
+        priceCapFromApi: tripMaxPrice(trip),
+        languages: parseTripLanguages(trip.languages),
         highlights: parseTripHighlights(trip.highlights),
         stops: (trip.stops ?? []).map(tripStopToPreview),
         routeSummary: trip.route_summary,
-        coverImage: trip.cover_image,
         dataStatus: undefined as string | undefined,
       };
     }
@@ -457,17 +462,17 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
 
   const priceNum = parseFloat(resolved.price);
   const priceDisplay =
-    priceNum > 0 ? `${resolved.currency === "USD" ? "$" : ""}${resolved.price} ${resolved.currency}`.trim() : "Free";
+    priceNum > 0
+      ? tripDisplayPriceLabel({
+          price: resolved.price,
+          max_price: resolved.priceCapFromApi,
+          currency: resolved.currency,
+        })
+      : "Free";
 
   const routeHeading = buildRouteHeading(resolved.stops, resolved.routeSummary);
   const locationSummary = primaryLocationLabel(resolved.stops, resolved.category);
   const stat = statusLabel(trip, resolved.dataStatus);
-
-  const galleryUrls: (string | null)[] = (() => {
-    const u = resolved.coverImage;
-    if (u) return [u, u, u, u];
-    return [null, null, null, null];
-  })();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -479,7 +484,7 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
       />
 
       <div
-        className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[#2a2a2a] bg-[#121212] shadow-2xl"
+        className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby="trip-preview-title"
@@ -487,7 +492,7 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+          className="absolute right-4 top-4 z-10 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
           aria-label="Close"
         >
           <XIcon />
@@ -501,19 +506,19 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
               >
                 {priceDisplay}
               </span>
-              <span className="rounded-full bg-[#2a2a2a] px-3 py-1 text-xs font-medium text-white">
+              <span className="rounded-full bg-[var(--tott-dash-surface-inset)] px-3 py-1 text-xs font-medium text-foreground">
                 {difficultyLabel(resolved.difficulty)}
               </span>
-              <span className="rounded-full bg-[#2a2a2a] px-3 py-1 text-xs font-medium text-white">{stat}</span>
+              <span className="rounded-full bg-[var(--tott-dash-surface-inset)] px-3 py-1 text-xs font-medium text-foreground">{stat}</span>
             </div>
 
-            <h2 id="trip-preview-title" className="text-xl font-bold text-white sm:text-2xl">
+            <h2 id="trip-preview-title" className="text-xl font-bold text-foreground sm:text-2xl">
               {resolved.title.trim() || "Trip Name"}
             </h2>
-            {routeHeading && <p className="mt-2 text-sm text-white">{routeHeading}</p>}
+            {routeHeading && <p className="mt-2 text-sm text-foreground">{routeHeading}</p>}
           </div>
 
-          <div className="mt-6 flex flex-wrap rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] py-4">
+          <div className="mt-6 flex flex-wrap rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] py-4">
             <SummaryCell
               icon={<CalendarSmIcon className={ACCENT} />}
               label="Date"
@@ -554,7 +559,7 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
               <div className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
                 {filteredHighlights.map((h, i) => (
                   <div key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#2a2a2a]">
+                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--tott-dash-surface-inset)]">
                       <CheckIcon />
                     </span>
                     <span>{h}</span>
@@ -564,31 +569,8 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
             </div>
           )}
 
-          <div className="mt-10">
-            <h3 className={`mb-4 text-sm font-semibold ${ACCENT}`}>Traveller&apos;s Gallery</h3>
-            <div className="relative flex flex-col items-center gap-4">
-              <div
-                className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#333] bg-[#2a2a2a] text-sm font-semibold text-gray-300"
-                aria-hidden
-              >
-                {(resolved.moderatorName.trim() || "T").charAt(0).toUpperCase()}
-              </div>
-              <div className="flex w-full flex-wrap justify-center gap-3 sm:gap-4">
-                {galleryUrls.map((url, i) => (
-                  <div
-                    key={i}
-                    className="h-24 w-20 shrink-0 sm:h-28 sm:w-24"
-                    style={hexImageStyle(url)}
-                    role="img"
-                    aria-label={url ? "Gallery image" : "Gallery placeholder"}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
           {namedStops.length > 0 && (
-            <div className="mt-12 border-t border-[#2a2a2a] pt-8">
+            <div className="mt-12 border-t border-[var(--tott-card-border)] pt-8">
               <h3 className={`mb-6 text-sm font-semibold ${ACCENT}`}>Trip Timeline &amp; Route Map</h3>
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_400px]">
                 <div className="relative min-w-0 pl-0">
@@ -610,7 +592,7 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
           )}
         </div>
 
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-3 border-t border-[#2a2a2a] px-6 py-4 sm:px-8">
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-3 border-t border-[var(--tott-card-border)] px-6 py-4 sm:px-8">
           {trip?.id ? (
             <Link
               href={`/trip/${trip.id}`}
@@ -623,7 +605,7 @@ export function TripPreviewModal({ open, onClose, data, trip }: TripPreviewModal
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg bg-[#2a2a2a] px-8 py-2.5 text-sm font-medium text-gray-200 transition-colors hover:bg-[#333] hover:text-white"
+            className="rounded-lg bg-[var(--tott-dash-surface-inset)] px-8 py-2.5 text-sm font-medium text-gray-200 transition-colors hover:bg-[var(--tott-dash-control-hover)] hover:text-foreground"
           >
             Close
           </button>

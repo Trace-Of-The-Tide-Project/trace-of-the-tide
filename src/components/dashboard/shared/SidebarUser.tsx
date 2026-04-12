@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { theme } from "@/lib/theme";
 import { LogOutIcon } from "@/components/ui/icons";
 import { clearStoredAuth } from "@/services/auth.service";
@@ -14,6 +15,7 @@ function getInitial(name?: string | null, email?: string | null): string {
 
 export function SidebarUser() {
   const router = useRouter();
+  const { isDark } = useTheme();
   const user = useStoredAuthUser();
   const name = user?.full_name || user?.username;
   const email = user?.email;
@@ -27,7 +29,11 @@ export function SidebarUser() {
       >
         {getInitial(name, email)}
       </span>
-      <span className="flex-1 truncate text-sm font-medium text-white">{displayName}</span>
+      <span
+        className={`flex-1 truncate text-sm font-medium ${isDark ? "text-foreground" : "text-gray-900"}`}
+      >
+        {displayName}
+      </span>
       <button
         type="button"
         onClick={() => {
@@ -35,7 +41,11 @@ export function SidebarUser() {
           router.push("/auth/login");
           router.refresh();
         }}
-        className="shrink-0 text-gray-500 transition-colors hover:text-white"
+        className={
+          isDark
+            ? "shrink-0 text-gray-500 transition-colors hover:text-foreground"
+            : "shrink-0 text-gray-500 transition-colors hover:text-gray-900"
+        }
         aria-label="Sign out"
       >
         <LogOutIcon />

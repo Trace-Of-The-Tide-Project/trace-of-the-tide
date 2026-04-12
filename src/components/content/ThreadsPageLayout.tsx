@@ -96,7 +96,7 @@ export function ThreadsPageLayout({
   const canCollapse = visibleCount > initialVisibleCount;
 
   return (
-    <div className="min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
+    <div className="min-h-screen w-full" style={{ backgroundColor: theme.pageBackground }}>
       <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6">
         <ContentBreadcrumb items={breadcrumbs} />
       </div>
@@ -233,7 +233,7 @@ export function ThreadsPageLayout({
           <aside className="flex w-full shrink-0 flex-col gap-6 lg:sticky lg:top-6 lg:w-[24rem] lg:self-start">
             <div
               className="rounded-2xl border border-gray-800 p-5"
-              style={{ backgroundColor: theme.bgDark }}
+              style={{ backgroundColor: theme.pageBackground }}
             >
               <ContentAuthorCard {...author} />
               <div className="my-5 h-px bg-gray-800" />

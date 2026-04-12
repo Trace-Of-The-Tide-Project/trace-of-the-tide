@@ -28,7 +28,12 @@ function HexIcon({ children, size = "md" }: { children: React.ReactNode; size?: 
   return (
     <div className={`relative flex ${dim} shrink-0 items-center justify-center`}>
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 48 48" fill="none">
-        <path d="M24 2L44 14V34L24 46L4 34V14Z" fill="#1a1a1a" stroke="#444444" strokeWidth="1" />
+        <path
+          d="M24 2L44 14V34L24 46L4 34V14Z"
+          fill="var(--tott-dash-icon-bg)"
+          stroke="var(--tott-card-border)"
+          strokeWidth="1"
+        />
       </svg>
       <span className={`relative text-gray-400 ${iconScale}`}>{children}</span>
     </div>
@@ -36,16 +41,16 @@ function HexIcon({ children, size = "md" }: { children: React.ReactNode; size?: 
 }
 
 const buttonClass =
-  "flex items-center justify-center gap-2 rounded-lg border border-[#444444] bg-[#333333] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#2a2a2a] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
+  "flex items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-sm font-medium text-foreground transition-all hover:bg-[var(--tott-dash-surface-inset)] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
 
 const buttonClassCompact =
-  "flex items-center justify-center gap-1.5 rounded-md border border-[#444444] bg-[#333333] px-3 py-1.5 text-xs font-medium text-white transition-all hover:bg-[#2a2a2a] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
+  "flex items-center justify-center gap-1.5 rounded-md border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-3 py-1.5 text-xs font-medium text-foreground transition-all hover:bg-[var(--tott-dash-surface-inset)] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
 
 const iconOnlyButtonClass =
-  "flex h-12 w-12 items-center justify-center rounded-lg border border-[#444444] bg-[#333333] p-3 text-white transition-all hover:bg-[#2a2a2a] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
+  "flex h-12 w-12 items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] p-3 text-foreground transition-all hover:bg-[var(--tott-dash-surface-inset)] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
 
 const iconOnlyButtonClassCompact =
-  "flex h-9 w-9 items-center justify-center rounded-md border border-[#444444] bg-[#333333] p-2 text-white transition-all hover:bg-[#2a2a2a] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
+  "flex h-9 w-9 items-center justify-center rounded-md border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] p-2 text-foreground transition-all hover:bg-[var(--tott-dash-surface-inset)] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]";
 
 export function ArticleCard({
   icon,
@@ -58,10 +63,10 @@ export function ArticleCard({
   compact = false,
 }: ArticleCardProps) {
   const cardClass = compact
-    ? "flex flex-col gap-2 rounded-lg border border-[#444444] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between"
-    : "flex flex-col gap-4 rounded-xl border border-[#444444] px-5 py-4 sm:flex-row sm:items-center sm:justify-between";
+    ? "flex flex-col gap-2 rounded-lg border border-[var(--tott-card-border)] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+    : "flex flex-col gap-4 rounded-xl border border-[var(--tott-card-border)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between";
   const contentGap = compact ? "gap-2" : "gap-3";
-  const labelClass = "text-xs text-white";
+  const labelClass = "text-xs text-foreground";
   const titleClass = compact ? "mt-0.5 truncate text-sm font-medium" : "mt-1 truncate text-sm font-medium";
   const detailClass = compact ? "mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-gray-500" : "mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-gray-500";
 
@@ -69,7 +74,7 @@ export function ArticleCard({
     <div className={cardClass}>
       <div className={`flex min-w-0 flex-1 items-center ${contentGap}`}>
         <div className="shrink-0 self-center">
-          {useHexIcon ? <HexIcon size={compact ? "sm" : "md"}>{icon}</HexIcon> : <span className={compact ? "text-gray-400" : "text-white"}>{icon}</span>}
+          {useHexIcon ? <HexIcon size={compact ? "sm" : "md"}>{icon}</HexIcon> : <span className={compact ? "text-gray-400" : "text-foreground"}>{icon}</span>}
         </div>
         <div className="min-w-0 flex-1">
           <p className={labelClass}>{statusLabel}</p>

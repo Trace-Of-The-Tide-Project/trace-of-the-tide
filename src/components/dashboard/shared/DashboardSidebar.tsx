@@ -54,7 +54,7 @@ export function DashboardSidebar({ config, onItemClick }: DashboardSidebarProps)
         </div>
       </nav>
 
-      <div className="shrink-0 border-t border-[#333]">
+      <div className="shrink-0 border-t border-[var(--tott-card-border)]">
         <SidebarUser />
       </div>
     </div>

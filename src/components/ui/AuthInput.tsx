@@ -2,7 +2,7 @@
 
 import { theme } from '@/lib/theme'
 
-const inputBaseClass = `w-full pl-10 pr-4 py-3.5 rounded-lg bg-black border text-base text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-[${theme.accentGoldFocus}]/50 focus:border-[${theme.accentGoldFocus}] caret-transparent`
+const inputBaseClass = `w-full pl-10 pr-4 py-3.5 rounded-lg border text-base text-[color:var(--tott-panel-text)] placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[${theme.accentGoldFocus}]/50 focus:border-[${theme.accentGoldFocus}] caret-transparent bg-[var(--tott-well-bg)]`
 
 type AuthInputProps = {
   id: string
@@ -48,7 +48,7 @@ export function AuthInput({
       {(label || labelRight) ? (
         <div className="flex items-center justify-between mb-1.5">
           {label ? (
-            <label htmlFor={id} className="block text-sm font-medium text-white cursor-default select-none">
+            <label htmlFor={id} className="block text-sm font-medium text-foreground cursor-default select-none">
               {label}
             </label>
           ) : null}

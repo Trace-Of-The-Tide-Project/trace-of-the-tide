@@ -13,19 +13,19 @@ const STATIC_PAGES = [
 
 export function StaticPagesTab() {
   return (
-    <div className="rounded-xl border border-[#444] p-6">
+    <div className="rounded-xl border border-[var(--tott-card-border)] p-6">
       <div className="space-y-4">
         {STATIC_PAGES.map((page) => (
           <div
             key={page.id}
-            className="flex w-full items-center justify-between gap-4 rounded-lg border border-[#444] px-4 py-4"
+            className="flex w-full items-center justify-between gap-4 rounded-lg border border-[var(--tott-card-border)] px-4 py-4"
           >
             <div className="flex min-w-0 flex-1 items-center gap-4">
               <HexIconOutlined size="sm">
                 <FileTextIcon />
               </HexIconOutlined>
               <div>
-                <p className="font-medium text-white">{page.title}</p>
+                <p className="font-medium text-foreground">{page.title}</p>
                 <p className="text-xs text-gray-500">Last edited: {page.lastEdited}</p>
               </div>
             </div>
@@ -33,7 +33,7 @@ export function StaticPagesTab() {
               <span className="text-sm font-medium text-emerald-500">Published</span>
               <button
                 type="button"
-                className="flex items-center gap-2 rounded-lg border border-[#444] bg-[#333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
+                className="flex items-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
               >
                 <span className="[&_svg]:h-4 [&_svg]:w-4">
                   <PenLineIcon />
@@ -42,7 +42,7 @@ export function StaticPagesTab() {
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2 rounded-lg border border-[#444] bg-[#333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
+                className="flex items-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
               >
                 <span className="[&_svg]:h-4 [&_svg]:w-4">
                   <EyeIcon />

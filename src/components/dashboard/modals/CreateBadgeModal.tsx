@@ -102,15 +102,15 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
         aria-label="Close modal"
       />
 
-      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[#333] bg-[#0a0a0a] p-6">
-        <div className="mb-5 flex items-start justify-between border-b border-[#333] pb-5">
+      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6">
+        <div className="mb-5 flex items-start justify-between border-b border-[var(--tott-card-border)] pb-5">
           <div>
-            <h2 className="text-lg font-bold text-white">Create New Badge</h2>
+            <h2 className="text-lg font-bold text-foreground">Create New Badge</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
             aria-label="Close"
           >
             <XIcon />
@@ -131,17 +131,19 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
           }}
         >
           <div>
-            <label className="mb-2 block text-sm font-medium text-white">Icon</label>
+            <label className="mb-2 block text-sm font-medium text-foreground">Icon</label>
             <div className="flex flex-wrap gap-3">
               {ICON_OPTIONS.map((opt) => (
                 <button
                   key={opt.id}
                   type="button"
                   onClick={() => setSelectedIcon(opt.id)}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg border bg-[#1a1a1a] transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg border bg-[var(--tott-dash-input-bg)] transition-colors"
                   style={{
-                    borderColor: selectedIcon === opt.id ? theme.accentGoldFocus : "#333",
-                    color: selectedIcon === opt.id ? theme.accentGoldFocus : "#d1d5db",
+                    borderColor:
+                      selectedIcon === opt.id ? theme.accentGoldFocus : "var(--tott-card-border)",
+                    color:
+                      selectedIcon === opt.id ? theme.accentGoldFocus : "var(--tott-dash-control-fg)",
                   }}
                   aria-label={opt.label}
                 >
@@ -152,25 +154,25 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Badge Name</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Badge Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g Top Contributor"
-              className="w-full rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#e5e7eb" }}
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Or select a role</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Or select a role</label>
             <div className="relative">
               <button
                 ref={roleButtonRef}
                 type="button"
                 onClick={() => setRoleMenuOpen((v) => !v)}
-                className="flex w-full items-center justify-between rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm outline-none transition-colors focus:border-gray-500"
+                className="flex w-full items-center justify-between rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm outline-none transition-colors focus:border-gray-500"
                 style={{ color: role ? "#e5e7eb" : "#6b7280" }}
                 aria-haspopup="listbox"
                 aria-expanded={roleMenuOpen}
@@ -195,7 +197,7 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
               {roleMenuOpen && (
                 <div
                   ref={roleMenuRef}
-                  className="absolute left-0 right-0 top-full z-10 mt-2 rounded-lg border border-[#333] bg-[#2a2a2a] p-2 shadow-xl"
+                  className="absolute left-0 right-0 top-full z-10 mt-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-2 shadow-xl"
                   role="listbox"
                 >
                   {ROLE_OPTIONS.map((opt) => (
@@ -206,7 +208,7 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
                         setRole(opt);
                         setRoleMenuOpen(false);
                       }}
-                      className="w-full rounded-md px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                      className="w-full rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-[var(--tott-dash-ghost-hover)]"
                     >
                       {opt}
                     </button>
@@ -217,7 +219,7 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">
+            <label className="mb-1.5 block text-sm font-medium text-foreground">
               Reason <span className="text-gray-500">(Optional)</span>
             </label>
             <textarea
@@ -225,7 +227,7 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
               onChange={(e) => setReason(e.target.value)}
               placeholder="Why is this badge being awarded?"
               rows={4}
-              className="w-full resize-y rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#e5e7eb" }}
             />
           </div>
@@ -234,7 +236,7 @@ export function CreateBadgeModal({ open, onClose, onCreate }: CreateBadgeModalPr
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-foreground"
             >
               Cancel
             </button>

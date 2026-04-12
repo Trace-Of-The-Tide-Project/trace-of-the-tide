@@ -24,11 +24,11 @@ export default function ContributionErrorPage() {
   return (
     <div
       className="relative min-h-screen w-full select-none"
-      style={{ backgroundColor: theme.bgDark }}
+      style={{ backgroundColor: theme.pageBackground }}
     >
       {/* Red-tinted hexagon pattern at top */}
       <section className="relative w-full overflow-hidden">
-        <div className="absolute inset-0" style={{ background: theme.bgDark }} />
+        <div className="absolute inset-0" style={{ background: theme.pageBackground }} />
         <div className="absolute inset-0 h-[320px] w-full">
           <HexBackground />
           <div

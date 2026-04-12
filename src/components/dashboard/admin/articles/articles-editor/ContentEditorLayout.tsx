@@ -38,7 +38,7 @@ import {
 import { isAxiosError } from "axios";
 
 const titleClass =
-  "w-full border-0 bg-transparent px-0 py-2 text-lg text-white placeholder:text-white outline-none";
+  "w-full border-0 bg-transparent px-0 py-2 text-lg text-foreground placeholder:text-foreground outline-none";
 
 function errMessage(e: unknown): string {
   if (isAxiosError(e)) {
@@ -393,7 +393,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
 
   if (isEditMode && loadError) {
     return (
-      <div className="flex min-h-0 flex-col gap-4 p-8 text-white">
+      <div className="flex min-h-0 flex-col gap-4 p-8 text-foreground">
         <Link href={ADMIN_ARTICLES_PATH} className="text-sm text-[#C9A96E] hover:underline">
           ← Articles
         </Link>
@@ -401,7 +401,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
         <button
           type="button"
           onClick={() => setLoadKey((k: number) => k + 1)}
-          className="w-fit text-sm text-gray-400 underline hover:text-white"
+          className="w-fit text-sm text-gray-400 underline hover:text-foreground"
         >
           Try again
         </button>
@@ -412,7 +412,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
   if (!isEditMode && !configFromProps) {
     return (
       <div className="p-8 text-sm text-red-300">
-        Editor misconfigured: pass <code className="text-white">config</code> for create mode.
+        Editor misconfigured: pass <code className="text-foreground">config</code> for create mode.
       </div>
     );
   }
@@ -429,7 +429,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
       <div className="flex flex-1 gap-6 overflow-hidden">
         <div className="min-w-0 flex-1 space-y-6 overflow-y-auto">
           {isEditMode && articleId ? (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#444444] pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--tott-card-border)] pb-4">
               <div className="flex flex-wrap items-center gap-3 text-sm">
                 <Link href={ADMIN_ARTICLES_PATH} className="text-[#C9A96E] hover:underline">
                   ← Articles
@@ -440,7 +440,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
                 href={`/content/article?id=${encodeURIComponent(articleId)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg border border-[#444444] bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:border-[#C9A96E]/50 hover:bg-[#252525]"
+                className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-[#C9A96E]/50 hover:bg-[#252525]"
               >
                 Preview
               </Link>

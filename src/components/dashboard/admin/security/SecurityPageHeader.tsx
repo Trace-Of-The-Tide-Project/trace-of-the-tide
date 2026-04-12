@@ -33,13 +33,13 @@ export function SecurityPageHeader() {
           return (
             <div
               key={stat.id}
-              className="flex min-h-[132px] flex-col items-center justify-center gap-2 rounded-xl border border-[#2f2f2f] bg-[#121212] px-4 py-5"
+              className="flex min-h-[132px] flex-col items-center justify-center gap-2 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-5"
             >
               <span className="text-[#E8DDC0]">
                 <Icon />
               </span>
               <span className="text-center text-xs text-gray-500">{stat.label}</span>
-              <span className="text-2xl font-bold text-white">{stat.value}</span>
+              <span className="text-2xl font-bold text-foreground">{stat.value}</span>
             </div>
           );
         })}

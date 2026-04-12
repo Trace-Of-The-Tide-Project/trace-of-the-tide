@@ -137,7 +137,7 @@ function Dropdown({
         ref={buttonRef}
         type="button"
         onClick={() => onOpenChange(!open)}
-        className={`inline-flex h-[42px] items-center justify-between gap-3 rounded-lg border border-[#2f2f2f] bg-[#121212] px-4 text-sm text-gray-200 outline-none transition-colors focus:border-[#555] ${
+        className={`inline-flex h-[42px] items-center justify-between gap-3 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 text-sm text-gray-200 outline-none transition-colors focus:border-[#555] ${
           fullWidth ? "w-full" : "min-w-[140px]"
         }`}
         aria-haspopup="listbox"
@@ -153,7 +153,7 @@ function Dropdown({
         <div
           ref={menuRef}
           role="listbox"
-          className={`absolute left-0 top-full z-20 mt-2 rounded-lg border border-[#2f2f2f] bg-[#2a2a2a] p-2 shadow-xl ${
+          className={`absolute left-0 top-full z-20 mt-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-2 shadow-xl ${
             menuWidthClassName ?? "w-[200px]"
           }`}
         >
@@ -165,7 +165,7 @@ function Dropdown({
                 onSelect(opt);
                 onOpenChange(false);
               }}
-              className="w-full rounded-md px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+              className="w-full rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-[var(--tott-dash-ghost-hover)]"
             >
               {opt}
             </button>
@@ -192,7 +192,7 @@ function ThreadRow({
       className={`w-full rounded-xl border px-4 py-4 text-left transition-colors ${
         selected
           ? "border-[#5a4a2a] bg-[#151515]"
-          : "border-[#2f2f2f] bg-[#121212] hover:bg-[#151515]"
+          : "border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] hover:bg-[#151515]"
       }`}
     >
       <div className="flex items-start gap-3">
@@ -204,9 +204,9 @@ function ThreadRow({
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">
-            <p className="truncate text-sm font-semibold text-white">{thread.senderName}</p>
+            <p className="truncate text-sm font-semibold text-foreground">{thread.senderName}</p>
             {thread.priority && (
-              <span className="rounded-full border border-[#3a2f1a] bg-[#1a1a1a] px-2 py-0.5 text-[10px] font-semibold text-[#CBA158]">
+              <span className="rounded-full border border-[#3a2f1a] bg-[var(--tott-dash-input-bg)] px-2 py-0.5 text-[10px] font-semibold text-[#CBA158]">
                 {thread.priority}
               </span>
             )}
@@ -322,7 +322,7 @@ export function MessagingContent() {
           setTemplates((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
         }}
       />
-      <div className="flex w-fit gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+      <div className="flex w-fit gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
         {MESSAGE_TABS.map((tab) => (
           <button
             key={tab}
@@ -330,7 +330,7 @@ export function MessagingContent() {
             onClick={() => setActiveTab(tab)}
             className={`rounded-md px-5 py-2.5 text-sm font-medium transition-all ${
               activeTab === tab
-                ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                 : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
             }`}
           >
@@ -340,9 +340,9 @@ export function MessagingContent() {
       </div>
 
       {activeTab === "Broadcast" ? (
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] p-6 lg:p-8">
-          <div className="mb-6 border-b border-[#2f2f2f] pb-6">
-            <h2 className="text-xl font-semibold text-white">New Broadcast Message</h2>
+        <div className="rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 lg:p-8">
+          <div className="mb-6 border-b border-[var(--tott-card-border)] pb-6">
+            <h2 className="text-xl font-semibold text-foreground">New Broadcast Message</h2>
             <p className="mt-1 text-sm text-gray-500">
               Send a message to all users or specific groups
             </p>
@@ -351,7 +351,7 @@ export function MessagingContent() {
           <div className="space-y-5">
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium text-white">Target Audience</label>
+                <label className="mb-2 block text-sm font-medium text-foreground">Target Audience</label>
                 <Dropdown
                   open={broadcastAudienceOpen}
                   onOpenChange={(v) => {
@@ -372,7 +372,7 @@ export function MessagingContent() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-white">Priority</label>
+                <label className="mb-2 block text-sm font-medium text-foreground">Priority</label>
                 <Dropdown
                   open={broadcastPriorityOpen}
                   onOpenChange={(v) => {
@@ -394,7 +394,7 @@ export function MessagingContent() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-white">Use Template</label>
+              <label className="mb-2 block text-sm font-medium text-foreground">Use Template</label>
               <Dropdown
                 open={broadcastTemplateOpen}
                 onOpenChange={(v) => {
@@ -413,23 +413,23 @@ export function MessagingContent() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-white">Subject</label>
+              <label className="mb-2 block text-sm font-medium text-foreground">Subject</label>
               <input
                 value={broadcastSubject}
                 onChange={(e) => setBroadcastSubject(e.target.value)}
                 placeholder="Inter message subject..."
-                className="h-[46px] w-full rounded-lg border border-[#2f2f2f] bg-[#1a1a1a] px-4 text-sm text-white placeholder-[#6b7280] outline-none transition-colors focus:border-[#555]"
+                className="h-[46px] w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 text-sm text-foreground placeholder:text-gray-500 outline-none transition-colors focus:border-[#555]"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-white">Message</label>
+              <label className="mb-2 block text-sm font-medium text-foreground">Message</label>
               <textarea
                 value={broadcastMessage}
                 onChange={(e) => setBroadcastMessage(e.target.value)}
                 placeholder="Write your Broadcast message..."
                 rows={6}
-                className="w-full resize-y rounded-lg border border-[#2f2f2f] bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-[#6b7280] outline-none transition-colors focus:border-[#555]"
+                className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-3 text-sm text-foreground placeholder:text-gray-500 outline-none transition-colors focus:border-[#555]"
               />
             </div>
 
@@ -440,7 +440,7 @@ export function MessagingContent() {
                   setBroadcastSubject("");
                   setBroadcastMessage("");
                 }}
-                className="h-[46px] rounded-lg border border-[#2f2f2f] bg-[#2a2a2a] text-sm font-medium text-gray-200 transition-colors hover:bg-[#333333]"
+                className="h-[46px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] text-sm font-medium text-gray-200 transition-colors hover:bg-[var(--tott-dash-control-bg)]"
               >
                 Cancel
               </button>
@@ -449,7 +449,7 @@ export function MessagingContent() {
                 onClick={() => {
                   // Placeholder: wire to drafts API.
                 }}
-                className="inline-flex h-[46px] items-center justify-center gap-2 rounded-lg border border-[#2f2f2f] bg-[#2a2a2a] text-sm font-medium text-gray-200 transition-colors hover:bg-[#333333]"
+                className="inline-flex h-[46px] items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] text-sm font-medium text-gray-200 transition-colors hover:bg-[var(--tott-dash-control-bg)]"
               >
                 <svg
                   width="16"
@@ -481,10 +481,10 @@ export function MessagingContent() {
           </div>
         </div>
       ) : activeTab === "Templates" ? (
-        <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] p-6 lg:p-8">
-          <div className="mb-6 flex flex-col gap-4 border-b border-[#2f2f2f] pb-6 sm:flex-row sm:items-start sm:justify-between">
+        <div className="rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 lg:p-8">
+          <div className="mb-6 flex flex-col gap-4 border-b border-[var(--tott-card-border)] pb-6 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-white">New Broadcast Message</h2>
+              <h2 className="text-xl font-semibold text-foreground">New Broadcast Message</h2>
               <p className="mt-1 text-sm text-gray-500">
                 Send a message to all users or specific groups
               </p>
@@ -494,7 +494,7 @@ export function MessagingContent() {
               onClick={() => {
                 setCreateTemplateOpen(true);
               }}
-              className="h-[40px] rounded-lg border border-[#2f2f2f] bg-[#2a2a2a] px-4 text-sm font-medium text-gray-200 transition-colors hover:bg-[#333333]"
+              className="h-[40px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 text-sm font-medium text-gray-200 transition-colors hover:bg-[var(--tott-dash-control-bg)]"
             >
               Create Template
             </button>
@@ -509,10 +509,10 @@ export function MessagingContent() {
                   setSelectedTemplate(tpl);
                   setEditTemplateOpen(true);
                 }}
-                className="flex items-center justify-between gap-4 rounded-xl border border-[#2f2f2f] bg-[#121212] px-6 py-5 text-left transition-colors hover:bg-[#151515]"
+                className="flex items-center justify-between gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-6 py-5 text-left transition-colors hover:bg-[#151515]"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-base font-semibold text-white">{tpl.name}</p>
+                  <p className="truncate text-base font-semibold text-foreground">{tpl.name}</p>
                   <p className="mt-1 truncate text-sm text-gray-500">{tpl.category}...</p>
                 </div>
                 <span className="shrink-0 [&_svg]:h-4 [&_svg]:w-4" style={{ color: "#E8DDC0" }}>
@@ -534,7 +534,7 @@ export function MessagingContent() {
                 placeholder="Search messages..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full rounded-lg border border-[#2f2f2f] bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
             </div>
 
@@ -575,16 +575,16 @@ export function MessagingContent() {
               ))}
 
               {filteredThreads.length === 0 && (
-                <div className="rounded-xl border border-[#2f2f2f] bg-[#121212] p-10 text-center text-gray-500">
+                <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-10 text-center text-gray-500">
                   No messages match your filters.
                 </div>
               )}
             </div>
 
-            <div className="rounded-xl border border-[#2f2f2f] bg-[#121212]">
+            <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)]">
               {selectedThread ? (
                 <div className="flex h-[640px] flex-col">
-                  <div className="flex items-start justify-between gap-4 border-b border-[#2f2f2f] px-5 py-4">
+                  <div className="flex items-start justify-between gap-4 border-b border-[var(--tott-card-border)] px-5 py-4">
                     <div className="flex items-start gap-3">
                       <div
                         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-[#111]"
@@ -593,7 +593,7 @@ export function MessagingContent() {
                         {getInitials(selectedThread.senderName)}
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-white">
+                        <p className="truncate text-sm font-semibold text-foreground">
                           {selectedThread.senderName}
                         </p>
                         <p className="truncate text-xs text-gray-500">{selectedThread.subject}</p>
@@ -604,7 +604,7 @@ export function MessagingContent() {
                         ref={threadMenuButtonRef}
                         type="button"
                         onClick={() => setThreadMenuOpen((v) => !v)}
-                        className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+                        className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
                         aria-label="More actions"
                         aria-haspopup="menu"
                         aria-expanded={threadMenuOpen}
@@ -615,25 +615,25 @@ export function MessagingContent() {
                         <div
                           ref={threadMenuRef}
                           role="menu"
-                          className="absolute right-0 top-full z-20 mt-2 w-[180px] rounded-lg border border-[#2f2f2f] bg-[#2a2a2a] p-2 shadow-xl"
+                          className="absolute right-0 top-full z-20 mt-2 w-[180px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-2 shadow-xl"
                         >
                           <button
                             type="button"
-                            className="w-full rounded-md px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                            className="w-full rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-[var(--tott-dash-ghost-hover)]"
                             onClick={() => setThreadMenuOpen(false)}
                           >
                             View profile
                           </button>
                           <button
                             type="button"
-                            className="w-full rounded-md px-3 py-2 text-left text-sm text-[#CBA158] hover:bg-white/5"
+                            className="w-full rounded-md px-3 py-2 text-left text-sm text-[#CBA158] hover:bg-[var(--tott-dash-ghost-hover)]"
                             onClick={() => setThreadMenuOpen(false)}
                           >
                             Archive
                           </button>
                           <button
                             type="button"
-                            className="w-full rounded-md px-3 py-2 text-left text-sm text-red-400 hover:bg-white/5"
+                            className="w-full rounded-md px-3 py-2 text-left text-sm text-red-400 hover:bg-[var(--tott-dash-ghost-hover)]"
                             onClick={() => setThreadMenuOpen(false)}
                           >
                             Delete
@@ -660,8 +660,8 @@ export function MessagingContent() {
                         <div
                           className={`max-w-[520px] rounded-xl border px-4 py-3 text-sm leading-relaxed ${
                             m.align === "right"
-                              ? "border-[#3a2f1a] bg-[#1a1a1a] text-gray-200"
-                              : "border-[#2f2f2f] bg-[#151515] text-gray-200"
+                              ? "border-[#3a2f1a] bg-[var(--tott-dash-input-bg)] text-gray-200"
+                              : "border-[var(--tott-card-border)] bg-[#151515] text-gray-200"
                           }`}
                         >
                           <p className="whitespace-pre-line">{m.body}</p>
@@ -679,7 +679,7 @@ export function MessagingContent() {
                     ))}
                   </div>
 
-                  <div className="border-t border-[#2f2f2f] p-4">
+                  <div className="border-t border-[var(--tott-card-border)] p-4">
                     <div className="mb-3">
                       <Dropdown
                         open={templateOpen}
@@ -693,7 +693,7 @@ export function MessagingContent() {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#2f2f2f] bg-[#121212] text-gray-400 hover:text-white"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] text-gray-400 hover:text-foreground"
                         aria-label="Attach"
                       >
                         <svg
@@ -713,7 +713,7 @@ export function MessagingContent() {
                         value={composer}
                         onChange={(e) => setComposer(e.target.value)}
                         placeholder="Type your message"
-                        className="h-10 flex-1 rounded-lg border border-[#2f2f2f] bg-[#121212] px-4 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-[#555]"
+                        className="h-10 flex-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 text-sm text-foreground placeholder-gray-500 outline-none transition-colors focus:border-[#555]"
                       />
                       <button
                         type="button"

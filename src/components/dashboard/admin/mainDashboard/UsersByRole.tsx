@@ -19,13 +19,13 @@ type UsersByRoleProps = {
 
 export function UsersByRole({ roles, totalLabel, totalValue, viewAllHref }: UsersByRoleProps) {
   return (
-    <div className="rounded-xl border border-[#333] bg-[#0a0a0a] p-7">
+    <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-7">
       <div className="mb-5 flex items-center justify-between">
-        <h3 className="text-lg font-bold text-white">Users by Role</h3>
+        <h3 className="text-lg font-bold text-foreground">Users by Role</h3>
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+            className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-foreground"
           >
             View all
           </Link>
@@ -40,7 +40,7 @@ export function UsersByRole({ roles, totalLabel, totalValue, viewAllHref }: User
               <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-gray-500"><Icon /></span>
-                  <span className="text-sm font-medium text-white">{role.label}</span>
+                  <span className="text-sm font-medium text-foreground">{role.label}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-400">{role.count}</span>
@@ -64,9 +64,9 @@ export function UsersByRole({ roles, totalLabel, totalValue, viewAllHref }: User
       </div>
 
       {totalLabel && totalValue && (
-        <div className="mt-3 flex items-center justify-between border-t border-[#333] pt-4 text-sm text-gray-500">
+        <div className="mt-3 flex items-center justify-between border-t border-[var(--tott-card-border)] pt-4 text-sm text-gray-500">
           <span>{totalLabel}</span>
-          <span className="font-semibold text-white">{totalValue}</span>
+          <span className="font-semibold text-foreground">{totalValue}</span>
         </div>
       )}
     </div>

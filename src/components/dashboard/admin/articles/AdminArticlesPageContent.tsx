@@ -228,7 +228,7 @@ export function AdminArticlesPageContent() {
 
   const fallback = useMemo(
     () => (
-      <div className="rounded-lg border border-[#444444] px-5 py-12 text-center text-sm text-gray-500">
+      <div className="rounded-lg border border-[var(--tott-card-border)] px-5 py-12 text-center text-sm text-gray-500">
         Loading articles…
       </div>
     ),

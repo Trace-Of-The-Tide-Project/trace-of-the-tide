@@ -38,7 +38,7 @@ export function SupportersContent() {
   return (
     <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
       {/* Filter tabs - segment control with gray effect on selected */}
-      <div className="flex w-full  gap-1 rounded-lg border border-[#444] bg-[#232323] p-1 ">
+      <div className="flex w-full  gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1 ">
         {SUPPORTER_FILTERS.map((opt) => {
           const isSelected = opt.id === selectedFilter;
           return (
@@ -48,7 +48,7 @@ export function SupportersContent() {
               onClick={() => setSelectedFilter(opt.id)}
               className={`flex-1 cursor-pointer rounded-md py-2 text-sm font-medium transition-all ${
                 isSelected
-                  ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                  ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                   : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
               }`}
             >
@@ -63,7 +63,7 @@ export function SupportersContent() {
         {filteredContributions.map((entry) => (
           <div
             key={entry.id}
-            className="flex flex-col gap-4 rounded-xl border border-[#444444] bg-[#1a1a1a] px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
           >
             {/* Left: Avatar, name, timestamp */}
             <div className="flex items-center gap-3">
@@ -87,13 +87,13 @@ export function SupportersContent() {
                 <p className="text-sm font-medium" style={{ color:"#C9A96E" }}>
                   {entry.amount}
                 </p>
-                <p className="text-xs capitalize text-white">
+                <p className="text-xs capitalize text-foreground">
                   {entry.type === "one-time" ? "One-time" : "Recurring"}
                 </p>
               </div>
               <button
                 type="button"
-                className="flex cursor-pointer items-center justify-center gap-2 self-start rounded-lg bg-[#333333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3d3d3d]"
+                className="flex cursor-pointer items-center justify-center gap-2 self-start rounded-lg bg-[var(--tott-dash-control-bg)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
               >
                 <MessageSquareIcon />
                 Thank the contributor

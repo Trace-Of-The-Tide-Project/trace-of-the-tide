@@ -7,13 +7,15 @@ import { GripIcon } from "../ArticleEditorIcons";
 import { ApplicationFormPreview } from "./ApplicationFormPreview";
 
 const inputClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-2 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500";
 
 const FIELD_DRAG_MIME = "application/x-tott-field-index";
 
 type Props = {
   fields: ApplicationFormField[];
   onChange: (fields: ApplicationFormField[]) => void;
+  /** When set, “Reset to default template” restores this list instead of the open-call template. */
+  defaultTemplateFields?: ApplicationFormField[];
 };
 
 function newFieldForType(type: ApplicationFormField["type"]): ApplicationFormField {
@@ -45,7 +47,7 @@ function newFieldForType(type: ApplicationFormField["type"]): ApplicationFormFie
   }
 }
 
-export function ApplicationFormBuilder({ fields, onChange }: Props) {
+export function ApplicationFormBuilder({ fields, onChange, defaultTemplateFields }: Props) {
   const [showPreview, setShowPreview] = useState(false);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
@@ -114,13 +116,14 @@ export function ApplicationFormBuilder({ fields, onChange }: Props) {
   );
 
   const resetDefaults = useCallback(() => {
-    onChange(DEFAULT_OPEN_CALL_APPLICATION_FIELDS.map((f) => JSON.parse(JSON.stringify(f))));
-  }, [onChange]);
+    const src = defaultTemplateFields ?? DEFAULT_OPEN_CALL_APPLICATION_FIELDS;
+    onChange(src.map((f) => JSON.parse(JSON.stringify(f))));
+  }, [onChange, defaultTemplateFields]);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-lg font-bold text-white">Edit form fields</h3>
+        <h3 className="text-lg font-bold text-foreground">Edit form fields</h3>
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -165,7 +168,7 @@ export function ApplicationFormBuilder({ fields, onChange }: Props) {
               key={t}
               type="button"
               onClick={() => addField(t)}
-              className="rounded border border-[#444] bg-[#333] px-2 py-1 text-xs text-gray-300 hover:border-gray-500"
+              className="rounded border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-2 py-1 text-xs text-gray-300 hover:border-gray-500"
             >
               + {t}
             </button>
@@ -194,13 +197,13 @@ function PreviewModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative mx-4 max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-[#333] bg-[#0a0a0a] p-6 shadow-2xl">
+      <div className="relative mx-4 max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-white">Form Preview</h3>
+          <h3 className="text-lg font-bold text-foreground">Form Preview</h3>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-[#333] hover:text-white"
+            className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-[var(--tott-dash-control-hover)] hover:text-foreground"
           >
             <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 6 6 18" />
@@ -254,7 +257,7 @@ function FieldRow({
   return (
     <div
       className={`flex gap-3 rounded-lg border bg-[#141414] p-4 transition-all ${
-        isDragging ? "border-[#C9A96E]/40 opacity-50" : isDragOver ? "border-[#C9A96E] bg-[#1a1a1a]" : "border-[#444]"
+        isDragging ? "border-[#C9A96E]/40 opacity-50" : isDragOver ? "border-[#C9A96E] bg-[var(--tott-dash-input-bg)]" : "border-[var(--tott-card-border)]"
       }`}
       onDragOver={(e) => onDragOver(e, index)}
       onDrop={(e) => onDrop(e, index)}
@@ -268,7 +271,7 @@ function FieldRow({
           title="Drag to reorder"
           onDragStart={(e) => onDragStart(e, index)}
           onDragEnd={onDragEnd}
-          className={`flex h-8 w-8 cursor-grab items-center justify-center rounded bg-[#333333] text-white transition-colors select-none hover:bg-[#3d3d3d] active:cursor-grabbing ${
+          className={`flex h-8 w-8 cursor-grab items-center justify-center rounded border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-foreground transition-colors select-none hover:bg-[var(--tott-dash-control-hover)] active:cursor-grabbing ${
             isDragging ? "opacity-50" : ""
           }`}
         >

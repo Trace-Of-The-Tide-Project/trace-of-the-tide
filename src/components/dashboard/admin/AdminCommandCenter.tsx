@@ -8,7 +8,7 @@ export function AdminCommandCenter() {
     <div>
       <div className="flex flex-col gap-2 py-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white sm:text-2xl">Command Center</h1>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Command Center</h1>
           <p className="mt-1 text-sm text-gray-500">
             Welcome back, Super Admin. Here&apos;s what&apos;s happening on your platform.
           </p>

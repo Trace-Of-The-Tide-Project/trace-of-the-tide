@@ -60,13 +60,13 @@ export default function ContributePage() {
   }, [types]);
 
   return (
-    <div className="relative min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
+    <div className="relative min-h-screen w-full" style={{ backgroundColor: theme.pageBackground }}>
       {/* Upper hero: hex background */}
       <section className="relative w-full overflow-hidden">
         <div
           className="absolute inset-0"
           style={{
-            background: theme.bgDark,
+            background: theme.pageBackground,
           }}
         />
         <div className="absolute inset-0 h-[200px] w-full">
@@ -78,7 +78,7 @@ export default function ContributePage() {
           <span className="text-gray-400">
             <ContributeIcon />
           </span>
-          <h1 className="mt-6 text-center text-3xl font-bold text-white select-none sm:text-4xl">
+          <h1 className="mt-6 text-center text-3xl font-bold text-foreground select-none sm:text-4xl">
             Contribute to Trace of the Tides
           </h1>
           <p className="mt-6 text-center text-lg font-medium select-none text-gray-400">

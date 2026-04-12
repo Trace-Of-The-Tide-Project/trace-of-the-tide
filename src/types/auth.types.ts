@@ -27,3 +27,11 @@ export interface AuthResponse {
   access_token: string
   user: AuthUser
 }
+
+/** Signup succeeded but the server did not issue a session (e.g. verify email first). */
+export type SignupPendingVerification = {
+  pendingEmailVerification: true
+  email: string
+}
+
+export type SignupResult = AuthResponse | SignupPendingVerification

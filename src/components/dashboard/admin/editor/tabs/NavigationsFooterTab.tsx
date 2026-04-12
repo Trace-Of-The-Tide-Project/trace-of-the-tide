@@ -20,7 +20,7 @@ function NavFooterToggle({ checked, onChange }: { checked: boolean; onChange: (v
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? "" : "bg-[#333]"}`}
+      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? "" : "bg-[var(--tott-dash-control-bg)]"}`}
       style={checked ? { backgroundColor: theme.accentGoldFocus } : undefined}
     >
       <span
@@ -40,11 +40,11 @@ export function NavigationsFooterTab() {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-2" role="region" aria-label="Navigations and footer configuration">
       <div
-        className="isolate min-w-0 overflow-visible rounded-xl border border-[#444] p-6"
+        className="isolate min-w-0 overflow-visible rounded-xl border border-[var(--tott-card-border)] p-6"
         role="group"
         aria-label="Header navigation configuration"
       >
-        <h3 className="text-sm font-semibold text-white">Header Navigation</h3>
+        <h3 className="text-sm font-semibold text-foreground">Header Navigation</h3>
         <p className="mt-1 text-xs text-gray-500">Configure main navigation links</p>
         <div className="mt-4 space-y-4">
           {navLinks.map((link) => (
@@ -57,14 +57,14 @@ export function NavigationsFooterTab() {
                 placeholder="Text"
                 value={link.text}
                 onChange={(e) => updateNavLink(link.id, "text", e.target.value)}
-                className="min-w-0 flex-1 rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="min-w-0 flex-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
               <input
                 type="text"
                 placeholder="/text"
                 value={link.path}
                 onChange={(e) => updateNavLink(link.id, "path", e.target.value)}
-                className="min-w-0 flex-1 rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="min-w-0 flex-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
               <NavFooterToggle
                 checked={link.enabled}
@@ -75,7 +75,7 @@ export function NavigationsFooterTab() {
         </div>
         <button
           type="button"
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[#444] bg-[#333] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
         >
           <span className="[&_svg]:h-4 [&_svg]:w-4">
             <PlusIcon />
@@ -84,45 +84,45 @@ export function NavigationsFooterTab() {
         </button>
       </div>
       <div
-        className="isolate overflow-hidden rounded-xl border border-[#444] p-6"
+        className="isolate overflow-hidden rounded-xl border border-[var(--tott-card-border)] p-6"
         role="group"
         aria-label="Footer configuration"
       >
-        <h3 className="text-sm font-semibold text-white">Footer</h3>
+        <h3 className="text-sm font-semibold text-foreground">Footer</h3>
         <p className="mt-1 text-xs text-gray-500">Configure footer content and links</p>
         <div className="mt-4 space-y-4">
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white">Footer Text</label>
+            <label className="mb-1.5 block text-xs font-medium text-foreground">Footer Text</label>
             <textarea
               placeholder="© 2024 TTT. All rights reserved."
               rows={3}
-              className="w-full resize-none rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+              className="w-full resize-none rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white">Social Links</label>
+            <label className="mb-1.5 block text-xs font-medium text-foreground">Social Links</label>
             <div className="space-y-2">
               <input
                 type="text"
                 placeholder="Twitter URL"
-                className="w-full rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
               <input
                 type="text"
                 placeholder="Instagram URL"
-                className="w-full rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
               <input
                 type="text"
                 placeholder="Linkedin URL"
-                className="w-full rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
             </div>
           </div>
         </div>
         <button
           type="button"
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[#444] bg-[#333] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
         >
           <span className="[&_svg]:h-4 [&_svg]:w-4">
             <PlusIcon />

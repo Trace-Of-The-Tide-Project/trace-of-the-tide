@@ -45,7 +45,7 @@ function RelatedContentHexBackground() {
 
 export function RelatedContent({ items, viewMoreHref = "#" }: RelatedContentProps) {
   return (
-    <section className="relative py-10 sm:py-14" style={{ backgroundColor: theme.bgDark }}>
+    <section className="relative py-10 sm:py-14" style={{ backgroundColor: theme.pageBackground }}>
       <RelatedContentHexBackground />
       <div className="relative mx-auto max-w-6xl px-6 sm:px-10">
         <div className="flex items-start justify-between gap-4">

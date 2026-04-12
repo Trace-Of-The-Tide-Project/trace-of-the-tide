@@ -52,8 +52,8 @@ export function ReportsContent() {
 
   return (
     <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
-      <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] p-6 lg:p-8">
-        <div className="flex w-fit gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+      <div className="rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 lg:p-8">
+        <div className="flex w-fit gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
           {REPORT_TABS.map((tab) => {
             const label =
               tab === "Reported Content"
@@ -68,7 +68,7 @@ export function ReportsContent() {
                 onClick={() => setActiveTab(tab)}
                 className={`rounded-md px-5 py-2.5 text-sm font-medium transition-all ${
                   activeTab === tab
-                    ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                    ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                     : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
                 }`}
               >
@@ -90,7 +90,7 @@ export function ReportsContent() {
                   placeholder="Search reports..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="w-full rounded-lg border border-[#2f2f2f] bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                  className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
                 />
               </div>
               <div className="flex flex-wrap gap-2">
@@ -101,8 +101,8 @@ export function ReportsContent() {
                     onClick={() => setFilter(f)}
                     className={`rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors ${
                       filter === f
-                        ? "border-[#555] bg-[#333] text-white"
-                        : "border-[#444] bg-transparent text-gray-400 hover:text-white"
+                        ? "border-[#555] bg-[var(--tott-dash-control-bg)] text-foreground"
+                        : "border-[var(--tott-card-border)] bg-transparent text-gray-400 hover:text-foreground"
                     }`}
                   >
                     {f}
@@ -126,16 +126,16 @@ export function ReportsContent() {
                 )}
               </div>
 
-              <div className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-[#2f2f2f] bg-[#0f0f0f] px-6 py-12 text-center">
+              <div className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-[var(--tott-card-border)] bg-[#0f0f0f] px-6 py-12 text-center">
                 {selected ? (
                   <div className="w-full max-w-md text-left">
-                    <h3 className="text-lg font-semibold text-white">{selected.title}</h3>
+                    <h3 className="text-lg font-semibold text-foreground">{selected.title}</h3>
                     <p className="mt-2 text-sm text-gray-500">{selected.timeAgo}</p>
                     <p className="mt-4 text-sm text-gray-400">
-                      Reported by: <span className="text-white">{selected.reporter}</span>
+                      Reported by: <span className="text-foreground">{selected.reporter}</span>
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
-                      <span className="rounded-full border border-[#444] bg-[#1a1a1a] px-3 py-1 text-xs text-gray-300">
+                      <span className="rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-1 text-xs text-gray-300">
                         {selected.typeLabel}
                       </span>
                       <span
@@ -151,7 +151,7 @@ export function ReportsContent() {
                   </div>
                 ) : (
                   <>
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#333] bg-[#1a1a1a] text-[#E8DDC0]">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] text-[#E8DDC0]">
                       <FlagIcon />
                     </div>
                     <p className="mt-4 text-sm text-gray-500">Select a report to review</p>
@@ -181,7 +181,7 @@ const AUDIT_CARD_CLIP =
 function AuditLogSection({ entries }: { entries: AuditLogEntry[] }) {
   return (
     <div className="mt-6">
-      <h2 className="text-lg font-bold text-white sm:text-xl">Audit Log</h2>
+      <h2 className="text-lg font-bold text-foreground sm:text-xl">Audit Log</h2>
       <p className="mt-1 text-sm text-[#a0a0a0]">Track all moderation actions</p>
       <div className="mt-6 space-y-3">
         {entries.map((entry) => (
@@ -199,11 +199,11 @@ function AuditLogCard({ entry }: { entry: AuditLogEntry }) {
       style={{
         clipPath: AUDIT_CARD_CLIP,
         backgroundColor: "#1a1a1a",
-        boxShadow: "inset 0 0 0 1px #2a2a2a",
+        boxShadow: "inset 0 0 0 1px var(--tott-card-border)",
       }}
     >
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#333] bg-[#121212] text-[#E8DDC0]"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] text-[#E8DDC0]"
         aria-hidden
       >
         <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -211,7 +211,7 @@ function AuditLogCard({ entry }: { entry: AuditLogEntry }) {
         </span>
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-semibold text-white">{entry.title}</p>
+        <p className="font-semibold text-foreground">{entry.title}</p>
         <p className="mt-0.5 text-sm text-[#a0a0a0]">{entry.meta}</p>
       </div>
       <p className="shrink-0 text-right text-sm text-[#a0a0a0]">{entry.timeAgo}</p>
@@ -221,7 +221,7 @@ function AuditLogCard({ entry }: { entry: AuditLogEntry }) {
 
 function ReportedUserCard({ user }: { user: ReportedUserItem }) {
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-[#2f2f2f] bg-[#121212] p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex flex-col gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex min-w-0 gap-4">
         <div
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-bold text-[#111]"
@@ -230,7 +230,7 @@ function ReportedUserCard({ user }: { user: ReportedUserItem }) {
           {user.avatarInitial}
         </div>
         <div className="min-w-0">
-          <p className="font-semibold text-white">{user.displayName}</p>
+          <p className="font-semibold text-foreground">{user.displayName}</p>
           <p className="text-sm text-gray-500">{user.email}</p>
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
             <span className="inline-flex items-center gap-1.5">
@@ -253,12 +253,12 @@ function ReportedUserCard({ user }: { user: ReportedUserItem }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:justify-end">
-        <span className="rounded-full border border-amber-500/35 bg-[#1a1a1a] px-3 py-1 text-xs font-medium text-amber-400">
+        <span className="rounded-full border border-amber-500/35 bg-[var(--tott-dash-input-bg)] px-3 py-1 text-xs font-medium text-amber-400">
           {user.status}
         </span>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-lg border border-[#444] bg-[#232323] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
+          className="inline-flex items-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)]"
         >
           <span className="text-[#E8DDC0] [&_svg]:h-4 [&_svg]:w-4">
             <EyeIcon />
@@ -267,7 +267,7 @@ function ReportedUserCard({ user }: { user: ReportedUserItem }) {
         </button>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-lg border border-[#444] bg-[#232323] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
+          className="inline-flex items-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)]"
         >
           <span className="text-[#E8DDC0] [&_svg]:h-4 [&_svg]:w-4">
             <MessageSquareIcon />
@@ -276,7 +276,7 @@ function ReportedUserCard({ user }: { user: ReportedUserItem }) {
         </button>
         <button
           type="button"
-          className="rounded-lg border border-[#444] bg-[#232323] px-3 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-[#2a2a2a]"
+          className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-3 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-[var(--tott-dash-surface-inset)]"
         >
           Suspend
         </button>
@@ -301,21 +301,21 @@ function ReportListCard({
       className={`w-full rounded-xl border px-4 py-4 text-left transition-colors ${
         selected
           ? "border-[#5a4a2a] bg-[#151515]"
-          : "border-[#2f2f2f] bg-[#121212] hover:bg-[#151515]"
+          : "border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] hover:bg-[#151515]"
       }`}
     >
       <div className="flex gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#333] bg-[#1a1a1a] text-[#E8DDC0]">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] text-[#E8DDC0]">
           <AlertTriangleIcon />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-white">{report.title}</p>
+          <p className="text-sm font-semibold text-foreground">{report.title}</p>
           <p className="mt-1 text-xs text-gray-500">{report.timeAgo}</p>
           <p className="mt-2 text-xs text-gray-400">
             Reported by: <span className="text-gray-300">{report.reporter}</span>
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
-            <span className="rounded-full border border-[#444] bg-[#1a1a1a] px-2 py-0.5 text-[11px] text-gray-400">
+            <span className="rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-2 py-0.5 text-[11px] text-gray-400">
               {report.typeLabel}
             </span>
             <span

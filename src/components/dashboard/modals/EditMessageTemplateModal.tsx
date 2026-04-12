@@ -96,16 +96,16 @@ export function EditMessageTemplateModal({ open, template, onClose, onSave }: Ed
         aria-label="Close modal"
       />
 
-      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[#333] bg-[#0a0a0a] p-6">
-        <div className="mb-5 flex items-start justify-between border-b border-[#333] pb-5">
+      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6">
+        <div className="mb-5 flex items-start justify-between border-b border-[var(--tott-card-border)] pb-5">
           <div>
-            <h2 className="text-lg font-bold text-white">Edit Template</h2>
+            <h2 className="text-lg font-bold text-foreground">Edit Template</h2>
             <p className="mt-1 text-sm text-gray-500">Update this message template</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
             aria-label="Close"
           >
             <XIcon />
@@ -128,22 +128,22 @@ export function EditMessageTemplateModal({ open, template, onClose, onSave }: Ed
           }}
         >
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Template Name</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Template Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="h-[44px] w-full rounded-lg border border-[#333] bg-[#1a1a1a] px-4 text-sm text-white placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="h-[44px] w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 text-sm text-foreground placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Category</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Category</label>
             <div className="relative">
               <button
                 ref={categoryButtonRef}
                 type="button"
                 onClick={() => setCategoryOpen((v) => !v)}
-                className="flex h-[44px] w-full items-center justify-between rounded-lg border border-[#333] bg-[#1a1a1a] px-4 text-sm text-white outline-none transition-colors focus:border-gray-500"
+                className="flex h-[44px] w-full items-center justify-between rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 text-sm text-foreground outline-none transition-colors focus:border-gray-500"
                 aria-haspopup="listbox"
                 aria-expanded={categoryOpen}
               >
@@ -157,7 +157,7 @@ export function EditMessageTemplateModal({ open, template, onClose, onSave }: Ed
                 <div
                   ref={categoryMenuRef}
                   role="listbox"
-                  className="absolute left-0 right-0 top-full z-10 mt-2 rounded-lg border border-[#333] bg-[#2a2a2a] p-2 shadow-xl"
+                  className="absolute left-0 right-0 top-full z-10 mt-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-2 shadow-xl"
                 >
                   {CATEGORY_OPTIONS.map((opt) => (
                     <button
@@ -167,7 +167,7 @@ export function EditMessageTemplateModal({ open, template, onClose, onSave }: Ed
                         setCategory(opt.value);
                         setCategoryOpen(false);
                       }}
-                      className="w-full rounded-md px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                      className="w-full rounded-md px-3 py-2 text-left text-sm text-foreground hover:bg-[var(--tott-dash-ghost-hover)]"
                     >
                       {opt.label.charAt(0).toUpperCase() + opt.label.slice(1)}
                     </button>
@@ -178,21 +178,21 @@ export function EditMessageTemplateModal({ open, template, onClose, onSave }: Ed
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Subject Line</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Subject Line</label>
             <input
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="h-[44px] w-full rounded-lg border border-[#333] bg-[#1a1a1a] px-4 text-sm text-white placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="h-[44px] w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 text-sm text-foreground placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Message Body</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Message Body</label>
             <textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={5}
-              className="w-full resize-y rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-3 text-sm text-foreground placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
             />
             <p className="mt-2 text-xs text-gray-500">
               Available variables:{" "}
@@ -204,7 +204,7 @@ export function EditMessageTemplateModal({ open, template, onClose, onSave }: Ed
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-foreground"
             >
               Cancel
             </button>

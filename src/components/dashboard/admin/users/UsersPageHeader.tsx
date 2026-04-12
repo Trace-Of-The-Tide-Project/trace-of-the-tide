@@ -15,7 +15,7 @@ export function UsersPageHeader() {
           <button
             type="button"
             onClick={() => requestUsersCsvExport()}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#444] bg-[#232323] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a] sm:w-auto sm:justify-start sm:py-2"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)] sm:w-auto sm:justify-start sm:py-2"
           >
             <DownloadIcon />
             Export CSV

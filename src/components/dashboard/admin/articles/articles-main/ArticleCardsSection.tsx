@@ -38,14 +38,14 @@ export function ArticleCardsSection({
       {(title || viewAllHref) && (
         <div className="mb-4 flex items-center justify-between">
           {!hideTitle && title ? (
-            <h3 className="text-lg font-bold text-white">{title}</h3>
+            <h3 className="text-lg font-bold text-foreground">{title}</h3>
           ) : (
             <span />
           )}
           {viewAllHref && (
             <Link
               href={viewAllHref}
-              className="text-sm font-medium text-gray-400 transition-colors hover:text-white"
+              className="text-sm font-medium text-gray-400 transition-colors hover:text-foreground"
             >
               View all
             </Link>

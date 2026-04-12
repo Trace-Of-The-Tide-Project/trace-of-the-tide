@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import Link from "next/link";
 import {
   PersonIcon,
@@ -23,9 +23,7 @@ function formatFileSize(bytes: number): string {
 }
 
 function labelForName(name: string): string {
-  return name
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function iconForType(type: ApplicationFormField["type"]) {
@@ -34,7 +32,16 @@ function iconForType(type: ApplicationFormField["type"]) {
       return <EmailIcon />;
     case "phone":
       return (
-        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width={18}
+          height={18}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
         </svg>
       );
@@ -43,16 +50,21 @@ function iconForType(type: ApplicationFormField["type"]) {
   }
 }
 
-function TextField({ field }: { field: ApplicationFormField & { type: "text" | "email" | "phone" } }) {
+function TextField({
+  field,
+}: {
+  field: ApplicationFormField & { type: "text" | "email" | "phone" };
+}) {
   const label = labelForName(field.name);
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-white">
-        {label}{field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
+      <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+        {label}
+        {field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
       </label>
       <div
-        className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-        style={{ borderColor: theme.inputBorder }}
+        className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+        style={{ borderColor: theme.inputBorder, backgroundColor: theme.panelWellBackground }}
       >
         <span className="shrink-0 text-gray-500">{iconForType(field.type)}</span>
         <input
@@ -60,7 +72,7 @@ function TextField({ field }: { field: ApplicationFormField & { type: "text" | "
           type={field.type === "email" ? "email" : field.type === "phone" ? "tel" : "text"}
           placeholder={`Enter ${label.toLowerCase()}`}
           required={field.required}
-          className="w-full bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+          className="w-full bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
         />
       </div>
     </div>
@@ -71,8 +83,9 @@ function TextareaField({ field }: { field: ApplicationFormField & { type: "texta
   const label = labelForName(field.name);
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-white">
-        {label}{field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
+      <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+        {label}
+        {field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
       </label>
       <textarea
         name={field.name}
@@ -90,21 +103,30 @@ function SelectField({ field }: { field: ApplicationFormField & { type: "select"
   const label = labelForName(field.name);
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-white">
-        {label}{field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
+      <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+        {label}
+        {field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
       </label>
       <div
-        className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-        style={{ borderColor: theme.inputBorder }}
+        className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+        style={{ borderColor: theme.inputBorder, backgroundColor: theme.panelWellBackground }}
       >
         <select
           name={field.name}
           required={field.required}
-          className="w-full appearance-none bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+          className="w-full appearance-none bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
         >
-          <option value="" className="bg-[#1a1a1a]">Select</option>
+          <option value="" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            Select
+          </option>
           {field.options.map((opt) => (
-            <option key={opt} value={opt} className="bg-[#1a1a1a]">{opt}</option>
+            <option
+              key={opt}
+              value={opt}
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
+              {opt}
+            </option>
           ))}
         </select>
         <span className="pointer-events-none shrink-0 text-gray-500">
@@ -115,7 +137,11 @@ function SelectField({ field }: { field: ApplicationFormField & { type: "select"
   );
 }
 
-function CheckboxField({ field, checked, onChange }: {
+function CheckboxField({
+  field,
+  checked,
+  onChange,
+}: {
   field: ApplicationFormField & { type: "checkbox" };
   checked: boolean;
   onChange: (v: boolean) => void;
@@ -131,7 +157,7 @@ function CheckboxField({ field, checked, onChange }: {
         required={field.required}
         className="h-4 w-4 rounded border-gray-600 bg-transparent accent-[#C9A96E] focus:ring-[#C9A96E]"
       />
-      <span className="text-sm text-gray-400">{label}</span>
+      <span className="text-sm text-gray-500">{label}</span>
     </label>
   );
 }
@@ -141,15 +167,18 @@ function FileField({ field }: { field: ApplicationFormField & { type: "file_mult
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
-  const addFiles = useCallback((fileList: FileList | null) => {
-    if (!fileList?.length) return;
-    const newFiles: UploadedFile[] = Array.from(fileList).map((file) => ({
-      id: `${file.name}-${Date.now()}-${Math.random()}`,
-      file,
-      sizeLabel: formatFileSize(file.size),
-    }));
-    setFiles((prev) => [...prev, ...newFiles].slice(0, field.max_files));
-  }, [field.max_files]);
+  const addFiles = useCallback(
+    (fileList: FileList | null) => {
+      if (!fileList?.length) return;
+      const newFiles: UploadedFile[] = Array.from(fileList).map((file) => ({
+        id: `${file.name}-${Date.now()}-${Math.random()}`,
+        file,
+        sizeLabel: formatFileSize(file.size),
+      }));
+      setFiles((prev) => [...prev, ...newFiles].slice(0, field.max_files));
+    },
+    [field.max_files]
+  );
 
   const removeFile = useCallback((id: string) => {
     setFiles((prev) => prev.filter((f) => f.id !== id));
@@ -159,15 +188,26 @@ function FileField({ field }: { field: ApplicationFormField & { type: "file_mult
 
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-white">
-        {label}{field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
+      <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+        {label}
+        {field.required && <span className="ml-0.5 text-[#C9A96E]">*</span>}
       </label>
       <div
-        onDrop={(e) => { e.preventDefault(); setIsDragging(false); addFiles(e.dataTransfer.files); }}
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-        onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+          addFiles(e.dataTransfer.files);
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+        }}
         className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 transition-colors ${
-          isDragging ? "border-[#C9A96E] bg-[#C9A96E]/10" : "border-gray-600 bg-[#1a1a1a]"
+          isDragging ? "border-[#C9A96E] bg-[#C9A96E]/10" : "border-gray-600 bg-[var(--tott-well-bg)]"
         }`}
       >
         <input
@@ -178,24 +218,41 @@ function FileField({ field }: { field: ApplicationFormField & { type: "file_mult
           accept={field.allowed_types.map((t) => `.${t}`).join(",")}
           onChange={(e) => addFiles(e.target.files)}
         />
-        <label htmlFor={inputId} className="flex cursor-pointer flex-col items-center gap-2 text-gray-400">
+        <label
+          htmlFor={inputId}
+          className="flex cursor-pointer flex-col items-center gap-2 text-gray-400"
+        >
           <span style={{ color: theme.accentGoldFocus }}>
             <CloudUploadIcon />
           </span>
           <span className="text-center text-sm">Drag and drop files here, or click to browse</span>
           <span className="text-xs text-gray-500">
-            Supported: {field.allowed_types.join(", ").toUpperCase()} (Max {field.max_files} files, {field.max_size_mb} MB each)
+            Supported: {field.allowed_types.join(", ").toUpperCase()} (Max {field.max_files} files,{" "}
+            {field.max_size_mb} MB each)
           </span>
         </label>
       </div>
       {files.length > 0 && (
         <ul className="mt-3 space-y-2">
           {files.map(({ id, file, sizeLabel }) => (
-            <li key={id} className="flex items-center gap-3 rounded-lg border border-gray-700 bg-[#1a1a1a] px-4 py-3">
-              <span className="text-gray-500"><FileTextIcon /></span>
-              <span className="min-w-0 flex-1 truncate text-sm text-white">{file.name}</span>
+            <li
+              key={id}
+              className="flex items-center gap-3 rounded-lg border border-gray-700 px-4 py-3"
+              style={{ backgroundColor: theme.panelWellBackground }}
+            >
+              <span className="text-gray-500">
+                <FileTextIcon />
+              </span>
+              <span className="min-w-0 flex-1 truncate text-sm text-[color:var(--tott-panel-text)]">
+                {file.name}
+              </span>
               <span className="text-xs text-gray-500">{sizeLabel}</span>
-              <button type="button" onClick={() => removeFile(id)} className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-white" aria-label="Remove file">
+              <button
+                type="button"
+                onClick={() => removeFile(id)}
+                className="rounded p-1 text-gray-500 hover:bg-black/10 hover:text-[color:var(--tott-panel-text)]"
+                aria-label="Remove file"
+              >
                 <TrashIcon />
               </button>
             </li>
@@ -206,7 +263,25 @@ function FileField({ field }: { field: ApplicationFormField & { type: "file_mult
   );
 }
 
-export function DynamicOpenCallForm({ fields }: { fields: ApplicationFormField[] }) {
+type DynamicOpenCallFormProps = {
+  fields: ApplicationFormField[];
+  /** Primary button label (default: Submit). */
+  submitLabel?: string;
+  /** When false, hide the “Home page” link under the button. */
+  showHomeLink?: boolean;
+  /** Inserted after fields, before submit (e.g. trip price row). */
+  beforeSubmitSlot?: ReactNode;
+  /** Inserted after submit (e.g. terms note). */
+  afterSubmitSlot?: ReactNode;
+};
+
+export function DynamicOpenCallForm({
+  fields,
+  submitLabel = "Submit",
+  showHomeLink = true,
+  beforeSubmitSlot,
+  afterSubmitSlot,
+}: DynamicOpenCallFormProps) {
   const [checkboxes, setCheckboxes] = useState<Record<string, boolean>>({});
 
   const allRequiredCheckboxesChecked = fields
@@ -245,21 +320,31 @@ export function DynamicOpenCallForm({ fields }: { fields: ApplicationFormField[]
         return null;
       })}
 
+      {beforeSubmitSlot}
+
       <button
         type="submit"
         disabled={!allRequiredCheckboxesChecked}
-        className="w-full cursor-pointer rounded-lg py-3.5 text-base font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black"
-        style={{ backgroundColor: theme.accentGold, boxShadow: `0 0 0 1px ${theme.accentGold}` }}
+        className="w-full cursor-pointer rounded-lg py-3.5 text-base font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--background)]"
+        style={{
+          backgroundColor: theme.accentGold,
+          boxShadow: `0 0 0 1px ${theme.accentGold}`,
+          color: theme.bgDark,
+        }}
       >
-        Submit
+        {submitLabel}
       </button>
 
-      <p className="text-center text-sm text-gray-400">
-        Go back to{" "}
-        <Link href="/" className="hover:underline" style={{ color: theme.accentGold }}>
-          Home page
-        </Link>
-      </p>
+      {afterSubmitSlot}
+
+      {showHomeLink ? (
+        <p className="text-center text-sm text-gray-400">
+          Go back to{" "}
+          <Link href="/" className="hover:underline" style={{ color: theme.accentGold }}>
+            Home page
+          </Link>
+        </p>
+      ) : null}
     </form>
   );
 }
