@@ -1,10 +1,11 @@
 "use client";
 
-import type { ComponentType } from "react";
+import { createElement, isValidElement, type ComponentType, type ReactNode } from "react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 
 type StatCardProps = {
-  icon: ComponentType;
+  /** Use `<Icon />` from Server Components, or a component ref from pure client trees. */
+  icon: ReactNode | ComponentType;
   value: string | number;
   label: string;
   trend?: {
@@ -14,7 +15,13 @@ type StatCardProps = {
   };
 };
 
-export function StatCard({ icon: Icon, value, label, trend }: StatCardProps) {
+function renderStatIcon(icon: StatCardProps["icon"]): ReactNode {
+  if (isValidElement(icon)) return icon;
+  if (typeof icon === "function") return createElement(icon as ComponentType);
+  return icon;
+}
+
+export function StatCard({ icon, value, label, trend }: StatCardProps) {
   const { isDark } = useTheme();
   return (
     <div className="flex flex-col items-center gap-2 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-panel-bg)] px-4 py-5">
@@ -22,7 +29,7 @@ export function StatCard({ icon: Icon, value, label, trend }: StatCardProps) {
         className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)]"
         style={{ color: isDark ? "#E8DDC0" : "#a89060" }}
       >
-        <Icon />
+        {renderStatIcon(icon)}
       </span>
       <span className="text-xs text-gray-500">{label}</span>
       <span className="text-2xl font-bold text-foreground">{value}</span>
