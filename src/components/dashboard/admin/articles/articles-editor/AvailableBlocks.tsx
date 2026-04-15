@@ -34,9 +34,15 @@ type AvailableBlocksProps = {
   onAddBlock: (type: BlockType) => void;
   /** If set, only these block types are offered (e.g. Open Call omits heading). */
   allowedBlockTypes?: BlockType[];
+  /** Overrides the palette label for the `image` block (hero/main media naming by content type). */
+  imageBlockLabel?: string;
 };
 
-export function AvailableBlocks({ onAddBlock, allowedBlockTypes }: AvailableBlocksProps) {
+export function AvailableBlocks({
+  onAddBlock,
+  allowedBlockTypes,
+  imageBlockLabel,
+}: AvailableBlocksProps) {
   const blocksToShow =
     allowedBlockTypes && allowedBlockTypes.length
       ? BLOCKS.filter((b) => allowedBlockTypes.includes(b.id))
@@ -57,7 +63,11 @@ export function AvailableBlocks({ onAddBlock, allowedBlockTypes }: AvailableBloc
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-gray-500">
                 {block.icon}
               </span>
-              <span className="text-sm font-medium text-gray-400">{block.label}</span>
+              <span className="text-sm font-medium text-gray-400">
+                {block.id === "image" && imageBlockLabel?.trim()
+                  ? imageBlockLabel.trim()
+                  : block.label}
+              </span>
             </div>
             <span className="shrink-0 text-gray-400">+</span>
           </button>

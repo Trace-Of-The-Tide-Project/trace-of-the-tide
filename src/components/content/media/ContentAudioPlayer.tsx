@@ -1,10 +1,12 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect -- reset transport when resolved blob URL changes */
 
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { PlayIcon, PauseIcon } from "@/components/ui/icons";
 import { theme } from "@/lib/theme";
 import { formatTime } from "./mediaUtils";
+import { useArticleMediaPlaybackUrl } from "@/hooks/useArticleMediaPlaybackUrl";
 
 type ContentAudioPlayerProps = {
   src: string;
@@ -19,6 +21,7 @@ export function ContentAudioPlayer({
   title,
   duration: durationLabel,
 }: ContentAudioPlayerProps) {
+  const { playbackUrl, status } = useArticleMediaPlaybackUrl(src);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -85,9 +88,14 @@ export function ContentAudioPlayer({
     const a = audioRef.current;
     const bar = e.currentTarget;
     if (!a || !bar) return;
+    const d = a.duration;
+    if (!isFinite(d) || d <= 0) return;
     const rect = bar.getBoundingClientRect();
+    if (rect.width <= 0) return;
     const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    a.currentTime = pct * a.duration;
+    const t = pct * d;
+    if (!isFinite(t)) return;
+    a.currentTime = t;
   }, []);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -105,10 +113,23 @@ export function ContentAudioPlayer({
     []
   );
 
+  useEffect(() => {
+    setPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, [playbackUrl]);
+
+  const showLoading = status === "loading" || (status === "ready" && !playbackUrl);
+
   return (
-    <div
-      className="overflow-hidden rounded-xl p-4 sm:p-6 md:p-8 lg:p-10"
-    >
+    <div className="relative overflow-hidden rounded-xl p-4 sm:p-6 md:p-8 lg:p-10">
+      {showLoading ? (
+        <div
+          className="absolute inset-0 z-[1] animate-pulse rounded-xl bg-[#1a1a1a]"
+          aria-busy="true"
+          aria-label="Loading audio"
+        />
+      ) : null}
       <div className="flex gap-4 sm:gap-6 md:gap-8">
         {thumbnail && (
           <div className="relative h-24 w-24 shrink-0 self-center overflow-hidden rounded-lg sm:h-32 sm:w-32 md:h-40 md:w-40 lg:h-48 lg:w-48">
@@ -211,8 +232,9 @@ export function ContentAudioPlayer({
       </div>
 
       <audio
+        key={playbackUrl || "pending"}
         ref={audioRef}
-        src={src}
+        src={playbackUrl || undefined}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onDurationChange={handleDurationChange}

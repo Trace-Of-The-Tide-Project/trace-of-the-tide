@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PlusIcon, MoreDotsIcon } from "@/components/ui/icons";
 import { ConfirmDeleteArticleModal } from "@/components/dashboard/admin/articles/articles-editor/modals/ConfirmDeleteArticleModal";
 import { deleteArticle } from "@/services/articles.service";
+import { previewHrefForContentType } from "@/lib/content/public-article-preview-href";
 import { isAxiosError } from "axios";
 
 type Tab = { id: string; label: string };
@@ -15,6 +16,7 @@ export type ArticleRow = {
   id: string;
   slug: string;
   title: string;
+  content_type: string;
   status: "Published" | "Draft" | "Scheduled";
   statusColor: string;
   lastUpdated: string;
@@ -220,7 +222,7 @@ export function ArticlesTable({
               <li role="none">
                 <Link
                   role="menuitem"
-                  href={`/content/article?id=${encodeURIComponent(openMenuRow.id)}`}
+                  href={previewHrefForContentType(openMenuRow.content_type, openMenuRow.id)}
                   className="block px-3 py-2 text-sm text-gray-200 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
                   onClick={closeArticleMenu}
                 >

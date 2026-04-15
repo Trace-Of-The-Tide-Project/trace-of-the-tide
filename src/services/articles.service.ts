@@ -7,6 +7,8 @@ export type CreateArticleBlock = {
     | "paragraph"
     | "quote"
     | "image"
+    | "video"
+    | "audio"
     | "gallery"
     | "callout"
     | "author_note"

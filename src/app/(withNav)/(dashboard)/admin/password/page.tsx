@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { AdminChangePassword } from "@/components/dashboard/admin/settings/AdminChangePassword";
 
 export default function PasswordPage() {
-  return <PlaceholderPage title="Password" subtitle="Update your password." />;
+  return <AdminChangePassword />;
 }

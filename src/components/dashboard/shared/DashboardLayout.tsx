@@ -10,10 +10,18 @@ type DashboardLayoutProps = {
   config: DashboardConfig;
   header?: React.ReactNode;
   commandCenter?: React.ReactNode;
+  /** Shown next to the menu button on small screens (default: "Dashboard"). */
+  mobileBarTitle?: string;
   children: React.ReactNode;
 };
 
-export function DashboardLayout({ config, header, commandCenter, children }: DashboardLayoutProps) {
+export function DashboardLayout({
+  config,
+  header,
+  commandCenter,
+  mobileBarTitle = "Dashboard",
+  children,
+}: DashboardLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isDark } = useTheme();
 
@@ -26,17 +34,16 @@ export function DashboardLayout({ config, header, commandCenter, children }: Das
     };
   }, [mobileOpen]);
 
-  const panelClass =
-    "rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-panel-bg)]";
+  const panelClass = "rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-panel-bg)]";
   const mobileMenuBtn = isDark
     ? "rounded-lg p-2 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
     : "rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900";
-  const mobileTitle = isDark ? "text-sm font-medium text-foreground" : "text-sm font-medium text-gray-900";
+  const mobileTitle = isDark
+    ? "text-sm font-medium text-foreground"
+    : "text-sm font-medium text-gray-900";
 
   return (
-    <div
-      className={`relative min-h-[calc(100dvh-72px)] ${isDark ? "bg-black" : "bg-background"}`}
-    >
+    <div className={`relative min-h-[calc(100dvh-72px)] ${isDark ? "bg-black" : "bg-background"}`}>
       {/* Hex background — only behind the topbar area (dark mode) */}
       {isDark && (
         <div className="pointer-events-none absolute inset-x-0 top-0 h-35 overflow-hidden">
@@ -55,7 +62,7 @@ export function DashboardLayout({ config, header, commandCenter, children }: Das
           >
             <MenuIcon />
           </button>
-          <span className={mobileTitle}>Dashboard</span>
+          <span className={mobileTitle}>{mobileBarTitle}</span>
         </div>
 
         <div className="flex flex-col gap-6 px-4 py-6 sm:px-8 md:px-16 lg:px-24 xl:px-40 xl:py-12">

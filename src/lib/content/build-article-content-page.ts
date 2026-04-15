@@ -1,11 +1,15 @@
 import type { ArticleDetail } from "@/services/articles.service";
 import {
   articleBlocksToSections,
-  getFirstCoverSrcFromBlocks,
+  getFirstCoverHeroFromBlocks,
 } from "@/lib/content/article-blocks-to-sections";
-import { isUsableImageSrc } from "@/lib/content/content-image-src";
+import { isLikelyAudioUrl, isLikelyVideoUrl } from "@/lib/content/media-url";
+import {
+  isUsableArticleMediaRef,
+  resolveArticleMediaSrc,
+} from "@/lib/content/article-media-url";
 import type { ContentPageLayoutProps } from "@/components/content/ContentPageLayout";
-import { CONTENT_COLLECTION, CONTENT_RELATED } from "@/lib/constants";
+import { CONTENT_COLLECTION, CONTENT_MEDIA_AUDIO, CONTENT_RELATED } from "@/lib/constants";
 
 function initialsFromName(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -47,6 +51,28 @@ function articleContentBreadcrumbs(article: ArticleDetail): { label: string; hre
   return [{ label: article.title }];
 }
 
+function normalizedArticleContentType(article: ArticleDetail): string {
+  return (article.content_type || "article").toLowerCase().replace(/-/g, "_");
+}
+
+/** Matches `/content/audio`: Content → Audio → title. */
+function audioArticleHeroBreadcrumbs(article: ArticleDetail): { label: string; href?: string }[] {
+  return [
+    { label: "Content", href: "/content" },
+    { label: "Audio", href: "/content/audio" },
+    { label: article.title },
+  ];
+}
+
+/** Matches `/content/video`: Content → Video → title. */
+function videoArticleHeroBreadcrumbs(article: ArticleDetail): { label: string; href?: string }[] {
+  return [
+    { label: "Content", href: "/content" },
+    { label: "Video", href: "/content/video" },
+    { label: article.title },
+  ];
+}
+
 export function buildArticleContentPageProps(article: ArticleDetail): ContentPageLayoutProps {
   const authorName =
     article.author?.full_name?.trim() || article.author?.username?.trim() || "Author";
@@ -68,29 +94,55 @@ export function buildArticleContentPageProps(article: ArticleDetail): ContentPag
     };
   });
 
-  const firstBlockImage = getFirstCoverSrcFromBlocks(article.blocks);
+  const firstCover = getFirstCoverHeroFromBlocks(article.blocks);
   const fromApiCover = article.cover_image?.trim() || null;
-  const heroCandidate = firstBlockImage ?? fromApiCover;
-  const heroSrc = isUsableImageSrc(heroCandidate) ? heroCandidate.trim() : null;
+  const heroCandidate = firstCover?.src ?? fromApiCover;
+  const heroTrimmed = heroCandidate?.trim() || "";
+  const heroKind =
+    firstCover?.kind ??
+    (isLikelyAudioUrl(heroTrimmed) ? ("audio" as const) : isLikelyVideoUrl(heroTrimmed) ? ("video" as const) : ("image" as const));
+  const heroRefOk = heroTrimmed && isUsableArticleMediaRef(heroTrimmed) ? heroTrimmed : null;
+  const heroSrc = heroRefOk ? resolveArticleMediaSrc(heroRefOk) : null;
 
   const media = heroSrc
-    ? {
-        type: "image" as const,
-        src: heroSrc,
-        thumbnail: heroSrc,
-        title: article.title,
-      }
+    ? heroKind === "video"
+      ? {
+          type: "video" as const,
+          src: heroSrc,
+          title: article.title,
+        }
+      : heroKind === "audio"
+        ? {
+            type: "audio" as const,
+            src: heroSrc,
+            thumbnail: CONTENT_MEDIA_AUDIO.thumbnail,
+            title: article.title,
+          }
+        : {
+            type: "image" as const,
+            src: heroSrc,
+            thumbnail: heroSrc,
+            title: article.title,
+          }
     : {
         type: "image" as const,
         src: "",
         title: article.title,
       };
 
+  const contentTypeNorm = normalizedArticleContentType(article);
+  const breadcrumbs =
+    contentTypeNorm === "audio"
+      ? audioArticleHeroBreadcrumbs(article)
+      : contentTypeNorm === "video"
+        ? videoArticleHeroBreadcrumbs(article)
+        : articleContentBreadcrumbs(article);
+
   return {
     articleId: article.id,
     openCallId: article.open_call_id ?? undefined,
     contentType: article.content_type,
-    breadcrumbs: articleContentBreadcrumbs(article),
+    breadcrumbs,
     media,
     article: {
       title: article.title,
@@ -105,7 +157,7 @@ export function buildArticleContentPageProps(article: ArticleDetail): ContentPag
           ? article.view_count
           : undefined,
       sections: articleBlocksToSections(article.blocks, {
-        omitCoverSrc: firstBlockImage ?? undefined,
+        omitCoverSrc: firstCover?.src ?? undefined,
       }),
     },
     author: {

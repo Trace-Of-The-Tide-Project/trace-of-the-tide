@@ -1,4 +1,8 @@
 import { theme } from "@/lib/theme";
+import { isLikelyAudioUrl, isLikelyVideoUrl } from "@/lib/content/media-url";
+import { resolveArticleMediaSrc } from "@/lib/content/article-media-url";
+import { ArticleBodyVideo } from "@/components/content/article/ArticleBodyVideo";
+import { ArticleBodyAudio } from "@/components/content/article/ArticleBodyAudio";
 
 export type ContentArticleCallout = string | { title: string; body: string };
 
@@ -75,14 +79,20 @@ export function ContentArticleBody({ sections }: ContentArticleBodyProps) {
           {section.images && section.images.length > 0
             ? section.images.map((img, k) => (
                 <figure key={k} className="space-y-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- remote article URLs from API */}
-                  <img
-                    src={img.src}
-                    alt={img.alt ?? ""}
-                    className="max-h-[min(70vh,720px)] w-full max-w-3xl rounded-lg border border-[var(--tott-card-border)] object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  {isLikelyVideoUrl(img.src) ? (
+                    <ArticleBodyVideo src={img.src} />
+                  ) : isLikelyAudioUrl(img.src) ? (
+                    <ArticleBodyAudio src={img.src} />
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element -- remote article URLs from API */
+                    <img
+                      src={resolveArticleMediaSrc(img.src)}
+                      alt={img.alt ?? ""}
+                      className="max-h-[min(70vh,720px)] w-full max-w-3xl rounded-lg border border-[var(--tott-card-border)] object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                   {img.caption ? (
                     <figcaption className="mt-2 text-sm italic text-foreground/65">
                       {img.caption}

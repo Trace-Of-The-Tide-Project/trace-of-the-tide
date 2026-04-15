@@ -1,31 +1,28 @@
 "use client";
 
-import { DashboardHeader } from "@/components/dashboard/shared/DashboardHeader";
 import { DownloadIcon } from "@/components/ui/icons";
 import { securityStats } from "@/lib/dashboard/security-constants";
 
 const ACCENT = "#E8DDC0";
 
-export function SecurityPageHeader() {
+/**
+ * Security-only command row: export action + stat cards. Used below {@link AdminSettingsPageHeader} on `/admin/security`.
+ */
+export function SecurityPageToolbar() {
   return (
-    <div className="px-6 py-6 sm:px-8 sm:py-8">
-      <DashboardHeader
-        title="Security"
-        subtitle="Manage admin access, security settings, and system monitoring."
-        compactPadding
-        actions={
-          <button
-            type="button"
-            className="inline-flex h-[40px] items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold text-[#111] whitespace-nowrap transition-opacity hover:opacity-90"
-            style={{ backgroundColor: ACCENT }}
-          >
-            <span className="[&_svg]:h-4 [&_svg]:w-4">
-              <DownloadIcon />
-            </span>
-            Export Logs
-          </button>
-        }
-      />
+    <div className="px-6 pb-6 sm:px-8">
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        <button
+          type="button"
+          className="inline-flex h-[40px] items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold text-[#111] whitespace-nowrap transition-opacity hover:opacity-90"
+          style={{ backgroundColor: ACCENT }}
+        >
+          <span className="[&_svg]:h-4 [&_svg]:w-4">
+            <DownloadIcon />
+          </span>
+          Export Logs
+        </button>
+      </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {securityStats.map((stat) => {

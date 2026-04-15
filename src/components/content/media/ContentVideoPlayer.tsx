@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect -- player resets when resolved blob URL changes */
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/icons";
 import { theme } from "@/lib/theme";
 import { formatTime } from "./mediaUtils";
+import { useArticleMediaPlaybackUrl } from "@/hooks/useArticleMediaPlaybackUrl";
 
 type ContentVideoPlayerProps = {
   src: string;
@@ -18,6 +20,7 @@ type ContentVideoPlayerProps = {
 };
 
 export function ContentVideoPlayer({ src, thumbnail }: ContentVideoPlayerProps) {
+  const { playbackUrl, status } = useArticleMediaPlaybackUrl(src);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -135,11 +138,27 @@ export function ContentVideoPlayer({ src, thumbnail }: ContentVideoPlayerProps) 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const volumePct = muted ? 0 : volume;
 
+  useEffect(() => {
+    setPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, [playbackUrl]);
+
+  const showLoading = status === "loading" || (status === "ready" && !playbackUrl);
+
   return (
     <div ref={containerRef} className="relative aspect-[21/9] overflow-hidden rounded-xl bg-[#111]">
+      {showLoading ? (
+        <div
+          className="absolute inset-0 z-[1] animate-pulse bg-[#1a1a1a]"
+          aria-busy="true"
+          aria-label="Loading video"
+        />
+      ) : null}
       <video
+        key={playbackUrl || "pending"}
         ref={videoRef}
-        src={src}
+        src={playbackUrl || undefined}
         poster={thumbnail}
         className="absolute inset-0 h-full w-full object-cover"
         onClick={togglePlay}
@@ -176,7 +195,14 @@ export function ContentVideoPlayer({ src, thumbnail }: ContentVideoPlayerProps) 
           >
             {playing ? <PauseIcon /> : <PlayIcon />}
           </button>
-          <div className="group flex flex-1 flex-col gap-2 pt-6" role="slider" onClick={handleSeek}>
+          <div
+            className="group flex flex-1 flex-col gap-2 pt-6"
+            role="slider"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress)}
+            onClick={handleSeek}
+          >
             <div className="relative h-1.5 w-full cursor-pointer rounded-full bg-gray-700">
               <div
                 className="absolute left-0 top-0 h-full min-w-[2px] rounded-full bg-[#C9A96E] transition-all"

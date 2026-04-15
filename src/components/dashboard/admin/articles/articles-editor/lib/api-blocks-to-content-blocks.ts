@@ -36,7 +36,9 @@ export function articleDetailBlocksToContentBlocks(blocks: ArticleDetailBlock[])
         out.push({ id, type: "divider" });
         break;
 
-      case "image": {
+      case "image":
+      case "video":
+      case "audio": {
         const obj = parseMetadataObject(b.metadata);
         const url =
           (obj && typeof obj.url === "string" && obj.url.trim()) ||

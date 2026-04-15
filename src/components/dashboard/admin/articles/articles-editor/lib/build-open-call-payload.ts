@@ -15,7 +15,7 @@ export type OpenCallBlocksResult = {
  * Maps editor blocks to API `content_blocks` and derives `main_media` from the first image with a URL.
  */
 export async function buildOpenCallContentBlocksAndMainMedia(
-  blocks: ContentBlock[],
+  blocks: ContentBlock[]
 ): Promise<OpenCallBlocksResult> {
   const content_blocks: OpenCallContentBlock[] = [];
   let order = 1;

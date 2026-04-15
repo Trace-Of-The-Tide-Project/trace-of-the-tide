@@ -21,6 +21,7 @@ import {
   removeArticleFromAdminArticlesListCache,
 } from "@/lib/dashboard/admin-articles-list-cache";
 import { deleteArticle, getArticles, type ArticleListItem } from "@/services/articles.service";
+import { previewHrefForContentType } from "@/lib/content/public-article-preview-href";
 import { isAxiosError } from "axios";
 import type { ArticleCardItem } from "@/components/dashboard/admin/articles/articles-main/ArticleCardsSection";
 import {
@@ -136,7 +137,7 @@ function toScheduledShareCards(items: ArticleListItem[]): ArticleCardItem[] {
       {
         label: "View",
         icon: <EyeIcon />,
-        href: `/content/article?id=${encodeURIComponent(a.id)}`,
+        href: previewHrefForContentType(a.content_type, a.id),
       },
     ],
   }));

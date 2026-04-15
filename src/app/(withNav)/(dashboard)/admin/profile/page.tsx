@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { AdminProfileInformation } from "@/components/dashboard/admin/profile/AdminProfileInformation";
 
 export default function ProfilePage() {
-  return <PlaceholderPage title="Profile" subtitle="Manage your admin profile." />;
+  return <AdminProfileInformation />;
 }

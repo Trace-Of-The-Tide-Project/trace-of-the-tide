@@ -39,6 +39,8 @@ export function ContentMediaPlayer({
       />
     );
   }
-  if (src) return <ContentVideoPlayer src={src} thumbnail={thumbnail || src} />;
+  if (type === "video" && src) {
+    return <ContentVideoPlayer src={src} thumbnail={thumbnail} />;
+  }
   return null;
 }
