@@ -70,12 +70,12 @@ export function DetailModal({
         aria-label="Close modal"
       />
 
-      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[#333] bg-[#0a0a0a] p-6">
+      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6">
         {/* Header */}
-        <div className="mb-4 flex items-start justify-between border-b border-[#333] pb-4">
+        <div className="mb-4 flex items-start justify-between border-b border-[var(--tott-card-border)] pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-white">{title}</h2>
+              <h2 className="text-lg font-bold text-foreground">{title}</h2>
               {badge && (
                 <span
                   className="rounded px-2 py-0.5 text-[10px] font-semibold uppercase"
@@ -92,7 +92,7 @@ export function DetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
             aria-label="Close"
           >
             <XIcon />
@@ -104,17 +104,17 @@ export function DetailModal({
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex min-h-[60px] shrink-0 items-center justify-between gap-4 rounded-xl border border-[#333] bg-[#111] px-5 py-4"
+              className="flex min-h-[60px] shrink-0 items-center justify-between gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-2)] px-5 py-4"
             >
               <div className="min-w-0 flex-1 overflow-hidden">
-                <p className="truncate text-sm font-medium text-white">{item.title}</p>
+                <p className="truncate text-sm font-medium text-foreground">{item.title}</p>
                 <p className="mt-0.5 truncate text-xs text-gray-500">{item.subtitle}</p>
               </div>
               {item.processButtons ? (
                 <div className="flex shrink-0 items-center gap-2">
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-gray-300 transition-colors hover:border-red-800 hover:text-red-400"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-[var(--tott-dash-control-fg)] transition-colors hover:border-red-800 hover:text-red-400"
                     aria-label="Reject"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -123,7 +123,7 @@ export function DetailModal({
                   </button>
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-gray-300 transition-colors hover:border-emerald-800 hover:text-emerald-400"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-[var(--tott-dash-control-fg)] transition-colors hover:border-emerald-800 hover:text-emerald-400"
                     aria-label="Approve"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -134,7 +134,7 @@ export function DetailModal({
               ) : item.actionHref ? (
                 <a
                   href={item.actionHref}
-                  className="shrink-0 rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+                  className="shrink-0 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-xs font-medium text-[var(--tott-dash-control-fg)] transition-colors hover:border-gray-500"
                   style={item.actionColor ? { color: item.actionColor } : undefined}
                 >
                   {item.actionLabel}
@@ -143,7 +143,7 @@ export function DetailModal({
                 <button
                   type="button"
                   onClick={item.onAction}
-                  className="shrink-0 rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500"
+                  className="shrink-0 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-xs font-medium text-[var(--tott-dash-control-fg)] transition-colors hover:border-gray-500"
                   style={item.actionColor ? { color: item.actionColor } : undefined}
                 >
                   {item.actionLabel}
@@ -182,7 +182,7 @@ export function DetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+            className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-2 text-sm font-medium text-[var(--tott-dash-control-fg)] transition-colors hover:border-gray-500 hover:text-foreground"
           >
             Close
           </button>

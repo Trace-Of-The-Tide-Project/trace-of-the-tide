@@ -24,8 +24,8 @@ function HexIcon({ children }: { children: React.ReactNode }) {
       >
         <path
           d="M24 2L44 14V34L24 46L4 34V14Z"
-          fill="#1a1a1a"
-          stroke="#333"
+          fill="var(--tott-dash-icon-bg)"
+          stroke="var(--tott-card-border)"
           strokeWidth="1"
         />
       </svg>
@@ -36,13 +36,13 @@ function HexIcon({ children }: { children: React.ReactNode }) {
 
 export function QuickActions({ items }: QuickActionsProps) {
   return (
-    <div className="rounded-xl border border-[#333] bg-[#0a0a0a] p-5">
-      <h3 className="mb-4 text-lg font-bold text-white">Quick Actions</h3>
+    <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-5">
+      <h3 className="mb-4 text-lg font-bold text-foreground">Quick Actions</h3>
 
       <div className="flex flex-col gap-5">
         {items.map((item) => {
           const Icon = item.icon;
-          const className = "flex items-center gap-4 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5 mx-4 transition-colors hover:bg-white/2";
+          const className = "flex items-center gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-5 mx-4 transition-colors hover:bg-white/2";
           if (item.onClick) {
             return (
               <button
@@ -55,7 +55,7 @@ export function QuickActions({ items }: QuickActionsProps) {
                   <Icon />
                 </HexIcon>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-white">{item.label}</p>
+                  <p className="text-sm font-medium text-foreground">{item.label}</p>
                   <p className="mt-0.5 text-xs text-gray-500">{item.description}</p>
                 </div>
               </button>
@@ -67,7 +67,7 @@ export function QuickActions({ items }: QuickActionsProps) {
                 <Icon />
               </HexIcon>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-white">{item.label}</p>
+                <p className="text-sm font-medium text-foreground">{item.label}</p>
                 <p className="mt-0.5 text-xs text-gray-500">{item.description}</p>
               </div>
             </Link>

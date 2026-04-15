@@ -51,15 +51,15 @@ function CommentCard({ comment }: { comment: Comment }) {
   }, []);
 
   return (
-    <div className="flex gap-4 rounded-lg border border-[#444] bg-[#121212] px-4 py-4">
+    <div className="flex gap-4 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-4">
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-foreground"
         style={{ backgroundColor: theme.accentGoldFocus }}
       >
         {comment.author.charAt(0)}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm text-white">
+        <p className="text-sm text-foreground">
           <span className="font-medium">{comment.author}</span>
           {" On "}
           <span className="text-gray-400">
@@ -98,18 +98,18 @@ function CommentCard({ comment }: { comment: Comment }) {
         <button
           type="button"
           onClick={() => setIsOpen((o) => !o)}
-          className="rounded p-1.5 transition-colors hover:bg-white/5"
+          className="rounded p-1.5 transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
           style={{ color: "#A3A3A3" }}
           aria-label="More actions"
         >
           <MoreDotsIcon />
         </button>
         {isOpen && (
-          <div className="absolute right-0 top-full z-20 mt-1 min-w-[140px] rounded-lg border border-[#444] bg-[#232323] py-1 shadow-lg">
-            <button className="w-full px-4 py-2 text-left text-sm text-white hover:bg-[#2a2a2a]">
+          <div className="absolute right-0 top-full z-20 mt-1 min-w-[140px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-1 shadow-lg">
+            <button className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-[var(--tott-dash-surface-inset)]">
               View
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-white hover:bg-[#2a2a2a]">
+            <button className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-[var(--tott-dash-surface-inset)]">
               Edit
             </button>
             <button className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10">
@@ -132,17 +132,17 @@ function TrendingDiscussionCard({
   onView: () => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-lg border border-[#444] bg-[#121212] px-4 py-4">
+    <div className="flex items-start justify-between gap-4 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-4">
       <div className="flex min-w-0 gap-4">
         <div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-foreground"
           style={{ backgroundColor: theme.accentGoldFocus }}
           aria-hidden="true"
         >
           {discussion.title.charAt(0)}
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-white">{discussion.title}</p>
+          <p className="truncate text-sm font-medium text-foreground">{discussion.title}</p>
           <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-gray-500">
             <span className="inline-flex items-center gap-1.5">
               <span
@@ -170,7 +170,7 @@ function TrendingDiscussionCard({
         <button
           type="button"
           onClick={onView}
-          className="inline-flex h-[40px] w-[120px] items-center justify-center gap-2 rounded-md border border-[#555] bg-[#333333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a] whitespace-nowrap"
+          className="inline-flex h-[40px] w-[120px] items-center justify-center gap-2 rounded-md border border-[#555] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)] whitespace-nowrap"
         >
           <EyeIcon />
           View
@@ -178,7 +178,7 @@ function TrendingDiscussionCard({
         <button
           type="button"
           onClick={onToggleLocked}
-          className="inline-flex h-[40px] w-[120px] items-center justify-center gap-2 rounded-md border border-[#555] bg-[#333333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a] whitespace-nowrap"
+          className="inline-flex h-[40px] w-[120px] items-center justify-center gap-2 rounded-md border border-[#555] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)] whitespace-nowrap"
           aria-label={discussion.locked ? "Unlock discussion" : "Lock discussion"}
         >
           <LockIcon />
@@ -210,16 +210,16 @@ function BadgeCard({
     );
 
   return (
-    <div className="rounded-xl border border-[#2f2f2f] bg-[#121212] p-5">
+    <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-5">
       <div className="flex items-start gap-4">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#2f2f2f] bg-[#1a1a1a]"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)]"
           style={{ color: "#E8DDC0" }}
         >
           {icon}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-semibold text-white">{badge.name}</p>
+          <p className="truncate text-base font-semibold text-foreground">{badge.name}</p>
           <p className="mt-1 text-sm text-gray-500">{badge.recipients} recipients</p>
         </div>
       </div>
@@ -229,7 +229,7 @@ function BadgeCard({
       <button
         type="button"
         onClick={onAward}
-        className="mt-5 w-full rounded-md border border-[#2f2f2f] bg-[#2a2a2a] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#333333]"
+        className="mt-5 w-full rounded-md border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-bg)]"
       >
         Award Badge
       </button>
@@ -292,7 +292,7 @@ export function EngagementsContent() {
         }}
       />
       {/* Tabs */}
-      <div className="flex w-fit gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+      <div className="flex w-fit gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
         {ENGAGEMENT_TABS.map((tab) => (
           <button
             key={tab.id}
@@ -300,7 +300,7 @@ export function EngagementsContent() {
             onClick={() => setActiveTab(tab.id)}
             className={`rounded-md px-6 py-3 text-sm font-medium transition-all ${
               activeTab === tab.id
-                ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                 : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
             }`}
           >
@@ -322,7 +322,7 @@ export function EngagementsContent() {
                 placeholder="Search comments..."
                 value={commentSearch}
                 onChange={(e) => setCommentSearch(e.target.value)}
-                className="w-full rounded-lg border border-[#444] bg-[#232323] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
             </div>
             <div className="flex gap-2">
@@ -331,8 +331,8 @@ export function EngagementsContent() {
                 onClick={() => setFilter("all")}
                 className={`rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors ${
                   filter === "all"
-                    ? "border-[#555] bg-[#333] text-white"
-                    : "border-[#444] bg-transparent text-gray-400 hover:text-white"
+                    ? "border-[#555] bg-[var(--tott-dash-control-bg)] text-foreground"
+                    : "border-[var(--tott-card-border)] bg-transparent text-gray-400 hover:text-foreground"
                 }`}
               >
                 All
@@ -342,8 +342,8 @@ export function EngagementsContent() {
                 onClick={() => setFilter("flagged")}
                 className={`rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors ${
                   filter === "flagged"
-                    ? "border-[#555] bg-[#333] text-white"
-                    : "border-[#444] bg-transparent text-gray-400 hover:text-white"
+                    ? "border-[#555] bg-[var(--tott-dash-control-bg)] text-foreground"
+                    : "border-[var(--tott-card-border)] bg-transparent text-gray-400 hover:text-foreground"
                 }`}
               >
                 {typeof FILTER_OPTIONS[1].label === "function"
@@ -403,7 +403,7 @@ export function EngagementsContent() {
                 placeholder="Search badges..."
                 value={badgeSearch}
                 onChange={(e) => setBadgeSearch(e.target.value)}
-                className="w-full rounded-lg border border-[#2f2f2f] bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+                className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
               />
             </div>
 

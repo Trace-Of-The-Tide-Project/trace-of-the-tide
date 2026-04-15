@@ -13,10 +13,10 @@ import {
 } from "./ArticleEditorIcons";
 
 const inputClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-3 py-2 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500";
 
 const selectClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-gray-400 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-3 py-2 text-sm text-gray-400 outline-none focus:border-gray-500";
 
 export type ArticleWorkflowStatus = "draft" | "published" | "scheduled";
 
@@ -161,8 +161,8 @@ export function ContentSettings({
   );
 
   return (
-    <div className="rounded-lg border border-[#444444] bg-[#1a1a1a] p-4">
-      <h3 className="mb-4 text-base font-bold text-white">{title}</h3>
+    <div className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] p-4">
+      <h3 className="mb-4 text-base font-bold text-foreground">{title}</h3>
 
       <div className="flex flex-col gap-4">
         <div>
@@ -267,7 +267,7 @@ export function ContentSettings({
                 {tagIds.map((id) => (
                   <span
                     key={id}
-                    className="flex max-w-full items-center gap-1 rounded-lg border border-[#444444] bg-[#333333] px-2.5 py-1 text-xs text-white"
+                    className="flex max-w-full items-center gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-2.5 py-1 text-xs text-foreground"
                   >
                     <span className="truncate" title={id}>
                       {tagNameById.get(id) ?? `Tag (${id.slice(0, 8)}…)`}
@@ -275,7 +275,7 @@ export function ContentSettings({
                     <button
                       type="button"
                       onClick={() => removeTagById(id)}
-                      className="ml-0.5 shrink-0 text-gray-500 hover:text-white"
+                      className="ml-0.5 shrink-0 text-gray-500 hover:text-foreground"
                       aria-label={`Remove ${tagNameById.get(id) ?? "tag"}`}
                     >
                       ×
@@ -348,8 +348,8 @@ export function ContentSettings({
             SEO
           </label>
           <div className="space-y-2">
-            <div className="rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-xs text-gray-400">
-              <p className="text-white">yoursite.com/articles/…</p>
+            <div className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-3 py-2 text-xs text-gray-400">
+              <p className="text-foreground">yoursite.com/articles/…</p>
               <p className="mt-1">
                 {metaDescription.trim()
                   ? metaDescription.slice(0, 160) + (metaDescription.length > 160 ? "…" : "")

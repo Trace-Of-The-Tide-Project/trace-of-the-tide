@@ -1,4 +1,8 @@
 import { theme } from "@/lib/theme";
+import { isLikelyAudioUrl, isLikelyVideoUrl } from "@/lib/content/media-url";
+import { resolveArticleMediaSrc } from "@/lib/content/article-media-url";
+import { ArticleBodyVideo } from "@/components/content/article/ArticleBodyVideo";
+import { ArticleBodyAudio } from "@/components/content/article/ArticleBodyAudio";
 
 export type ContentArticleCallout = string | { title: string; body: string };
 
@@ -24,13 +28,13 @@ export function ContentArticleBody({ sections }: ContentArticleBodyProps) {
       {sections.map((section, i) => (
         <div key={i} className="space-y-4">
           {section.heading && (
-            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
               {section.heading}
             </h2>
           )}
 
           {section.paragraphs.map((p, j) => (
-            <p key={j} className="text-sm leading-relaxed text-gray-400">
+            <p key={j} className="text-sm leading-relaxed text-foreground/75">
               {p}
             </p>
           ))}
@@ -47,22 +51,25 @@ export function ContentArticleBody({ sections }: ContentArticleBodyProps) {
           ) : null}
 
           {section.callout != null && section.callout !== "" ? (
-            <aside className="rounded-2xl bg-[#262626] p-8 text-neutral-400" role="note">
+            <aside
+              className="rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-panel-bg)] p-8"
+              role="note"
+            >
               {typeof section.callout === "object" ? (
                 <div className="flex flex-col gap-3">
                   {section.callout.title ? (
-                    <p className="m-0 text-4xl font-bold leading-tight text-white">
+                    <p className="m-0 text-4xl font-bold leading-tight text-foreground">
                       {section.callout.title}
                     </p>
                   ) : null}
                   {section.callout.body ? (
-                    <p className="m-0 text-lg font-normal leading-relaxed text-neutral-400">
+                    <p className="m-0 text-lg font-normal leading-relaxed text-foreground/80">
                       {section.callout.body}
                     </p>
                   ) : null}
                 </div>
               ) : (
-                <p className="m-0 text-lg font-normal leading-relaxed text-neutral-400">
+                <p className="m-0 text-lg font-normal leading-relaxed text-foreground/80">
                   {section.callout}
                 </p>
               )}
@@ -72,16 +79,22 @@ export function ContentArticleBody({ sections }: ContentArticleBodyProps) {
           {section.images && section.images.length > 0
             ? section.images.map((img, k) => (
                 <figure key={k} className="space-y-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- remote article URLs from API */}
-                  <img
-                    src={img.src}
-                    alt={img.alt ?? ""}
-                    className="max-h-[min(70vh,720px)] w-full max-w-3xl rounded-lg border border-gray-800 object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  {isLikelyVideoUrl(img.src) ? (
+                    <ArticleBodyVideo src={img.src} />
+                  ) : isLikelyAudioUrl(img.src) ? (
+                    <ArticleBodyAudio src={img.src} />
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element -- remote article URLs from API */
+                    <img
+                      src={resolveArticleMediaSrc(img.src)}
+                      alt={img.alt ?? ""}
+                      className="max-h-[min(70vh,720px)] w-full max-w-3xl rounded-lg border border-[var(--tott-card-border)] object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                   {img.caption ? (
-                    <figcaption className="mt-2 text-sm italic text-gray-400">
+                    <figcaption className="mt-2 text-sm italic text-foreground/65">
                       {img.caption}
                     </figcaption>
                   ) : null}
@@ -91,7 +104,7 @@ export function ContentArticleBody({ sections }: ContentArticleBodyProps) {
 
           {section.quote && (
             <blockquote
-              className="rounded-r-lg border-l-4 bg-[#1a1a1a] py-3 pl-5 pr-4 text-sm leading-relaxed text-gray-300"
+              className="rounded-r-lg border-l-4 bg-[var(--tott-well-bg)] py-3 pl-5 pr-4 text-sm leading-relaxed text-foreground/85"
               style={{ borderColor: theme.accentGold }}
             >
               {section.quote}

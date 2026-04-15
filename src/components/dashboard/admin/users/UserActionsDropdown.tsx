@@ -41,7 +41,7 @@ export function UserActionsDropdown({ userId, onAction }: UserActionsDropdownPro
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        className="rounded p-1.5 transition-colors hover:bg-white/5"
+        className="rounded p-1.5 transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
         style={{ color: "#A3A3A3" }}
         aria-label="More actions"
         aria-expanded={isOpen}
@@ -49,7 +49,7 @@ export function UserActionsDropdown({ userId, onAction }: UserActionsDropdownPro
         <MoreDotsIcon />
       </button>
       {isOpen && (
-        <div className="absolute right-0 top-full z-20 mt-1 min-w-[160px] rounded-lg border border-[#444] bg-[#232323] py-1 shadow-lg">
+        <div className="absolute right-0 top-full z-20 mt-1 min-w-[160px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-1 shadow-lg">
           {ACTIONS.map((action) => (
             <button
               key={action.id}
@@ -58,8 +58,8 @@ export function UserActionsDropdown({ userId, onAction }: UserActionsDropdownPro
                 onAction?.(action.id, userId);
                 setIsOpen(false);
               }}
-              className={`w-full px-4 py-2 text-left text-sm transition-colors hover:bg-[#2a2a2a] ${
-                action.destructive ? "text-red-400 hover:bg-red-500/10" : "text-white"
+              className={`w-full px-4 py-2 text-left text-sm transition-colors hover:bg-[var(--tott-dash-surface-inset)] ${
+                action.destructive ? "text-red-400 hover:bg-red-500/10" : "text-foreground"
               }`}
             >
               {action.label}

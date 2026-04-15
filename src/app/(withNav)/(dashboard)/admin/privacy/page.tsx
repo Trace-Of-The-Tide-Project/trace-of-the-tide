@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { AdminPrivacySettings } from "@/components/dashboard/admin/settings/AdminPrivacySettings";
 
 export default function PrivacyPage() {
-  return <PlaceholderPage title="Privacy" subtitle="Manage privacy settings." />;
+  return <AdminPrivacySettings />;
 }

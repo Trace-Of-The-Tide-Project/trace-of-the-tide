@@ -18,7 +18,7 @@ const DEFAULT_ZOOM = 8;
 const NOMINATIM_BASE = "https://nominatim.openstreetmap.org";
 
 const inputClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-2 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500";
 
 type LocationMapPickerProps = {
   latitude: string;
@@ -166,8 +166,8 @@ export default function LocationMapPicker({
 
   return (
     <div className="space-y-2">
-      {/* Search box */}
-      <div className="relative z-10">
+      {/* Search box — z above Leaflet panes (~400–800) so results aren’t covered by the map */}
+      <div className="relative z-1100">
         <input
           type="text"
           value={searchQuery}
@@ -181,13 +181,13 @@ export default function LocationMapPicker({
           </span>
         )}
         {results.length > 0 && (
-          <ul className="absolute left-0 right-0 top-full z-50 mt-1 max-h-40 overflow-y-auto rounded-lg border border-[#444444] bg-[#222222]">
+          <ul className="absolute left-0 right-0 top-full z-1 mt-1 max-h-40 overflow-y-auto rounded-lg border border-[var(--tott-card-border)] bg-[#222222]">
             {results.map((r, i) => (
               <li key={i}>
                 <button
                   type="button"
                   onClick={() => selectResult(r)}
-                  className="w-full px-3 py-2 text-left text-xs text-gray-300 hover:bg-[#333333] hover:text-white"
+                  className="w-full px-3 py-2 text-left text-xs text-gray-300 hover:bg-[var(--tott-dash-control-bg)] hover:text-foreground"
                 >
                   {r.name}
                 </button>
@@ -198,7 +198,7 @@ export default function LocationMapPicker({
       </div>
 
       {/* Map */}
-      <div className="h-[200px] overflow-hidden rounded-lg border border-[#444444]">
+      <div className="relative z-0 h-[200px] overflow-hidden rounded-lg border border-[var(--tott-card-border)]">
         <MapContainer
           center={position}
           zoom={hasPosition ? 14 : DEFAULT_ZOOM}

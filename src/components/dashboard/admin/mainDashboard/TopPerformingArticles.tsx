@@ -19,12 +19,12 @@ type TopPerformingArticlesProps = {
 export function TopPerformingArticles({ items }: TopPerformingArticlesProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold text-white">Top Performing Articles</h3>
+      <h3 className="text-lg font-bold text-foreground">Top Performing Articles</h3>
       <div className="flex flex-col gap-3">
         {items.map((entry) => (
           <div
             key={entry.id}
-            className="flex items-center gap-4 rounded-xl border border-[#444] bg-[#2f2f2f] px-4 py-3"
+            className="flex items-center gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[#2f2f2f] px-4 py-3"
           >
             <HexIconOutlined size="md">
               <MapPinIcon />

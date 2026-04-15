@@ -47,10 +47,10 @@ export function MaintenanceModal({ open, onClose }: MaintenanceModalProps) {
         aria-label="Close modal"
       />
 
-      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[#333] bg-[#0a0a0a] p-6">
-        <div className="mb-5 flex items-start justify-between border-b border-[#333] pb-5">
+      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6">
+        <div className="mb-5 flex items-start justify-between border-b border-[var(--tott-card-border)] pb-5">
           <div>
-            <h2 className="text-lg font-bold text-white">Maintenance Mode</h2>
+            <h2 className="text-lg font-bold text-foreground">Maintenance Mode</h2>
             <p className="mt-1 text-sm text-gray-500">
               Enable maintenance mode to temporarily disable user access to the platform.
             </p>
@@ -58,7 +58,7 @@ export function MaintenanceModal({ open, onClose }: MaintenanceModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
             aria-label="Close"
           >
             <XIcon />
@@ -68,7 +68,7 @@ export function MaintenanceModal({ open, onClose }: MaintenanceModalProps) {
         <form onSubmit={handleEnable} className="space-y-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-white">Enable Maintenance Mode</p>
+              <p className="text-sm font-medium text-foreground">Enable Maintenance Mode</p>
               <p className="mt-0.5 text-xs text-gray-500">Users will see a maintenance page.</p>
             </div>
             <button
@@ -77,7 +77,7 @@ export function MaintenanceModal({ open, onClose }: MaintenanceModalProps) {
               aria-checked={enabled}
               onClick={() => setEnabled(!enabled)}
               className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-                enabled ? "bg-[#CBA158]" : "bg-[#333]"
+                enabled ? "bg-[#CBA158]" : "bg-[var(--tott-dash-control-bg)]"
               }`}
             >
               <span
@@ -89,7 +89,7 @@ export function MaintenanceModal({ open, onClose }: MaintenanceModalProps) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">
+            <label className="mb-1.5 block text-sm font-medium text-foreground">
               Maintenance Message
             </label>
             <textarea
@@ -97,20 +97,20 @@ export function MaintenanceModal({ open, onClose }: MaintenanceModalProps) {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="We're currently performing scheduled maintenance ..."
               rows={4}
-              className="w-full resize-y rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#6b7280" }}
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">
+            <label className="mb-1.5 block text-sm font-medium text-foreground">
               Estimated Duration
             </label>
             <div className="relative">
               <select
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-[#333] bg-[#1a1a1a] py-2.5 pl-5 pr-10 text-sm outline-none transition-colors focus:border-gray-500"
+                className="w-full appearance-none rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] py-2.5 pl-5 pr-10 text-sm outline-none transition-colors focus:border-gray-500"
                 style={{ color: "#6b7280" }}
               >
                 <option value="30 minutes">30 minutes</option>
@@ -130,7 +130,7 @@ export function MaintenanceModal({ open, onClose }: MaintenanceModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-2 text-sm font-medium text-[var(--tott-dash-control-fg)] transition-colors hover:border-gray-500 hover:text-foreground"
             >
               Close
             </button>

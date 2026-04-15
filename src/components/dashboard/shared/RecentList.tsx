@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { theme } from "@/lib/theme";
 
 export type RecentListItem = {
@@ -17,20 +20,23 @@ type RecentListProps = {
 };
 
 export function RecentList({ heading, viewAllHref, items }: RecentListProps) {
+  const { isDark } = useTheme();
+  const viewAllClass = isDark
+    ? "rounded-lg border border-[var(--tott-card-border)] px-3 py-1.5 text-xs text-gray-400 transition-colors hover:border-gray-500 hover:text-foreground"
+    : "rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-900";
+  const rowHover = isDark ? "hover:bg-[var(--tott-dash-ghost-hover)]" : "hover:bg-gray-100";
+
   return (
-    <div className="rounded-xl border border-[#333] bg-[#0a0a0a]">
-      <div className="flex items-center justify-between border-b border-[#333] px-5 py-4">
-        <h3 className="text-sm font-semibold text-white">{heading}</h3>
+    <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-panel-bg)]">
+      <div className="flex items-center justify-between border-b border-[var(--tott-card-border)] px-5 py-4">
+        <h3 className="text-sm font-semibold text-foreground">{heading}</h3>
         {viewAllHref && (
-          <Link
-            href={viewAllHref}
-            className="rounded-lg border border-[#333] px-3 py-1.5 text-xs text-gray-400 transition-colors hover:border-gray-500 hover:text-white"
-          >
+          <Link href={viewAllHref} className={viewAllClass}>
             View all
           </Link>
         )}
       </div>
-      <div className="divide-y divide-gray-800/60">
+      <div className={isDark ? "divide-y divide-gray-800/60" : "divide-y divide-gray-200"}>
         {items.map((item) => {
           const content = (
             <div className="flex items-center gap-3 px-5 py-3.5">
@@ -46,13 +52,13 @@ export function RecentList({ heading, viewAllHref, items }: RecentListProps) {
                 </span>
               )}
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm text-white">{item.title}</p>
+                <p className="truncate text-sm text-foreground">{item.title}</p>
                 {item.subtitle && (
                   <p className="truncate text-xs text-gray-500">{item.subtitle}</p>
                 )}
               </div>
               {item.trailing && (
-                <span className="shrink-0 text-sm font-medium text-white">{item.trailing}</span>
+                <span className="shrink-0 text-sm font-medium text-foreground">{item.trailing}</span>
               )}
               {item.href && (
                 <svg
@@ -73,7 +79,7 @@ export function RecentList({ heading, viewAllHref, items }: RecentListProps) {
           );
 
           return item.href ? (
-            <Link key={item.id} href={item.href} className="block transition-colors hover:bg-white/[0.02]">
+            <Link key={item.id} href={item.href} className={`block transition-colors ${rowHover}`}>
               {content}
             </Link>
           ) : (

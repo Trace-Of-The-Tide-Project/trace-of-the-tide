@@ -13,9 +13,19 @@ import { TripLanguages } from "./TripLanguages";
 import { ItineraryBuilder, emptyEditorStop, editorStopsToTripStops, type EditorStop } from "./ItineraryBuilder";
 import { TripSummary } from "./TripSummary";
 import { TripPreviewModal } from "./TripPreviewModal";
-import { createTrip, type CreateTripPayload } from "@/services/trips.service";
+import { isEndDatetimeBeforeStart } from "@/lib/datetime-local";
+import { ApplicationFormBuilder } from "../open-call/ApplicationFormBuilder";
+import {
+  DEFAULT_TRIP_BOOKING_FORM_FIELDS,
+  createTrip,
+  type CreateTripPayload,
+} from "@/services/trips.service";
+import {
+  validateOpenCallApplicationFields,
+  type ApplicationFormField,
+} from "@/services/open-calls.service";
 
-const ADMIN_ARTICLES_PATH = "/admin/articles";
+const TRIPS_ARCHIVE_PATH = "/admin/trips?tab=archive";
 
 function errMessage(e: unknown): string {
   if (isAxiosError(e)) {
@@ -51,7 +61,7 @@ export function TripEditorLayout() {
   const [maxParticipants, setMaxParticipants] = useState(15);
   const [minParticipants, setMinParticipants] = useState(0);
 
-  // Pricing
+  // Pricing (`price` in API = minimum contribution; join form scales upward from here in the UI)
   const [price, setPrice] = useState("");
   const [currency, setCurrency] = useState("USD");
 
@@ -63,6 +73,11 @@ export function TripEditorLayout() {
 
   // Stops (itinerary)
   const [stops, setStops] = useState<EditorStop[]>([emptyEditorStop()]);
+
+  // Join trip form (same builder as open-call application form)
+  const [bookingFormFields, setBookingFormFields] = useState<ApplicationFormField[]>(() =>
+    DEFAULT_TRIP_BOOKING_FORM_FIELDS.map((f) => JSON.parse(JSON.stringify(f))),
+  );
 
   // Workflow
   const [workflowStatus, setWorkflowStatus] = useState<ArticleWorkflowStatus>("draft");
@@ -101,20 +116,30 @@ export function TripEditorLayout() {
         highlights: filteredHighlights.length > 0 ? filteredHighlights : undefined,
         moderator_name: moderatorName.trim() || undefined,
         stops: editorStopsToTripStops(stops),
+        booking_form: { fields: bookingFormFields },
       };
     },
     [
       title, description, category, buildRouteSummary,
       startDate, endDate, price, currency, maxParticipants, minParticipants,
       difficulty, durationHours, tags, languages, highlights, moderatorName, stops,
+      bookingFormFields,
     ],
   );
+
+  const handleStartDateChange = useCallback((v: string) => {
+    setStartDate(v);
+    if (!v) return;
+    setEndDate((prev) => (prev && isEndDatetimeBeforeStart(prev, v) ? v : prev));
+  }, []);
 
   const validateBeforeSubmit = useCallback(() => {
     if (!title.trim()) return "Title is required.";
     if (!category.trim()) return "Category is required.";
+    const formErr = validateOpenCallApplicationFields(bookingFormFields);
+    if (formErr) return formErr;
     return null;
-  }, [title, category]);
+  }, [title, category, bookingFormFields]);
 
   const handleSaveDraft = useCallback(async () => {
     const v = validateBeforeSubmit();
@@ -123,7 +148,7 @@ export function TripEditorLayout() {
     setBusy(true);
     try {
       await createTrip(buildPayload("draft"));
-      router.push(ADMIN_ARTICLES_PATH);
+      router.push(TRIPS_ARCHIVE_PATH);
     } catch (e) {
       setError(errMessage(e));
     } finally {
@@ -139,7 +164,7 @@ export function TripEditorLayout() {
     setBusy(true);
     try {
       await createTrip(buildPayload("published"));
-      router.push(ADMIN_ARTICLES_PATH);
+      router.push(TRIPS_ARCHIVE_PATH);
     } catch (e) {
       setError(errMessage(e));
     } finally {
@@ -157,7 +182,7 @@ export function TripEditorLayout() {
       try {
         await createTrip(buildPayload("published"));
         setScheduleModalOpen(false);
-        router.push(ADMIN_ARTICLES_PATH);
+        router.push(TRIPS_ARCHIVE_PATH);
       } catch (e) {
         setError(errMessage(e));
         setScheduleModalOpen(false);
@@ -220,7 +245,7 @@ export function TripEditorLayout() {
             difficulty={difficulty}
             onDifficultyChange={setDifficulty}
             startDate={startDate}
-            onStartDateChange={setStartDate}
+            onStartDateChange={handleStartDateChange}
             endDate={endDate}
             onEndDateChange={setEndDate}
             durationHours={durationHours}
@@ -232,8 +257,8 @@ export function TripEditorLayout() {
           />
 
           <TripPricing
-            price={price}
-            onPriceChange={setPrice}
+            minPrice={price}
+            onMinPriceChange={setPrice}
             currency={currency}
             onCurrencyChange={setCurrency}
           />
@@ -247,6 +272,19 @@ export function TripEditorLayout() {
             stops={stops}
             onChange={setStops}
           />
+
+          <section className="rounded-lg border border-[var(--tott-card-border)] p-4 space-y-4">
+            <h3 className="text-sm font-bold text-foreground">Join trip form</h3>
+            <p className="text-xs text-gray-500">
+              Travelers see this on the public trip page. Same field types as open-call applications;
+              reset restores the default join-trip template (name, email, optional message).
+            </p>
+            <ApplicationFormBuilder
+              fields={bookingFormFields}
+              onChange={setBookingFormFields}
+              defaultTemplateFields={DEFAULT_TRIP_BOOKING_FORM_FIELDS}
+            />
+          </section>
         </div>
 
         {/* Sidebar */}
@@ -270,13 +308,13 @@ export function TripEditorLayout() {
             </button>
             <button
               type="button"
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#444444] bg-[#1a1a1a] py-2 text-sm text-gray-400 hover:text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] py-2 text-sm text-gray-400 hover:text-foreground"
             >
               Duplicate Trip
             </button>
             <button
               type="button"
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#444444] bg-[#1a1a1a] py-2 text-sm text-gray-400 hover:text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] py-2 text-sm text-gray-400 hover:text-foreground"
             >
               Archive
             </button>

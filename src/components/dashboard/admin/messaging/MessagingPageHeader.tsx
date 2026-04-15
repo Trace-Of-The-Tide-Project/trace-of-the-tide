@@ -32,35 +32,35 @@ export function MessagingPageHeader() {
       />
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-5">
           <span style={{ color: "#E8DDC0" }}>
             <MessageSquareIcon />
           </span>
-          <span className="text-2xl font-bold text-white">23</span>
+          <span className="text-2xl font-bold text-foreground">23</span>
           <span className="text-xs text-gray-500">Unread Messages</span>
         </div>
 
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-5">
           <span style={{ color: "#E8DDC0" }}>
             <TrendingUpIcon />
           </span>
-          <span className="text-2xl font-bold text-white">5</span>
+          <span className="text-2xl font-bold text-foreground">5</span>
           <span className="text-xs text-gray-500">High Priority...</span>
         </div>
 
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-5">
           <span style={{ color: "#E8DDC0" }}>
             <ClockIcon />
           </span>
-          <span className="text-2xl font-bold text-white">12</span>
+          <span className="text-2xl font-bold text-foreground">12</span>
           <span className="text-xs text-gray-500">Pending Response</span>
         </div>
 
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5">
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-5">
           <span style={{ color: "#E8DDC0" }}>
             <SquareCheckIcon />
           </span>
-          <span className="text-2xl font-bold text-white">156</span>
+          <span className="text-2xl font-bold text-foreground">156</span>
           <span className="text-xs text-gray-500">Resolved This Week...</span>
         </div>
       </div>

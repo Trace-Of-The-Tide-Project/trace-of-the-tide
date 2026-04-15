@@ -1,3 +1,5 @@
+import { theme } from "@/lib/theme";
+
 type DetailItem = {
   icon: React.ReactNode;
   label: string;
@@ -68,13 +70,20 @@ export const DEFAULT_TRIP_ICONS = {
 
 export function TripDetailsBar({ items }: TripDetailsBarProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-gray-700/50 bg-[#111111] px-6 py-5 sm:flex-nowrap sm:gap-6">
+    <div
+      className="flex flex-wrap items-center justify-between gap-4 rounded-xl border px-6 py-5 sm:flex-nowrap sm:gap-6"
+      style={{
+        backgroundColor: theme.panelBackground,
+        borderColor: theme.cardBorder,
+        color: theme.panelForeground,
+      }}
+    >
       {items.map((item, i) => (
         <div key={i} className="flex flex-col items-center gap-2 text-center">
           <span className="text-gray-400">{item.icon}</span>
           <div>
             <p className="text-xs text-gray-500">{item.label}</p>
-            <p className="text-sm font-medium text-white">{item.value}</p>
+            <p className="text-sm font-medium text-[color:var(--tott-panel-text)]">{item.value}</p>
           </div>
         </div>
       ))}

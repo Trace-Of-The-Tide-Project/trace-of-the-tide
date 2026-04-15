@@ -11,8 +11,8 @@ function labelForName(name: string): string {
 
 export function ApplicationFormPreview({ fields }: { fields: ApplicationFormField[] }) {
   return (
-    <div className="rounded-xl border border-[#444444] bg-[#0a0a0a] p-5">
-      <h4 className="mb-4 text-sm font-semibold text-white">Preview</h4>
+    <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-5">
+      <h4 className="mb-4 text-sm font-semibold text-foreground">Preview</h4>
       <div className="flex flex-col gap-4">
         {fields.map((f, i) => (
           <PreviewField key={`preview-${i}`} field={f} />
@@ -37,7 +37,7 @@ function PreviewField({ field: f }: { field: ApplicationFormField }) {
   if (f.type === "checkbox") {
     return (
       <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
-        <input type="checkbox" className="h-4 w-4 shrink-0 rounded border-gray-500 bg-[#333] accent-[#C9A96E]" />
+        <input type="checkbox" className="h-4 w-4 shrink-0 rounded border-gray-500 bg-[var(--tott-dash-control-bg)] accent-[#C9A96E]" />
         {label}
         {req}
       </label>
@@ -53,7 +53,7 @@ function PreviewField({ field: f }: { field: ApplicationFormField }) {
         </p>
         <textarea
           placeholder={`Enter ${label.toLowerCase()}`}
-          className={`${inputBase} min-h-[100px] w-full rounded-lg border border-[#444] bg-[#232323] px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500`}
+          className={`${inputBase} min-h-[100px] w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-3 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500`}
         />
       </div>
     );
@@ -68,7 +68,7 @@ function PreviewField({ field: f }: { field: ApplicationFormField }) {
         </p>
         <div className="relative">
           <select
-            className={`${inputBase} w-full appearance-none rounded-lg border border-[#444] bg-[#232323] px-3 py-2.5 pr-9 text-sm text-white outline-none focus:border-gray-500`}
+            className={`${inputBase} w-full appearance-none rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-3 py-2.5 pr-9 text-sm text-foreground outline-none focus:border-gray-500`}
             defaultValue=""
           >
             <option value="" disabled className="text-gray-500">
@@ -105,7 +105,7 @@ function PreviewField({ field: f }: { field: ApplicationFormField }) {
           {label}
           {req}
         </p>
-        <div className="rounded-lg border border-dashed border-gray-600 bg-[#1a1a1a] px-4 py-8 text-center text-xs text-gray-500">
+        <div className="rounded-lg border border-dashed border-gray-600 bg-[var(--tott-dash-input-bg)] px-4 py-8 text-center text-xs text-gray-500">
           Drag and drop files (max {f.max_files}, {f.allowed_types.join(", ")}, up to {f.max_size_mb} MB)
         </div>
       </div>
@@ -121,7 +121,7 @@ function PreviewField({ field: f }: { field: ApplicationFormField }) {
       <input
         type={f.type === "email" ? "email" : f.type === "phone" ? "tel" : "text"}
         placeholder={`Enter ${label.toLowerCase()}`}
-        className={`${inputBase} h-10 w-full rounded-lg border border-[#444] bg-[#232323] px-3 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500`}
+        className={`${inputBase} h-10 w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-3 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500`}
       />
     </div>
   );

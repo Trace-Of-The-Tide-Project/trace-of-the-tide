@@ -96,6 +96,11 @@ export function OpenCallForm() {
     setIsDragging(false);
   }, []);
 
+  const fieldRowStyle = {
+    borderColor: theme.inputBorder,
+    backgroundColor: theme.panelWellBackground,
+  } as const;
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
   }
@@ -105,10 +110,10 @@ export function OpenCallForm() {
       {/* First name / Last name */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-white">First name</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">First name</label>
           <div
-            className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-            style={{ borderColor: theme.inputBorder }}
+            className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+            style={fieldRowStyle}
           >
             <span className="shrink-0 text-gray-500">
               <PersonIcon />
@@ -117,15 +122,15 @@ export function OpenCallForm() {
               name="firstName"
               type="text"
               placeholder="Enter your first name"
-              className="w-full bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+              className="w-full bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
             />
           </div>
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-white">Last name</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">Last name</label>
           <div
-            className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-            style={{ borderColor: theme.inputBorder }}
+            className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+            style={fieldRowStyle}
           >
             <span className="shrink-0 text-gray-500">
               <PersonIcon />
@@ -134,7 +139,7 @@ export function OpenCallForm() {
               name="lastName"
               type="text"
               placeholder="Enter your last name"
-              className="w-full bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+              className="w-full bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
             />
           </div>
         </div>
@@ -142,10 +147,10 @@ export function OpenCallForm() {
 
       {/* Email */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">Email address</label>
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">Email address</label>
         <div
-          className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-          style={{ borderColor: theme.inputBorder }}
+          className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+          style={fieldRowStyle}
         >
           <span className="shrink-0 text-gray-500">
             <EmailIcon />
@@ -154,21 +159,21 @@ export function OpenCallForm() {
             name="email"
             type="email"
             placeholder="Placeholder..."
-            className="w-full bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+            className="w-full bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
           />
         </div>
       </div>
 
       {/* Phone number */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">Phone number</label>
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">Phone number</label>
         <div
           className="flex items-stretch overflow-hidden rounded-lg border"
           style={{ borderColor: theme.inputBorder }}
         >
           <div
-            className="relative flex w-[100px] shrink-0 items-center border-r bg-[#1a1a1a]"
-            style={{ borderColor: theme.inputBorder }}
+            className="relative flex w-[100px] shrink-0 items-center border-r"
+            style={fieldRowStyle}
           >
             <select
               name="countryCode"
@@ -176,7 +181,11 @@ export function OpenCallForm() {
               defaultValue="+20"
             >
               {COUNTRY_CODES.map(({ code, country }) => (
-                <option key={code} value={code} className="bg-[#1a1a1a] text-white">
+                <option
+                  key={code}
+                  value={code}
+                  className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+                >
                   {code} {country}
                 </option>
               ))}
@@ -200,46 +209,46 @@ export function OpenCallForm() {
 
       {/* Experience field */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">Experience field</label>
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">Experience field</label>
         <div
-          className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-          style={{ borderColor: theme.inputBorder }}
+          className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+          style={fieldRowStyle}
         >
           <span className="shrink-0 text-gray-500">
             <WifiIcon />
           </span>
           <select
             name="experience"
-            className="w-full appearance-none bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+            className="w-full appearance-none bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
           >
-            <option value="" className="bg-[#1a1a1a]">
+            <option value="" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Select or write your experience field
             </option>
-            <option value="journalism" className="bg-[#1a1a1a]">
+            <option value="journalism" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Journalism
             </option>
-            <option value="research" className="bg-[#1a1a1a]">
+            <option value="research" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Research
             </option>
-            <option value="photography" className="bg-[#1a1a1a]">
+            <option value="photography" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Photography
             </option>
-            <option value="filmmaking" className="bg-[#1a1a1a]">
+            <option value="filmmaking" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Filmmaking
             </option>
-            <option value="writing" className="bg-[#1a1a1a]">
+            <option value="writing" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Writing
             </option>
-            <option value="art" className="bg-[#1a1a1a]">
+            <option value="art" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Art
             </option>
-            <option value="education" className="bg-[#1a1a1a]">
+            <option value="education" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Education
             </option>
-            <option value="technology" className="bg-[#1a1a1a]">
+            <option value="technology" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Technology
             </option>
-            <option value="other" className="bg-[#1a1a1a]">
+            <option value="other" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
               Other
             </option>
           </select>
@@ -251,7 +260,7 @@ export function OpenCallForm() {
 
       {/* Tell us about yourself */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
           Tell us about yourself
         </label>
         <textarea
@@ -266,31 +275,31 @@ export function OpenCallForm() {
       {/* Country / City */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-white">Country</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">Country</label>
           <div
-            className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-            style={{ borderColor: theme.inputBorder }}
+            className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+            style={fieldRowStyle}
           >
             <select
               name="country"
-              className="w-full appearance-none bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+              className="w-full appearance-none bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
             >
-              <option value="" className="bg-[#1a1a1a]">
+              <option value="" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
                 Select
               </option>
-              <option value="palestine" className="bg-[#1a1a1a]">
+              <option value="palestine" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
                 Palestine
               </option>
-              <option value="egypt" className="bg-[#1a1a1a]">
+              <option value="egypt" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
                 Egypt
               </option>
-              <option value="jordan" className="bg-[#1a1a1a]">
+              <option value="jordan" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
                 Jordan
               </option>
-              <option value="lebanon" className="bg-[#1a1a1a]">
+              <option value="lebanon" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
                 Lebanon
               </option>
-              <option value="other" className="bg-[#1a1a1a]">
+              <option value="other" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
                 Other
               </option>
             </select>
@@ -300,16 +309,16 @@ export function OpenCallForm() {
           </div>
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-white">City</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">City</label>
           <div
-            className="flex items-center gap-3 rounded-lg border bg-[#1a1a1a] px-3 py-2 sm:px-4 sm:py-3"
-            style={{ borderColor: theme.inputBorder }}
+            className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
+            style={fieldRowStyle}
           >
             <select
               name="city"
-              className="w-full appearance-none bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none sm:text-base"
+              className="w-full appearance-none bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
             >
-              <option value="" className="bg-[#1a1a1a]">
+              <option value="" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
                 Select
               </option>
             </select>
@@ -322,7 +331,7 @@ export function OpenCallForm() {
 
       {/* Upload files */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-white">
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
           Upload files <span className="font-normal text-gray-500">Upload as many as you want</span>
         </label>
         <div
@@ -330,7 +339,7 @@ export function OpenCallForm() {
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 transition-colors ${
-            isDragging ? "border-[#C9A96E] bg-[#C9A96E]/10" : "border-gray-600 bg-[#1a1a1a]"
+            isDragging ? "border-[#C9A96E] bg-[#C9A96E]/10" : "border-gray-600 bg-[var(--tott-well-bg)]"
           }`}
         >
           <input
@@ -361,17 +370,20 @@ export function OpenCallForm() {
             {files.map(({ id, file, sizeLabel }) => (
               <li
                 key={id}
-                className="flex items-center gap-3 rounded-lg border border-gray-700 bg-[#1a1a1a] px-4 py-3"
+                className="flex items-center gap-3 rounded-lg border border-gray-700 px-4 py-3"
+                style={{ backgroundColor: theme.panelWellBackground }}
               >
                 <span className="text-gray-500">
                   <FileTextIcon />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm text-white">{file.name}</span>
+                <span className="min-w-0 flex-1 truncate text-sm text-[color:var(--tott-panel-text)]">
+                  {file.name}
+                </span>
                 <span className="text-xs text-gray-500">{sizeLabel}</span>
                 <button
                   type="button"
                   onClick={() => removeFile(id)}
-                  className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#C9A96E]"
+                  className="rounded p-1 text-gray-500 hover:bg-black/10 hover:text-[color:var(--tott-panel-text)] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]"
                   aria-label="Remove file"
                 >
                   <TrashIcon />
@@ -407,10 +419,11 @@ export function OpenCallForm() {
       <button
         type="submit"
         disabled={!agreed}
-        className="w-full cursor-pointer rounded-lg py-3.5 text-base font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black"
+        className="w-full cursor-pointer rounded-lg py-3.5 text-base font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--background)]"
         style={{
           backgroundColor: theme.accentGold,
           boxShadow: `0 0 0 1px ${theme.accentGold}`,
+          color: theme.bgDark,
         }}
       >
         Submit

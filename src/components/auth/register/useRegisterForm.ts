@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { signup } from "@/services/auth.service";
+import { clearStoredAuth, signup } from "@/services/auth.service";
 import type { SignupRequest } from "@/types/auth.types";
 
 type RegisterSubmitEvent = React.FormEvent<HTMLFormElement>;
@@ -42,8 +42,12 @@ export function useRegisterForm() {
 
     setLoading(true);
     try {
-      await signup(data);
-      router.push("/admin");
+      const result = await signup(data);
+      // Require the emailed link to continue: discard any session the API might have returned on signup.
+      clearStoredAuth();
+      const email =
+        "pendingEmailVerification" in result ? result.email : result.user.email;
+      router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
       router.refresh();
     } catch (err) {
       if (process.env.NODE_ENV === "development") {

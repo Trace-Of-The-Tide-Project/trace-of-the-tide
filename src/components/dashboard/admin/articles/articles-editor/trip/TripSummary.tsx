@@ -1,5 +1,6 @@
 "use client";
 
+import { tripDisplayPriceLabel } from "@/services/trips.service";
 import type { EditorStop } from "./ItineraryBuilder";
 
 function DocIcon() {
@@ -70,7 +71,7 @@ type SummaryRowProps = {
 function SummaryRow({ icon, label, value }: SummaryRowProps) {
   return (
     <div>
-      <div className="flex items-center gap-2 text-sm font-medium text-white">
+      <div className="flex items-center gap-2 text-sm font-medium text-foreground">
         <span className="text-gray-400">{icon}</span>
         {label}
       </div>
@@ -119,11 +120,17 @@ export function TripSummary({
     : "---";
 
   const priceNum = parseFloat(price);
-  const priceDisplay = priceNum > 0 ? `${price} ${currency}` : "---";
+  const priceDisplay =
+    priceNum > 0
+      ? tripDisplayPriceLabel({
+          price,
+          currency,
+        })
+      : "---";
 
   return (
-    <div className="rounded-lg border border-[#444444] bg-[#1a1a1a] p-4">
-      <h3 className="mb-4 text-base font-bold italic text-white">Trip Summary</h3>
+    <div className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] p-4">
+      <h3 className="mb-4 text-base font-bold italic text-foreground">Trip Summary</h3>
 
       <div className="flex flex-col gap-3">
         <SummaryRow

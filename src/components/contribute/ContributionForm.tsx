@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { isAxiosError } from "axios";
 import {
   CloudUploadIcon,
   ChevronDownIcon,
@@ -10,11 +11,9 @@ import {
   TrashIcon,
 } from "@/components/ui/icons";
 import { theme } from "@/lib/theme";
-import {
-  CONTRIBUTION_FORM_INPUT_BASE as inputBase,
-  COUNTRY_CODES,
-} from "@/lib/constants";
-import { createContribution } from "@/services/contributions.service";
+import { CONTRIBUTION_FORM_INPUT_BASE as inputBase, COUNTRY_CODES } from "@/lib/constants";
+import { appendContributionFileByUrl, createContribution } from "@/services/contributions.service";
+import { uploadFileToUrl } from "@/services/uploads.service";
 
 type UploadedFile = { id: string; file: File; sizeLabel: string };
 
@@ -33,6 +32,7 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const addFiles = useCallback((fileList: FileList | null) => {
     if (!fileList?.length) return;
@@ -74,7 +74,8 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
     const title = (form.elements.namedItem("title") as HTMLInputElement | null)?.value ?? "";
     const description =
       (form.elements.namedItem("description") as HTMLTextAreaElement | null)?.value ?? "";
-    const contributorName = (form.elements.namedItem("name") as HTMLInputElement | null)?.value ?? "";
+    const contributorName =
+      (form.elements.namedItem("name") as HTMLInputElement | null)?.value ?? "";
     const contributorEmail =
       (form.elements.namedItem("email") as HTMLInputElement | null)?.value ?? "";
     const countryCode =
@@ -83,33 +84,61 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
 
     const phone = `${countryCode}${mobile}`.trim();
 
-    const fd = new FormData();
-    fd.append("title", title.trim());
-    fd.append("description", description.trim());
-    fd.append("contributor_name", contributorName.trim());
-    fd.append("contributor_email", contributorEmail.trim());
-    fd.append("consent_given", "true");
-
-    if (selectedTypeId) fd.append("type_id", selectedTypeId);
-    if (phone && phone !== countryCode) fd.append("contributor_phone", phone);
-
-    for (const f of files) fd.append("files", f.file);
-
+    setSubmitError(null);
     setIsSubmitting(true);
     try {
+      const fd = new FormData();
+      fd.append("title", title.trim());
+      fd.append("description", description.trim());
+      fd.append("contributor_name", contributorName.trim());
+      fd.append("contributor_email", contributorEmail.trim());
+      fd.append("consent_given", "true");
+      if (selectedTypeId) fd.append("type_id", selectedTypeId);
+      if (phone && phone !== countryCode) fd.append("contributor_phone", phone);
+
+      for (const f of files) {
+        const storagePathOrUrl = await uploadFileToUrl(f.file);
+        appendContributionFileByUrl(
+          fd,
+          storagePathOrUrl,
+          f.file.type || "application/octet-stream",
+        );
+      }
+
       await createContribution(fd);
       router.push("/contribute/success");
-    } catch {
-      router.push("/contribute/error");
+    } catch (err) {
+      let msg = "Submission failed. Please try again.";
+      if (isAxiosError(err)) {
+        const d = err.response?.data;
+        if (typeof d === "string" && d.trim()) msg = d;
+        else if (d && typeof d === "object") {
+          const o = d as Record<string, unknown>;
+          const inner = o.data as Record<string, unknown> | undefined;
+          const m =
+            (typeof inner?.message === "string" && inner.message) ||
+            (typeof o.message === "string" && o.message) ||
+            (Array.isArray(o.message) && o.message.map(String).join("; "));
+          if (m) msg = m;
+          else if (typeof o.error === "string") msg = o.error;
+        }
+        if (msg === "Submission failed. Please try again." && err.message) msg = err.message;
+      } else if (err instanceof Error) {
+        msg = err.message;
+      }
+      setSubmitError(msg);
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto w-[80vw] max-w-[80vw] select-none space-y-4 sm:w-full sm:max-w-xl sm:space-y-5">
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto w-[80vw] max-w-[80vw] select-none space-y-4 sm:w-full sm:max-w-xl sm:space-y-5"
+    >
       <div>
-        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
+        <label className="mb-1 block select-none text-xs font-medium text-foreground sm:mb-1.5 sm:text-sm">
           Contribution title
         </label>
         <input
@@ -124,7 +153,7 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block select-none text-xs cursor-pointer font-medium text-white sm:mb-1.5 sm:text-sm">
+        <label className="mb-1 block select-none text-xs cursor-pointer font-medium text-foreground sm:mb-1.5 sm:text-sm">
           Choose collection <span className="text-gray-500">(Optional)</span>
         </label>
         <div className="relative select-none">
@@ -145,7 +174,7 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
+        <label className="mb-1 block select-none text-xs font-medium text-foreground sm:mb-1.5 sm:text-sm">
           Description
         </label>
         <textarea
@@ -158,7 +187,7 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
+        <label className="mb-1 block select-none text-xs font-medium text-foreground sm:mb-1.5 sm:text-sm">
           Upload files
         </label>
         <div
@@ -202,12 +231,12 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
                 <span className="text-gray-500">
                   <FileTextIcon />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm text-white">{file.name}</span>
+                <span className="min-w-0 flex-1 truncate text-sm text-foreground">{file.name}</span>
                 <span className="text-xs text-gray-500">{sizeLabel}</span>
                 <button
                   type="button"
                   onClick={() => removeFile(id)}
-                  className="select-none rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#C9A96E]"
+                  className="select-none rounded p-1 text-gray-500 hover:bg-black/10 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-[#C9A96E]"
                   aria-label="Remove file"
                 >
                   <TrashIcon />
@@ -219,7 +248,9 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">Your name</label>
+        <label className="mb-1 block select-none text-xs font-medium text-foreground sm:mb-1.5 sm:text-sm">
+          Your name
+        </label>
         <input
           name="name"
           type="text"
@@ -230,7 +261,7 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
+        <label className="mb-1 block select-none text-xs font-medium text-foreground sm:mb-1.5 sm:text-sm">
           Your email address
         </label>
         <input
@@ -243,7 +274,7 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block select-none text-xs font-medium text-white sm:mb-1.5 sm:text-sm">
+        <label className="mb-1 block select-none text-xs font-medium text-foreground sm:mb-1.5 sm:text-sm">
           Your mobile number <span className="text-gray-500">(Optional)</span>
         </label>
         <div
@@ -260,7 +291,11 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
               defaultValue="+20"
             >
               {COUNTRY_CODES.map(({ code, country }) => (
-                <option key={code} value={code} className="bg-[#1a1a1a] text-white">
+                <option
+                  key={code}
+                  value={code}
+                  className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+                >
                   {code} {country}
                 </option>
               ))}
@@ -289,18 +324,28 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
         By submitting, you agree that your contribution may be used and attributed in accordance
         with our terms. We may contact you regarding your submission.
       </p>
+      <p className="select-none text-xs text-gray-600">
+        Each file is sent to <span className="text-gray-500">POST /upload</span> first. The contribution uses
+        multipart <span className="text-gray-500">files</span> parts whose <span className="text-gray-500">filename</span>{" "}
+        is that upload path or URL.
+      </p>
+
+      {submitError ? (
+        <p className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">{submitError}</p>
+      ) : null}
 
       <div className="pt-2">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full select-none cursor-pointer rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3.5 sm:text-base"
+          className="w-full select-none cursor-pointer rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3.5 sm:text-base"
           style={{
             backgroundColor: theme.accentGold,
             boxShadow: `0 0 0 1px ${theme.accentGold}`,
+            color: theme.bgDark,
           }}
         >
-          {isSubmitting ? "Submitting..." : "Submit Contribution"}
+          {isSubmitting ? "Uploading & submitting…" : "Submit Contribution"}
         </button>
       </div>
     </form>

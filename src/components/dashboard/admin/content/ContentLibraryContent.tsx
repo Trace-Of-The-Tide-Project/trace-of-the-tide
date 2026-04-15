@@ -17,13 +17,19 @@ import {
 } from "@/components/ui/icons";
 import { FilterDropdown } from "@/components/dashboard/admin/users/FilterDropdown";
 import { HexIconOutlined } from "@/components/dashboard/admin/articles/articles-create/HexIconOutlined";
+import { AuthedContributionImage } from "@/components/dashboard/admin/content/AuthedContributionImage";
 import {
+  contributionFilePublicUrl,
+  firstContributionPreviewableImageFile,
   getContributions,
   type ContributionListItem,
   type ContributionListMeta,
 } from "@/services/contributions.service";
 
 const ROWS_PER_PAGE = 10;
+
+/** Match image extensions when API omits image/* mime type. */
+const CONTRIBUTION_IMAGE_EXT = /\.(jpe?g|png|gif|webp|avif|bmp|svg)(\?.*)?$/i;
 
 function errMessage(e: unknown): string {
   if (isAxiosError(e)) {
@@ -112,7 +118,7 @@ function ContentActionsDropdown({
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        className="rounded p-1.5 transition-colors hover:bg-white/5"
+        className="rounded p-1.5 transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
         style={{ color: "#A3A3A3" }}
         aria-label="More actions"
         aria-expanded={isOpen}
@@ -120,7 +126,7 @@ function ContentActionsDropdown({
         <MoreDotsIcon />
       </button>
       {isOpen && (
-        <div className="absolute right-0 top-full z-20 mt-1 min-w-[140px] rounded-lg border border-[#444] bg-[#232323] py-1 shadow-lg">
+        <div className="absolute right-0 top-full z-20 mt-1 min-w-[140px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-1 shadow-lg">
           {ROW_ACTIONS.map((action) => (
             <button
               key={action.id}
@@ -129,8 +135,8 @@ function ContentActionsDropdown({
                 onAction?.(action.id, contentId);
                 setIsOpen(false);
               }}
-              className={`w-full px-4 py-2 text-left text-sm transition-colors hover:bg-[#2a2a2a] ${
-                action.destructive ? "text-red-400 hover:bg-red-500/10" : "text-white"
+              className={`w-full px-4 py-2 text-left text-sm transition-colors hover:bg-[var(--tott-dash-surface-inset)] ${
+                action.destructive ? "text-red-400 hover:bg-red-500/10" : "text-foreground"
               }`}
             >
               {action.label}
@@ -138,6 +144,33 @@ function ContentActionsDropdown({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function ContributionListThumbnail({
+  item,
+  variant = "inline",
+}: {
+  item: ContributionListItem;
+  variant?: "inline" | "card";
+}) {
+  const file = firstContributionPreviewableImageFile(item.files ?? []);
+  if (!file?.path?.trim()) return null;
+  if (variant === "card") {
+    return (
+      <div className="-mx-4 -mt-4 mb-3 overflow-hidden rounded-t-xl border-b border-[var(--tott-card-border)] bg-black/40">
+        <AuthedContributionImage
+          path={file.path}
+          alt=""
+          className="max-h-44 w-full object-cover sm:max-h-52"
+        />
+      </div>
+    );
+  }
+  return (
+    <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)]">
+      <AuthedContributionImage path={file.path} alt="" className="h-full w-full object-cover" />
     </div>
   );
 }
@@ -181,18 +214,18 @@ function ContributionDetailModal({
       />
 
       <div
-        className="relative mx-2 flex max-h-[90vh] w-full max-w-lg flex-col rounded-2xl border border-[#333] bg-[#0a0a0a] shadow-2xl sm:mx-4 sm:max-h-[85vh]"
+        className="relative mx-2 flex max-h-[90vh] w-full max-w-lg flex-col rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] shadow-2xl sm:mx-4 sm:max-h-[85vh]"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="flex shrink-0 items-start justify-between border-b border-[#333] px-6 py-5">
+        <div className="flex shrink-0 items-start justify-between border-b border-[var(--tott-card-border)] px-6 py-5">
           <div className="flex items-center gap-3">
             <HexIconOutlined size="sm">
               <TypeIconInline typeName={item.type?.name} />
             </HexIconOutlined>
             <div>
-              <h2 className="text-base font-bold text-white">{item.title}</h2>
+              <h2 className="text-base font-bold text-foreground">{item.title}</h2>
               <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500">
                 {item.type?.name && <span>{item.type.name}</span>}
                 <span
@@ -210,7 +243,7 @@ function ContributionDetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="rounded-lg p-1 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
             aria-label="Close"
           >
             <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -241,30 +274,29 @@ function ContributionDetailModal({
           </div>
 
           {/* Files */}
-          {item.files.length > 0 && (
+          {(item.files ?? []).length > 0 && (
             <div>
               <h3 className="mb-2 text-xs font-semibold uppercase text-gray-500">
-                Files ({item.files.length})
+                Files ({(item.files ?? []).length})
               </h3>
               <div className="space-y-2">
-                {item.files.map((f) => {
-                  const isImage = f.mime_type.startsWith("image/");
-                  const isAudio = f.mime_type.startsWith("audio/");
-                  const isVideo = f.mime_type.startsWith("video/");
-                  const fileUrl = f.path.startsWith("http")
-                    ? f.path
-                    : `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://backend-phd7.onrender.com"}/${f.path}`;
+                {(item.files ?? []).map((f) => {
+                  const isImage =
+                    (f.mime_type ?? "").startsWith("image/") ||
+                    CONTRIBUTION_IMAGE_EXT.test(`${f.file_name ?? ""} ${f.path ?? ""}`);
+                  const isAudio = (f.mime_type ?? "").startsWith("audio/");
+                  const isVideo = (f.mime_type ?? "").startsWith("video/");
+                  const fileUrl = contributionFilePublicUrl(f.path);
 
                   return (
                     <div
                       key={f.id}
-                      className="overflow-hidden rounded-lg border border-[#333] bg-[#111]"
+                      className="overflow-hidden rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-2)]"
                     >
                       {isImage && (
                         <div className="relative w-full bg-black/30">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={fileUrl}
+                          <AuthedContributionImage
+                            path={f.path}
                             alt={f.file_name}
                             className="max-h-64 w-full object-contain"
                           />
@@ -290,7 +322,7 @@ function ContributionDetailModal({
                       )}
                       <div className="flex items-center justify-between px-4 py-2.5">
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-white">{f.file_name}</p>
+                          <p className="truncate text-sm font-medium text-foreground">{f.file_name}</p>
                           <p className="text-[11px] text-gray-500">
                             {f.mime_type} &middot; {formatFileSize(f.file_size)}
                             {f.duration ? ` \u00b7 ${f.duration}` : ""}
@@ -314,7 +346,7 @@ function ContributionDetailModal({
                 {item.collections.map((c) => (
                   <span
                     key={c.id}
-                    className="rounded-full border border-[#333] bg-[#1a1a1a] px-3 py-1 text-xs text-gray-300"
+                    className="rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-1 text-xs text-gray-300"
                   >
                     {c.name}
                   </span>
@@ -325,11 +357,11 @@ function ContributionDetailModal({
         </div>
 
         {/* Footer */}
-        <div className="flex shrink-0 justify-end border-t border-[#333] px-6 py-4">
+        <div className="flex shrink-0 justify-end border-t border-[var(--tott-card-border)] px-6 py-4">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+            className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-foreground"
           >
             Close
           </button>
@@ -341,9 +373,9 @@ function ContributionDetailModal({
 
 function InfoCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-[#222] bg-[#111] px-3 py-2">
+    <div className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-2)] px-3 py-2">
       <span className="text-[10px] font-medium uppercase text-gray-500">{label}</span>
-      <p className="mt-0.5 truncate text-sm text-white">{value}</p>
+      <p className="mt-0.5 truncate text-sm text-foreground">{value}</p>
     </div>
   );
 }
@@ -421,7 +453,7 @@ export function ContentLibraryContent() {
       )}
 
       {/* Tabs */}
-      <div className="flex flex-col gap-1 rounded-lg border border-[#444] bg-[#232323] p-1 sm:w-fit sm:flex-row">
+      <div className="flex flex-col gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1 sm:w-fit sm:flex-row">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -429,7 +461,7 @@ export function ContentLibraryContent() {
             onClick={() => setActiveTab(tab.id)}
             className={`whitespace-nowrap rounded-md px-4 py-2.5 text-sm font-medium transition-all sm:px-6 sm:py-3 ${
               activeTab === tab.id
-                ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                 : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
             }`}
           >
@@ -449,7 +481,7 @@ export function ContentLibraryContent() {
             placeholder="Search contributions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-[#444] bg-[#232323] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+            className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
           />
         </div>
         <div className="flex items-center justify-center gap-2">
@@ -460,7 +492,7 @@ export function ContentLibraryContent() {
           />
           <button
             type="button"
-            className="flex items-center justify-center rounded-lg border border-[#444] bg-[#232323] p-2.5 text-gray-400 transition-colors hover:bg-[#2a2a2a] hover:text-white"
+            className="flex items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-2.5 text-gray-400 transition-colors hover:bg-[var(--tott-dash-surface-inset)] hover:text-foreground"
             aria-label="Filter"
           >
             <FilterIcon />
@@ -484,11 +516,11 @@ export function ContentLibraryContent() {
 
       {/* Content */}
       {loading ? (
-        <div className="rounded-xl border border-[#444] px-5 py-16 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-[var(--tott-card-border)] px-5 py-16 text-center text-sm text-gray-500">
           Loading contributions…
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border border-[#444] px-5 py-16 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-[var(--tott-card-border)] px-5 py-16 text-center text-sm text-gray-500">
           {search.trim() || activeTab !== "all"
             ? "No contributions match your filters."
             : "No contributions yet."}
@@ -500,11 +532,12 @@ export function ContentLibraryContent() {
             {filtered.map((item) => (
               <div
                 key={item.id}
-                className="rounded-xl border border-[#444] bg-[#111] p-4"
+                className="overflow-hidden rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-2)] p-4"
               >
+                <ContributionListThumbnail item={item} variant="card" />
                 <div className="mb-2 flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium text-white">{item.title}</p>
+                    <p className="font-medium text-foreground">{item.title}</p>
                     {item.description && (
                       <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">
                         {item.description}
@@ -515,7 +548,7 @@ export function ContentLibraryContent() {
                     <button
                       type="button"
                       onClick={() => setPreviewItem(item)}
-                      className="rounded p-1.5 text-gray-500 transition-colors hover:text-white"
+                      className="rounded p-1.5 text-gray-500 transition-colors hover:text-foreground"
                       aria-label={`View ${item.title}`}
                     >
                       <EyeIcon />
@@ -532,8 +565,10 @@ export function ContentLibraryContent() {
                   >
                     {capitalize(item.status)}
                   </span>
-                  {item.files.length > 0 && (
-                    <span>{item.files.length} file{item.files.length > 1 ? "s" : ""}</span>
+                  {(item.files ?? []).length > 0 && (
+                    <span>
+                      {(item.files ?? []).length} file{(item.files ?? []).length > 1 ? "s" : ""}
+                    </span>
                   )}
                   <span>{formatDate(item.submission_date)}</span>
                 </div>
@@ -542,10 +577,13 @@ export function ContentLibraryContent() {
           </div>
 
           {/* Table layout — large screens */}
-          <div className="hidden overflow-hidden rounded-xl border border-[#444] lg:block">
+          <div className="hidden overflow-hidden rounded-xl border border-[var(--tott-card-border)] lg:block">
             <table className="w-full border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-[#444]">
+                <tr className="border-b border-[var(--tott-card-border)]">
+                  <th className="w-14 px-2 py-3 text-xs font-semibold" style={{ color: theme.accentGoldFocus }}>
+                    Preview
+                  </th>
                   <th className="px-3 py-3 text-xs font-semibold" style={{ color: theme.accentGoldFocus }}>
                     Title
                   </th>
@@ -574,10 +612,15 @@ export function ContentLibraryContent() {
                 {filtered.map((item) => (
                   <tr
                     key={item.id}
-                    className="border-b border-[#444] transition-colors last:border-b-0"
+                    className="border-b border-[var(--tott-card-border)] transition-colors last:border-b-0"
                   >
+                    <td className="px-2 py-3 align-middle">
+                      <div className="flex justify-center">
+                        <ContributionListThumbnail item={item} />
+                      </div>
+                    </td>
                     <td className="px-3 py-3">
-                      <span className="block truncate font-medium text-white">
+                      <span className="block truncate font-medium text-foreground">
                         {item.title}
                       </span>
                       {item.description && (
@@ -601,8 +644,8 @@ export function ContentLibraryContent() {
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-2 py-3 text-gray-400 xl:table-cell">
-                      {item.files.length > 0
-                        ? `${item.files.length} file${item.files.length > 1 ? "s" : ""}`
+                      {(item.files ?? []).length > 0
+                        ? `${(item.files ?? []).length} file${(item.files ?? []).length > 1 ? "s" : ""}`
                         : "—"}
                     </td>
                     <td className="whitespace-nowrap px-2 py-3 text-gray-400 xl:table-cell">
@@ -618,7 +661,7 @@ export function ContentLibraryContent() {
                         <button
                           type="button"
                           onClick={() => setPreviewItem(item)}
-                          className="rounded p-1.5 text-gray-500 transition-colors hover:text-white"
+                          className="rounded p-1.5 text-gray-500 transition-colors hover:text-foreground"
                           aria-label={`View ${item.title}`}
                         >
                           <EyeIcon />
@@ -645,7 +688,7 @@ export function ContentLibraryContent() {
               type="button"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
-              className="rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2 text-gray-400 transition-colors hover:text-white disabled:opacity-40"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2 text-gray-400 transition-colors hover:text-foreground disabled:opacity-40"
             >
               Previous
             </button>
@@ -653,7 +696,7 @@ export function ContentLibraryContent() {
               type="button"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2 text-gray-400 transition-colors hover:text-white disabled:opacity-40"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2 text-gray-400 transition-colors hover:text-foreground disabled:opacity-40"
             >
               Next
             </button>

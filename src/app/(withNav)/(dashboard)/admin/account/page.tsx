@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/dashboard/shared/PlaceholderPage";
+import { AdminAccountSecurity } from "@/components/dashboard/admin/settings/AdminAccountSecurity";
 
 export default function AccountPage() {
-  return <PlaceholderPage title="Account" subtitle="Manage your account settings." />;
+  return <AdminAccountSecurity />;
 }

@@ -58,7 +58,7 @@ export function LoginForm() {
           <button
             type="button"
             onClick={() => setShowPassword((p) => !p)}
-            className="text-neutral-500 hover:text-white"
+            className="text-neutral-500 hover:text-foreground"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
             suppressHydrationWarning
           >

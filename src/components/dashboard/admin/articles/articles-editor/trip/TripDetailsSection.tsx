@@ -1,10 +1,12 @@
 "use client";
 
+import { isEndDatetimeBeforeStart } from "@/lib/datetime-local";
+
 const inputClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-2 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500";
 
 const selectClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-gray-400 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-2 text-sm text-foreground outline-none focus:border-gray-500";
 
 const DIFFICULTIES = ["easy", "moderate", "hard", "extreme"] as const;
 
@@ -51,8 +53,8 @@ export function TripDetailsSection({
   onCategoryChange,
 }: TripDetailsSectionProps) {
   return (
-    <section className="rounded-lg border border-[#333333] p-4 space-y-4">
-      <h3 className="flex items-center gap-2 text-sm font-bold text-white">
+    <section className="rounded-lg border border-[var(--tott-card-border)] p-4 space-y-4">
+      <h3 className="flex items-center gap-2 text-sm font-bold text-foreground">
         <CompassIcon />
         Trip Details
       </h3>
@@ -118,7 +120,15 @@ export function TripDetailsSection({
           <input
             type="datetime-local"
             value={endDate}
-            onChange={(e) => onEndDateChange(e.target.value)}
+            min={startDate || undefined}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (startDate && v && isEndDatetimeBeforeStart(v, startDate)) {
+                onEndDateChange(startDate);
+                return;
+              }
+              onEndDateChange(v);
+            }}
             className={inputClass}
           />
         </div>

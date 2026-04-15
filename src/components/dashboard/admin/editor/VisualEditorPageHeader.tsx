@@ -13,7 +13,7 @@ export function VisualEditorPageHeader() {
         <>
           <button
             type="button"
-            className="flex items-center gap-2 rounded-lg border border-[#444] bg-[#232323] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
+            className="flex items-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)]"
           >
             <span className="[&_svg]:h-4 [&_svg]:w-4">
               <EyeIcon />

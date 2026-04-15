@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { PlusIcon, EyeIcon, TrashIcon } from "@/components/ui/icons";
 import { getTrips, deleteTrip, type TripListItem } from "@/services/trips.service";
@@ -111,19 +112,19 @@ function ArchiveView({ trips, loading, error, onRetry, onDelete, deletingId, onP
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search archive..."
-          className="w-full rounded-lg border border-[#444444] bg-[#1a1a1a] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500"
+          className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500"
         />
       </div>
 
       {loading ? (
-        <div className="rounded-lg border border-[#444444] px-5 py-12 text-center text-sm text-gray-500">
+        <div className="rounded-lg border border-[var(--tott-card-border)] px-5 py-12 text-center text-sm text-gray-500">
           Loading trips…
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[#444444]">
+        <div className="overflow-x-auto rounded-lg border border-[var(--tott-card-border)]">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-[#444444]">
+              <tr className="border-b border-[var(--tott-card-border)]">
                 <th className="px-5 py-3 text-xs font-semibold" style={{ color: "#C9A96E" }}>Title</th>
                 <th className="px-4 py-3 text-xs font-semibold" style={{ color: "#C9A96E" }}>Route</th>
                 <th className="px-4 py-3 text-xs font-semibold" style={{ color: "#C9A96E" }}>Start Date</th>
@@ -144,8 +145,8 @@ function ArchiveView({ trips, loading, error, onRetry, onDelete, deletingId, onP
                 pageRows.map((trip) => {
                   const st = statusDisplay(trip.status);
                   return (
-                    <tr key={trip.id} className="border-b border-[#444444] last:border-b-0">
-                      <td className="px-5 py-3 font-medium text-white">{trip.title}</td>
+                    <tr key={trip.id} className="border-b border-[var(--tott-card-border)] last:border-b-0">
+                      <td className="px-5 py-3 font-medium text-foreground">{trip.title}</td>
                       <td className="px-4 py-3 text-gray-400">{trip.route_summary ?? "—"}</td>
                       <td className="px-4 py-3 text-gray-400">{formatDate(trip.start_date)}</td>
                       <td className="px-4 py-3 text-gray-400">{formatDate(trip.end_date)}</td>
@@ -160,7 +161,7 @@ function ArchiveView({ trips, loading, error, onRetry, onDelete, deletingId, onP
                           <button
                             type="button"
                             onClick={() => onPreview(trip)}
-                            className="text-gray-500 transition-colors hover:text-white"
+                            className="text-gray-500 transition-colors hover:text-foreground"
                             aria-label={`Preview ${trip.title}`}
                           >
                             <EyeIcon />
@@ -197,7 +198,7 @@ function ArchiveView({ trips, loading, error, onRetry, onDelete, deletingId, onP
               type="button"
               disabled={safePage <= 1}
               onClick={() => setPage((p) => p - 1)}
-              className="rounded-lg border border-[#444444] bg-[#1a1a1a] px-4 py-2 text-gray-400 transition-colors hover:text-white disabled:opacity-40"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2 text-gray-400 transition-colors hover:text-foreground disabled:opacity-40"
             >
               Previous
             </button>
@@ -205,7 +206,7 @@ function ArchiveView({ trips, loading, error, onRetry, onDelete, deletingId, onP
               type="button"
               disabled={safePage >= totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="rounded-lg border border-[#444444] bg-[#1a1a1a] px-4 py-2 text-gray-400 transition-colors hover:text-white disabled:opacity-40"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2 text-gray-400 transition-colors hover:text-foreground disabled:opacity-40"
             >
               Next
             </button>
@@ -217,14 +218,22 @@ function ArchiveView({ trips, loading, error, onRetry, onDelete, deletingId, onP
 }
 
 export function TripsManagementContent() {
-  const [activeTab, setActiveTab] = useState<"create" | "archive">("create");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get("tab") === "archive" ? "archive" : "create";
+
+  const setTab = useCallback(
+    (tab: "create" | "archive") => {
+      router.replace(tab === "archive" ? "/admin/trips?tab=archive" : "/admin/trips", { scroll: false });
+    },
+    [router]
+  );
 
   const [trips, setTrips] = useState<TripListItem[]>([]);
   const [tripsLoading, setTripsLoading] = useState(false);
   const [tripsError, setTripsError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [previewTrip, setPreviewTrip] = useState<TripListItem | null>(null);
-  const loadedRef = useRef(false);
 
   const loadTrips = useCallback(async () => {
     setTripsLoading(true);
@@ -232,7 +241,6 @@ export function TripsManagementContent() {
     try {
       const data = await getTrips();
       setTrips(data);
-      loadedRef.current = true;
     } catch (e) {
       setTripsError(errMessage(e));
     } finally {
@@ -241,7 +249,7 @@ export function TripsManagementContent() {
   }, []);
 
   useEffect(() => {
-    if (activeTab === "archive" && !loadedRef.current) {
+    if (activeTab === "archive") {
       void loadTrips();
     }
   }, [activeTab, loadTrips]);
@@ -267,13 +275,13 @@ export function TripsManagementContent() {
       />
 
       {/* Tabs */}
-      <div className="flex w-full gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+      <div className="flex w-full gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
         <button
           type="button"
-          onClick={() => setActiveTab("create")}
+          onClick={() => setTab("create")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-md py-3 text-sm font-medium transition-all ${
             activeTab === "create"
-              ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+              ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
               : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
           }`}
         >
@@ -282,10 +290,10 @@ export function TripsManagementContent() {
         </button>
         <button
           type="button"
-          onClick={() => setActiveTab("archive")}
+          onClick={() => setTab("archive")}
           className={`flex-1 rounded-md py-3 text-sm font-medium transition-all ${
             activeTab === "archive"
-              ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+              ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
               : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
           }`}
         >

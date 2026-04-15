@@ -55,7 +55,12 @@ function RoleHierarchyHex({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 48 48" fill="none">
-        <path d={hexPath(24, 24, 22)} fill="#333" stroke="#555" strokeWidth="1.5" />
+        <path
+          d={hexPath(24, 24, 22)}
+          fill="var(--tott-dash-icon-bg)"
+          stroke="var(--tott-card-border)"
+          strokeWidth="1.5"
+        />
       </svg>
       <span
         className="relative z-10 flex items-center justify-center [&>svg]:h-5 [&>svg]:w-5"
@@ -137,7 +142,7 @@ function EditorAppActionsDropdown({
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        className="rounded-full p-2 transition-colors hover:bg-white/5"
+        className="rounded-full p-2 transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
         style={{ backgroundColor: "#333", color: "#A3A3A3" }}
         aria-label="More actions"
         aria-expanded={isOpen}
@@ -145,7 +150,7 @@ function EditorAppActionsDropdown({
         <MoreDotsIcon />
       </button>
       {isOpen && (
-        <div className="absolute right-0 top-full z-20 mt-1 min-w-[160px] rounded-lg border border-[#444] bg-[#232323] py-1 shadow-lg">
+        <div className="absolute right-0 top-full z-20 mt-1 min-w-[160px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-1 shadow-lg">
           {actions.map((action) => (
             <button
               key={action.id}
@@ -154,10 +159,10 @@ function EditorAppActionsDropdown({
                 onAction?.(action.id, app.id);
                 setIsOpen(false);
               }}
-              className={`w-full px-4 py-2 text-left text-sm transition-colors hover:bg-[#2a2a2a] ${
+              className={`w-full px-4 py-2 text-left text-sm transition-colors hover:bg-[var(--tott-dash-surface-inset)] ${
                 (action as { destructive?: boolean }).destructive
                   ? "text-red-400 hover:bg-red-500/10"
-                  : "text-white"
+                  : "text-foreground"
               }`}
             >
               {action.label}
@@ -208,10 +213,10 @@ function EditorApplications() {
   };
 
   const statusBadgeStyle = (s: EditorAppStatus) => {
-    if (s === "pending") return "rounded-md bg-[#444] px-3 py-1 text-sm font-medium text-white";
+    if (s === "pending") return "rounded-md bg-[#444] px-3 py-1 text-sm font-medium text-foreground";
     if (s === "approved")
-      return "rounded-md bg-emerald-600/80 px-3 py-1 text-sm font-medium text-white";
-    return "rounded-md bg-red-600/80 px-3 py-1 text-sm font-medium text-white";
+      return "rounded-md bg-emerald-600/80 px-3 py-1 text-sm font-medium text-foreground";
+    return "rounded-md bg-red-600/80 px-3 py-1 text-sm font-medium text-foreground";
   };
 
   return (
@@ -226,7 +231,7 @@ function EditorApplications() {
             placeholder="Search applications..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-[#444] bg-[#232323] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+            className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
           />
         </div>
         <div className="flex gap-2">
@@ -237,8 +242,8 @@ function EditorApplications() {
               onClick={() => handleStatusChange(f.value)}
               className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                 statusFilter === f.value
-                  ? "border-[#555] bg-[#333] text-white"
-                  : "border-[#444] bg-transparent text-gray-400 hover:text-white"
+                  ? "border-[#555] bg-[var(--tott-dash-control-bg)] text-foreground"
+                  : "border-[var(--tott-card-border)] bg-transparent text-gray-400 hover:text-foreground"
               }`}
             >
               {f.label} (
@@ -257,16 +262,16 @@ function EditorApplications() {
 
       <div className="space-y-4">
         {filtered.map((app) => (
-          <div key={app.id} className="rounded-xl border border-[#444] p-4">
+          <div key={app.id} className="rounded-xl border border-[var(--tott-card-border)] p-4">
             <div className="flex items-start gap-4">
               <div
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-bold text-white"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-bold text-foreground"
                 style={{ backgroundColor: theme.accentGoldFocus }}
               >
                 {app.name.charAt(0).toUpperCase()}
               </div>
               <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                <p className="font-semibold text-white">{app.name}</p>
+                <p className="font-semibold text-foreground">{app.name}</p>
                 <p className="text-sm text-gray-500">{app.email}</p>
               </div>
               <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -278,7 +283,7 @@ function EditorApplications() {
                     <button
                       type="button"
                       onClick={() => {}}
-                      className="flex items-center gap-2 rounded-lg border border-[#444] bg-[#333] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#3a3a3a]"
+                      className="flex items-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
                     >
                       <span className="[&>svg]:h-4 [&>svg]:w-4">
                         <EyeIcon />
@@ -288,7 +293,7 @@ function EditorApplications() {
                     <button
                       type="button"
                       onClick={() => handleApprove(app.id)}
-                      className="flex items-center gap-2 rounded-lg border border-emerald-600/50 bg-emerald-600/80 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600"
+                      className="flex items-center gap-2 rounded-lg border border-emerald-600/50 bg-emerald-600/80 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-emerald-600"
                     >
                       <span className="[&>svg]:h-4 [&>svg]:w-4">
                         <SquareCheckIcon />
@@ -298,7 +303,7 @@ function EditorApplications() {
                     <button
                       type="button"
                       onClick={() => handleReject(app.id)}
-                      className="flex items-center gap-2 rounded-lg border border-red-600/50 bg-red-600/80 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                      className="flex items-center gap-2 rounded-lg border border-red-600/50 bg-red-600/80 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-red-600"
                     >
                       <span className="[&>svg]:h-4 [&>svg]:w-4">
                         <XIcon />
@@ -341,13 +346,13 @@ function PermissionsMatrix() {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-bold text-white">Permission Matrix</h3>
+        <h3 className="text-lg font-bold text-foreground">Permission Matrix</h3>
         <p className="mt-1 text-sm text-gray-500">Configure granular permissions for each role</p>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-[#444]">
+      <div className="overflow-x-auto rounded-xl border border-[var(--tott-card-border)]">
         <table className="w-full min-w-[600px] border-collapse">
           <thead>
-            <tr className="border-b border-[#444]">
+            <tr className="border-b border-[var(--tott-card-border)]">
               <th
                 className="px-4 py-3 text-left text-sm font-semibold"
                 style={{ color: theme.accentGoldFocus }}
@@ -368,7 +373,7 @@ function PermissionsMatrix() {
           <tbody className="divide-y divide-[#444]/60">
             {PERMISSIONS.map((permission) => (
               <tr key={permission} className="transition-colors hover:bg-white/2">
-                <td className="px-4 py-3 text-sm text-white">{permission}</td>
+                <td className="px-4 py-3 text-sm text-foreground">{permission}</td>
                 {MATRIX_ROLES.map((role) => (
                   <td key={role} className="px-4 py-3 text-center">
                     <div className="flex justify-center">
@@ -396,7 +401,7 @@ export function RolesPermissionsContent() {
   return (
     <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
       {/* Tabs - left-aligned */}
-      <div className="flex w-fit gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+      <div className="flex w-fit gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -404,7 +409,7 @@ export function RolesPermissionsContent() {
             onClick={() => setActiveTab(tab.id)}
             className={`rounded-md px-6 py-3 text-sm font-medium transition-all ${
               activeTab === tab.id
-                ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                 : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
             }`}
           >
@@ -414,7 +419,7 @@ export function RolesPermissionsContent() {
       </div>
 
       {activeTab === "overview" && (
-        <div className="rounded-xl border border-[#444] p-6">
+        <div className="rounded-xl border border-[var(--tott-card-border)] p-6">
           <div className="space-y-8">
             {/* Role stat cards - octagonal SVG border only, no bg */}
             <div className="flex flex-nowrap gap-6 overflow-x-auto">
@@ -440,7 +445,7 @@ export function RolesPermissionsContent() {
                     <span style={{ color: "#E8DDC0" }}>
                       <Icon />
                     </span>
-                    <span className="text-2xl font-bold text-white">{stat.value}</span>
+                    <span className="text-2xl font-bold text-foreground">{stat.value}</span>
                     <span className="text-center text-sm text-gray-500">{stat.label}</span>
                   </div>
                 );
@@ -448,8 +453,8 @@ export function RolesPermissionsContent() {
             </div>
 
             {/* Role Hierarchy */}
-            <div className="rounded-xl border border-[#444] p-6">
-              <h3 className="text-lg font-bold text-white">Role Hierarchy</h3>
+            <div className="rounded-xl border border-[var(--tott-card-border)] p-6">
+              <h3 className="text-lg font-bold text-foreground">Role Hierarchy</h3>
               <p className="mt-1 text-sm text-gray-500">
                 Understanding the permission inheritance between roles. Click Super Admin to edit
                 permissions.
@@ -463,7 +468,7 @@ export function RolesPermissionsContent() {
                       <RoleHierarchyHex>
                         <Icon />
                       </RoleHierarchyHex>
-                      <span className="text-sm font-medium text-white">{role.label}</span>
+                      <span className="text-sm font-medium text-foreground">{role.label}</span>
                     </>
                   );
                   return (
@@ -504,13 +509,13 @@ export function RolesPermissionsContent() {
       )}
 
       {activeTab === "permissions" && (
-        <div className="rounded-xl border border-[#444] p-16 py-10">
+        <div className="rounded-xl border border-[var(--tott-card-border)] p-16 py-10">
           <PermissionsMatrix />
         </div>
       )}
 
       {activeTab === "editor-apps" && (
-        <div className="rounded-xl border border-[#444] p-6">
+        <div className="rounded-xl border border-[var(--tott-card-border)] p-6">
           <EditorApplications />
         </div>
       )}

@@ -210,7 +210,7 @@ export function UsersManagementContent() {
             placeholder="Search username, full name, email…"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full min-w-0 rounded-lg border border-[#444] bg-[#232323] py-2.5 pl-10 pr-3 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none sm:pr-4"
+            className="w-full min-w-0 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-2.5 pl-10 pr-3 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none sm:pr-4"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch sm:gap-2 lg:flex-nowrap lg:items-center">
@@ -250,10 +250,10 @@ export function UsersManagementContent() {
         </div>
       ) : null}
 
-      <div className="-mx-1 w-full max-w-full overflow-x-auto overscroll-x-contain rounded-lg border border-[#444444] [touch-action:pan-x] sm:mx-0">
+      <div className="-mx-1 w-full max-w-full overflow-x-auto overscroll-x-contain rounded-lg border border-[var(--tott-card-border)] [touch-action:pan-x] sm:mx-0">
         <table className="min-w-[720px] w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-[#444444]">
+            <tr className="border-b border-[var(--tott-card-border)]">
               <th
                 className="bg-transparent px-3 py-2.5 text-xs font-semibold sm:px-5 sm:py-3"
                 style={{ color: theme.accentGoldFocus }}
@@ -322,7 +322,7 @@ export function UsersManagementContent() {
             type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={loading || effectivePage <= 1 || meta.total === 0}
-            className="min-h-[44px] rounded-lg border border-[#444] bg-[#232323] px-4 py-2 text-sm font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[#2a2a2a] sm:min-h-0"
+            className="min-h-[44px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2 text-sm font-medium text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--tott-dash-surface-inset)] sm:min-h-0"
           >
             Previous
           </button>
@@ -333,7 +333,7 @@ export function UsersManagementContent() {
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={loading || effectivePage >= totalPages || meta.total === 0}
-            className="min-h-[44px] rounded-lg border border-[#444] bg-[#232323] px-4 py-2 text-sm font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[#2a2a2a] sm:min-h-0"
+            className="min-h-[44px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2 text-sm font-medium text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--tott-dash-surface-inset)] sm:min-h-0"
           >
             Next
           </button>
@@ -346,7 +346,7 @@ export function UsersManagementContent() {
 function UserRow({ user, nowMs }: { user: AdminUserListItem; nowMs: number }) {
   const color = statusColor(user.status);
   return (
-    <tr className="border-b border-[#444444] last:border-b-0 transition-colors hover:bg-white/5">
+    <tr className="border-b border-[var(--tott-card-border)] last:border-b-0 transition-colors hover:bg-[var(--tott-dash-ghost-hover)]">
       <td className="px-3 py-2.5 sm:px-5 sm:py-3">
         <div className="flex items-center gap-2 sm:gap-3">
           <span
@@ -369,7 +369,7 @@ function UserRow({ user, nowMs }: { user: AdminUserListItem; nowMs: number }) {
         </div>
       </td>
       <td className="px-2 py-2.5 sm:px-4 sm:py-3">
-        <span className="inline-flex max-w-full rounded-full bg-[#3a3a3a] px-2 py-0.5 text-[10px] font-medium text-white sm:px-2.5 sm:py-1 sm:text-xs">
+        <span className="inline-flex max-w-full rounded-full bg-[#3a3a3a] px-2 py-0.5 text-[10px] font-medium text-foreground sm:px-2.5 sm:py-1 sm:text-xs">
           <span className="truncate">{formatUserRoleLabel(user.role)}</span>
         </span>
       </td>

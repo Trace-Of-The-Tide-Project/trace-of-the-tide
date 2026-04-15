@@ -9,11 +9,15 @@ import { TripDetailsBar, DEFAULT_TRIP_ICONS } from "@/components/trip/TripDetail
 import { TripBookingForm } from "@/components/trip/TripBookingForm";
 import { TripHighlights } from "@/components/trip/TripHighlights";
 import { TripTimeline } from "@/components/trip/TripTimeline";
+import { resolveTripCoverImage } from "@/lib/trip-cover-image";
 import { theme } from "@/lib/theme";
 import {
   getTripById,
   parseTripHighlights,
-  parseTripTags,
+  parseTripLanguages,
+  tripBookingFormFields,
+  tripDisplayPriceLabel,
+  tripStopImageUrl,
   type TripListItem,
   type TripStop,
 } from "@/services/trips.service";
@@ -99,14 +103,6 @@ function routeFromTo(trip: TripListItem): { from: string; to: string } {
   return { from: r || "—", to: "—" };
 }
 
-function priceLabel(trip: TripListItem): string {
-  const n = parseFloat(trip.price);
-  if (!Number.isFinite(n) || n <= 0) return "Free";
-  const cur = trip.currency || "USD";
-  if (cur === "USD") return `$${trip.price} USD`;
-  return `${trip.price} ${cur}`;
-}
-
 function orderedStops(trip: TripListItem): TripStop[] {
   return [...(trip.stops ?? [])].sort((a, b) => a.stop_order - b.stop_order);
 }
@@ -121,6 +117,7 @@ function stopsToTimelineEntries(stops: TripStop[]) {
       s.location.latitude !== 0 || s.location.longitude !== 0
         ? `Lat: ${Number(s.location.latitude).toFixed(4)}, Lng: ${Number(s.location.longitude).toFixed(4)}`
         : s.location.name || undefined,
+    imageUrl: tripStopImageUrl(s),
   }));
 }
 
@@ -148,7 +145,7 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
 
   const languages = useMemo(() => {
     if (!trip) return [];
-    return parseTripTags(trip.tags);
+    return parseTripLanguages(trip.languages);
   }, [trip]);
 
   const stops = useMemo(() => (trip ? orderedStops(trip) : []), [trip]);
@@ -170,7 +167,7 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
     return (
       <div
         className="flex min-h-[50vh] items-center justify-center text-gray-400"
-        style={{ backgroundColor: theme.bgDark }}
+        style={{ backgroundColor: theme.pageBackground }}
       >
         Invalid trip link.
       </div>
@@ -181,7 +178,7 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
     return (
       <div
         className="flex min-h-[50vh] items-center justify-center text-gray-400"
-        style={{ backgroundColor: theme.bgDark }}
+        style={{ backgroundColor: theme.pageBackground }}
       >
         Loading trip…
       </div>
@@ -190,8 +187,8 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
 
   if (trip === null) {
     return (
-      <div className="mx-auto max-w-lg px-6 py-20 text-center" style={{ backgroundColor: theme.bgDark }}>
-        <h1 className="text-xl font-semibold text-white">Trip not found</h1>
+      <div className="mx-auto max-w-lg px-6 py-20 text-center" style={{ backgroundColor: theme.pageBackground }}>
+        <h1 className="text-xl font-semibold text-foreground">Trip not found</h1>
         <p className="mt-2 text-sm text-gray-400">This trip may have been removed or the link is incorrect.</p>
         <Link href="/trip" className="mt-8 inline-block text-sm font-medium text-[#CBA158] hover:underline">
           View sample trip
@@ -201,7 +198,7 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
   }
 
   const { from, to } = routeFromTo(trip);
-  const heroImage = trip.cover_image?.trim() || FALLBACK_HERO;
+  const heroImage = resolveTripCoverImage(trip.cover_image, FALLBACK_HERO);
   const detailItems = [
     {
       icon: DEFAULT_TRIP_ICONS.calendar,
@@ -231,11 +228,11 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
   ];
 
   return (
-    <div className="min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
+    <div className="min-h-screen w-full" style={{ backgroundColor: theme.pageBackground }}>
       <TripHero
         image={heroImage}
         title={trip.title.trim() || "Trip"}
-        price={priceLabel(trip)}
+        price={tripDisplayPriceLabel(trip)}
         difficulty={
           trip.difficulty
             ? trip.difficulty.charAt(0).toUpperCase() + trip.difficulty.slice(1).toLowerCase()
@@ -249,7 +246,7 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
           <div className="flex min-w-0 flex-1 flex-col gap-10">
             <TripDetailsBar items={detailItems} />
             <div>
-              <h2 className="mb-4 text-lg font-semibold text-white">About this trip</h2>
+              <h2 className="mb-4 text-lg font-semibold text-foreground">About this trip</h2>
               <p className="text-sm leading-relaxed text-gray-400">
                 {trip.description.trim() || "No description provided."}
               </p>
@@ -263,7 +260,11 @@ export function TripDetailContent({ tripId }: TripDetailContentProps) {
             ) : null}
           </div>
           <div className="w-full shrink-0 lg:sticky lg:top-6 lg:w-80">
-            <TripBookingForm price={priceLabel(trip)} />
+            <TripBookingForm
+              minPrice={trip.price}
+              currency={trip.currency}
+              fields={tripBookingFormFields(trip)}
+            />
           </div>
         </div>
       </div>

@@ -31,7 +31,10 @@ export function ContentCollection({
   const visible = showAll ? items : items.slice(0, visibleCount);
 
   return (
-    <div className="rounded-xl border border-gray-800 p-4" style={{ backgroundColor: theme.bgDark }}>
+    <div
+      className="rounded-xl border p-4"
+      style={{ backgroundColor: theme.pageBackground, borderColor: theme.cardBorder }}
+    >
       <h3 className="text-lg font-bold text-white">Collection content</h3>
       <p className="mt-0.5 text-sm text-gray-500">
         {articleCount} Articles • {duration} of content

@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 
 const selectClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-gray-400 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-2 text-sm text-foreground outline-none focus:border-gray-500";
 
 const AVAILABLE_LANGUAGES = [
   { code: "AR", label: "Arabic" },
@@ -40,8 +40,8 @@ export function TripLanguages({ languages, onLanguagesChange }: TripLanguagesPro
   const available = AVAILABLE_LANGUAGES.filter((l) => !languages.includes(l.code));
 
   return (
-    <section className="rounded-lg border border-[#333333] p-4 space-y-4">
-      <h3 className="text-sm font-bold text-white">Languages</h3>
+    <section className="rounded-lg border border-[var(--tott-card-border)] p-4 space-y-4">
+      <h3 className="text-sm font-bold text-foreground">Languages</h3>
 
       <div>
         <label className="mb-1.5 block text-xs font-medium text-gray-400">
@@ -70,13 +70,13 @@ export function TripLanguages({ languages, onLanguagesChange }: TripLanguagesPro
             return (
               <span
                 key={code}
-                className="flex items-center gap-1 rounded-lg border border-[#444444] bg-[#333333] px-2.5 py-1 text-xs text-white"
+                className="flex items-center gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-2.5 py-1 text-xs text-foreground"
               >
                 {code}
                 <button
                   type="button"
                   onClick={() => removeLanguage(code)}
-                  className="ml-0.5 text-gray-500 hover:text-white"
+                  className="ml-0.5 text-gray-500 hover:text-foreground"
                   aria-label={`Remove ${label}`}
                 >
                   ×

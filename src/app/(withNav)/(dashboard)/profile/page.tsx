@@ -5,10 +5,10 @@ import { GridIcon, HeartHandshakeIcon, BarChartIcon, CalendarIcon } from "@/comp
 import { theme } from "@/lib/theme";
 
 const stats = [
-  { icon: GridIcon, value: "8", label: "Articles Published" },
-  { icon: HeartHandshakeIcon, value: "420", label: "Contributions" },
-  { icon: BarChartIcon, value: "1,200", label: "Total Reads" },
-  { icon: CalendarIcon, value: "765", label: "Days Active" },
+  { icon: <GridIcon />, value: "8", label: "Articles Published" },
+  { icon: <HeartHandshakeIcon />, value: "420", label: "Contributions" },
+  { icon: <BarChartIcon />, value: "1,200", label: "Total Reads" },
+  { icon: <CalendarIcon />, value: "765", label: "Days Active" },
 ];
 
 const recentArticles = [

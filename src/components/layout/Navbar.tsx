@@ -11,10 +11,12 @@ import {
   PenLineIcon,
   LanguagesIcon,
   MoonIcon,
+  SunIcon,
   MenuIcon,
   LogOutIcon,
   XIcon,
 } from "@/components/ui/icons";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { useStoredAuthUser } from "@/hooks/useStoredAuthUser";
 import { clearStoredAuth } from "@/services/auth.service";
 import { getNavAccountHref } from "@/lib/auth/nav-account-href";
@@ -37,6 +39,7 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isDark, toggleScheme } = useTheme();
   const user = useStoredAuthUser();
   const displayName = user?.full_name || user?.username || user?.email || "Username";
   const accountHref = user ? getNavAccountHref(user) : "/profile";
@@ -65,20 +68,25 @@ export function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
+  const navMuted = isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900";
+  const navRowHover = isDark ? "hover:bg-white/5 hover:text-white" : "hover:bg-gray-100 hover:text-gray-900";
+  const chipBg = isDark ? theme.cardBorder : "#e5e7eb";
+  const iconBtnBg = chipBg;
+
   return (
     <header
-      className="sticky top-0 z-50 w-full py-2"
-      style={{
-        backgroundColor: theme.bgDark,
-        borderColor: theme.cardBorder,
-      }}
+      className={`sticky top-0 z-50 w-full border-b py-2 ${
+        isDark ? "border-[#333333] bg-black" : "border-gray-200 bg-white"
+      }`}
     >
       <nav className="flex h-14 w-full items-center justify-between gap-8 px-6">
         {/* Part 1: Brand - left */}
         <div className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-3">
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-3 text-white transition-opacity hover:opacity-90"
+            className={`flex shrink-0 items-center gap-3 transition-opacity hover:opacity-90 ${
+              isDark ? "text-white" : "text-gray-900"
+            }`}
           >
             <Image
               src="/images/Logo.png"
@@ -99,19 +107,18 @@ export function Navbar() {
             <Link
               key={href}
               href={href}
-              className="hidden lg:flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
+              className={`hidden lg:flex items-center gap-2 transition-colors ${navMuted}`}
             >
               <Icon />
               <span>{label}</span>
             </Link>
           ))}
           <span
-            className="mx-1 hidden h-8 w-px lg:block"
-            style={{ backgroundColor: theme.cardBorder }}
+            className={`mx-1 hidden h-8 w-px lg:block ${isDark ? "bg-[#333333]" : "bg-gray-200"}`}
           />
           <button
             type="button"
-            className="hidden lg:flex items-center gap-2 rounded px-2 py-1.5 text-gray-400 transition-colors hover:text-white"
+            className={`hidden lg:flex items-center gap-2 rounded px-2 py-1.5 transition-colors ${navMuted}`}
             aria-label="Select language"
           >
             <LanguagesIcon />
@@ -123,7 +130,7 @@ export function Navbar() {
               <Link
                 href="/profile"
                 className="flex lg:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-opacity hover:opacity-90"
-                style={{ backgroundColor: theme.cardBorder }}
+                style={{ backgroundColor: chipBg }}
                 aria-label="Profile"
               >
                 <span
@@ -139,9 +146,11 @@ export function Navbar() {
               {/* 901px and up: full profile button */}
               <Link
                 href={accountHref}
-                className="hidden lg:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-white"
+                className={`hidden lg:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  isDark ? "text-gray-300 hover:text-white" : "text-gray-700 hover:text-gray-900"
+                }`}
                 style={{
-                  backgroundColor: theme.cardBorder,
+                  backgroundColor: chipBg,
                 }}
               >
                 <span
@@ -158,9 +167,11 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="hidden lg:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
+                className={`hidden lg:inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
                 style={{
-                  backgroundColor: theme.cardBorder,
+                  backgroundColor: chipBg,
                 }}
               >
                 <LogOutIcon />
@@ -171,9 +182,11 @@ export function Navbar() {
             <>
               <Link
                 href="/auth/login"
-                className="hidden lg:inline-flex rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
+                className={`hidden lg:inline-flex rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
                 style={{
-                  backgroundColor: theme.cardBorder,
+                  backgroundColor: chipBg,
                 }}
               >
                 Login
@@ -192,22 +205,28 @@ export function Navbar() {
           )}
           <button
             type="button"
-            className="hidden lg:flex rounded-md p-2 text-white/90 transition-colors hover:text-white"
+            onClick={toggleScheme}
+            className={`hidden lg:flex rounded-md p-2 transition-colors ${
+              isDark ? "text-white/90 hover:text-white" : "text-gray-700 hover:text-gray-900"
+            }`}
             style={{
-              backgroundColor: theme.cardBorder,
+              backgroundColor: iconBtnBg,
             }}
-            aria-label="Toggle dark mode"
+            aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+            aria-pressed={isDark}
           >
-            <MoonIcon />
+            {isDark ? <SunIcon /> : <MoonIcon />}
           </button>
 
           {/* 900px and below: hamburger menu (nav links + language + auth in drawer) */}
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(true)}
-            className="flex lg:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:text-white/90"
+            className={`flex lg:hidden h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors ${
+              isDark ? "text-white hover:text-white/90" : "text-gray-800 hover:text-gray-950"
+            }`}
             style={{
-              backgroundColor: theme.cardBorder,
+              backgroundColor: iconBtnBg,
             }}
             aria-label="Open menu"
           >
@@ -234,23 +253,20 @@ export function Navbar() {
         <div
           className={`absolute right-0 top-0 flex h-full w-full max-w-[280px] flex-col border-l transition-transform duration-300 ease-out ${
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-          style={{
-            backgroundColor: theme.bgDark,
-            borderColor: theme.cardBorder,
-          }}
+          } ${isDark ? "border-[#333333] bg-black" : "border-gray-200 bg-white"}`}
         >
           <div
-            className="flex flex-col gap-1 border-b p-4"
-            style={{ borderColor: theme.cardBorder }}
+            className={`flex flex-col gap-1 border-b p-4 ${isDark ? "border-[#333333]" : "border-gray-200"}`}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="font-medium text-white">Menu</span>
+              <span className={`font-medium ${isDark ? "text-white" : "text-gray-900"}`}>Menu</span>
               <button
                 type="button"
                 onClick={closeMobileMenu}
-                className="rounded-md p-2 text-gray-400 transition-colors hover:text-white"
-                style={{ backgroundColor: theme.cardBorder }}
+                className={`rounded-md p-2 transition-colors ${
+                  isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"
+                }`}
+                style={{ backgroundColor: iconBtnBg }}
                 aria-label="Close menu"
               >
                 <XIcon />
@@ -263,16 +279,16 @@ export function Navbar() {
                 key={href}
                 href={href}
                 onClick={closeMobileMenu}
-                className="flex items-center gap-3 rounded-md px-4 py-3 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+                className={`flex items-center gap-3 rounded-md px-4 py-3 transition-colors ${navMuted} ${navRowHover}`}
               >
                 <Icon />
                 <span>{label}</span>
               </Link>
             ))}
-            <span className="my-2 h-px w-full" style={{ backgroundColor: theme.cardBorder }} />
+            <span className={`my-2 h-px w-full ${isDark ? "bg-[#333333]" : "bg-gray-200"}`} />
             <button
               type="button"
-              className="flex items-center gap-3 rounded-md px-4 py-3 text-left text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+              className={`flex items-center gap-3 rounded-md px-4 py-3 text-left transition-colors ${navMuted} ${navRowHover}`}
               aria-label="Select language"
             >
               <LanguagesIcon />
@@ -283,7 +299,7 @@ export function Navbar() {
                 <Link
                   href={accountHref}
                   onClick={closeMobileMenu}
-                  className="flex items-center gap-3 rounded-md px-4 py-3 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+                  className={`flex items-center gap-3 rounded-md px-4 py-3 transition-colors ${navMuted} ${navRowHover}`}
                 >
                   <span
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium"
@@ -299,8 +315,10 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 rounded-md px-4 py-3 text-white transition-colors"
-                  style={{ backgroundColor: theme.cardBorder }}
+                  className={`flex items-center justify-center gap-2 rounded-md px-4 py-3 transition-colors ${
+                    isDark ? "text-white" : "text-gray-900"
+                  }`}
+                  style={{ backgroundColor: chipBg }}
                 >
                   <LogOutIcon />
                   Logout
@@ -311,8 +329,10 @@ export function Navbar() {
                 <Link
                   href="/auth/login"
                   onClick={closeMobileMenu}
-                  className="flex items-center justify-center gap-2 rounded-md px-4 py-3 text-white transition-colors"
-                  style={{ backgroundColor: theme.cardBorder }}
+                  className={`flex items-center justify-center gap-2 rounded-md px-4 py-3 transition-colors ${
+                    isDark ? "text-white" : "text-gray-900"
+                  }`}
+                  style={{ backgroundColor: chipBg }}
                 >
                   Login
                 </Link>
@@ -329,14 +349,16 @@ export function Navbar() {
                 </Link>
               </>
             )}
-            <span className="my-2 h-px w-full" style={{ backgroundColor: theme.cardBorder }} />
+            <span className={`my-2 h-px w-full ${isDark ? "bg-[#333333]" : "bg-gray-200"}`} />
             <button
               type="button"
-              className="flex items-center gap-3 rounded-md px-4 py-3 text-left text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
-              aria-label="Toggle dark mode"
+              onClick={toggleScheme}
+              className={`flex w-full items-center gap-3 rounded-md px-4 py-3 text-left transition-colors ${navMuted} ${navRowHover}`}
+              aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+              aria-pressed={isDark}
             >
-              <MoonIcon />
-              <span>Dark mode</span>
+              {isDark ? <SunIcon /> : <MoonIcon />}
+              <span>{isDark ? "Light mode" : "Dark mode"}</span>
             </button>
           </div>
         </div>

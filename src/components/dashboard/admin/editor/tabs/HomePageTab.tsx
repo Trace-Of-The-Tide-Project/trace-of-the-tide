@@ -62,8 +62,8 @@ export function HomePageTab() {
 
   return (
     <div className="grid gap-9 lg:grid-cols-[320px_1fr]">
-      <div className="rounded-xl border border-[#444] p-8 px-10">
-        <h3 className="text-sm font-semibold text-white">Quick Actions</h3>
+      <div className="rounded-xl border border-[var(--tott-card-border)] p-8 px-10">
+        <h3 className="text-sm font-semibold text-foreground">Quick Actions</h3>
         <p className="mt-1 text-xs text-gray-500">Drag to reorder, toggle visibility.</p>
         <div className="mt-4 flex w-full flex-col gap-4">
           {SECTIONS.map((section) => {
@@ -72,8 +72,8 @@ export function HomePageTab() {
               <div
                 key={section.id}
                 onClick={() => setSelectedSection(section.id)}
-                className={`flex w-full cursor-pointer items-center gap-3 rounded-lg border px-3 py-5 transition-colors hover:bg-[#333] ${
-                  isSelected ? "border-[#C9A96E]" : "border-[#444]"
+                className={`flex w-full cursor-pointer items-center gap-3 rounded-lg border px-3 py-5 transition-colors hover:bg-[var(--tott-dash-control-hover)] ${
+                  isSelected ? "border-[#C9A96E]" : "border-[var(--tott-card-border)]"
                 }`}
               >
                 <span
@@ -83,7 +83,7 @@ export function HomePageTab() {
                   <GripVerticalIcon />
                 </span>
                 <span
-                  className={`flex-1 text-sm font-medium ${isSelected ? "text-[#C9A96E]" : "text-white"}`}
+                  className={`flex-1 text-sm font-medium ${isSelected ? "text-[#C9A96E]" : "text-foreground"}`}
                 >
                   {section.label}
                 </span>
@@ -93,7 +93,7 @@ export function HomePageTab() {
                     e.stopPropagation();
                     toggleVisibility(section.id);
                   }}
-                  className={`rounded p-1.5 transition-colors hover:bg-white/10 ${
+                  className={`rounded p-1.5 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] ${
                     isSelected ? "text-[#C9A96E]" : sectionVisibility[section.id] ? "text-gray-400" : "text-gray-600"
                   }`}
                   aria-label={sectionVisibility[section.id] ? "Hide section" : "Show section"}
@@ -108,7 +108,7 @@ export function HomePageTab() {
         </div>
         <button
           type="button"
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[#333] py-2.5 text-sm text-white transition-colors hover:bg-[#3a3a3a]"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--tott-dash-control-bg)] py-2.5 text-sm text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
         >
           <span className="[&_svg]:h-4 [&_svg]:w-4">
             <PlusIcon />
@@ -117,15 +117,15 @@ export function HomePageTab() {
         </button>
       </div>
 
-      <div className="rounded-xl border border-[#444] p-6">
+      <div className="rounded-xl border border-[var(--tott-card-border)] p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-semibold text-white">Hero Banner</h3>
+            <h3 className="text-sm font-semibold text-foreground">Hero Banner</h3>
             <p className="mt-1 text-xs text-gray-500">Edit section content and settings.</p>
           </div>
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-lg border border-[#444] bg-[#333] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#2a2a2a] hover:text-white"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)] hover:text-foreground"
           >
             <span className="[&_svg]:h-3.5 [&_svg]:w-3.5">
               <RefreshCwIcon />
@@ -135,39 +135,39 @@ export function HomePageTab() {
         </div>
         <div className="mt-6 space-y-4">
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white">Headline</label>
+            <label className="mb-1.5 block text-xs font-medium text-foreground">Headline</label>
             <input
               type="text"
               placeholder="Discover. Create. Inspire."
-              className="w-full rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+              className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white">Subheadline</label>
+            <label className="mb-1.5 block text-xs font-medium text-foreground">Subheadline</label>
             <textarea
               placeholder="Join a community of creators, authors, and editors sharing their passion with the world."
               rows={3}
-              className="w-full resize-none rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+              className="w-full resize-none rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white">Primary CTA</label>
+            <label className="mb-1.5 block text-xs font-medium text-foreground">Primary CTA</label>
             <input
               type="text"
               placeholder="Contribute now."
-              className="w-full rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+              className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white">Secondary CTA</label>
+            <label className="mb-1.5 block text-xs font-medium text-foreground">Secondary CTA</label>
             <input
               type="text"
               placeholder="Contribute now."
-              className="w-full rounded-lg border border-[#444] bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none"
+              className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white">Background Image</label>
+            <label className="mb-1.5 block text-xs font-medium text-foreground">Background Image</label>
             <input
               ref={fileInputRef}
               type="file"
@@ -189,7 +189,7 @@ export function HomePageTab() {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-10 transition-colors ${
-                isDragging ? "border-[#C9A96E] bg-[#2a2a2a]" : "border-[#444] bg-[#1a1a1a] hover:border-[#555]"
+                isDragging ? "border-[#C9A96E] bg-[var(--tott-dash-surface-inset)]" : "border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] hover:border-[#555]"
               }`}
             >
               {previewUrl ? (
@@ -208,7 +208,7 @@ export function HomePageTab() {
                       <CloudUploadIcon />
                     </span>
                   </span>
-                  <p className="mt-2 text-sm text-white">
+                  <p className="mt-2 text-sm text-foreground">
                     Drag and drop files here, or click to browse
                   </p>
                   <p className="mt-1 text-xs text-gray-500">

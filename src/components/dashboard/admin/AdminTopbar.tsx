@@ -1,19 +1,38 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { SettingsIcon, BellIcon, ClockIcon, SearchIcon } from "@/components/ui/icons";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { shouldShowAdminSettingsHeader } from "@/lib/dashboard/admin-settings-header-paths";
+
+const ACCENT_MUTED = "#E8DDC0";
 
 export function AdminTopbar() {
+  const pathname = usePathname();
+  const settingsHeader = shouldShowAdminSettingsHeader(pathname);
+  const { isDark } = useTheme();
+  const iconBtn = isDark
+    ? "hover:bg-[var(--tott-dash-ghost-hover)]"
+    : "border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] hover:bg-[var(--tott-dash-ghost-hover)]";
+  const inputClass = isDark
+    ? "w-full max-w-md rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-gray-600"
+    : "w-full max-w-md rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-500 outline-none transition-colors focus:border-gray-400";
+
   return (
-    <div className="hidden items-center gap-4 border-b border-[#333] py-3 pb-4 lg:flex">
+    <div className="hidden items-center gap-6 border-b border-[var(--tott-card-border)] py-3 pb-4 lg:flex">
+    
       {/* Search */}
-      <div className="relative flex-1">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#E8DDC0" }}>
+      <div className="relative min-w-0 flex-1">
+        <span
+          className="absolute left-3 top-1/2 -translate-y-1/2"
+          style={{ color: isDark ? ACCENT_MUTED : "#78716c" }}
+        >
           <SearchIcon />
         </span>
         <input
           type="text"
           placeholder="Search users, content, settings..."
-          className="w-full max-w-md rounded-lg border border-[#333] bg-[#1a1a1a] py-2.5 pl-10 pr-4 text-sm text-white placeholder-gray-600 outline-none transition-colors focus:border-gray-600"
+          className={inputClass}
         />
       </div>
 
@@ -21,30 +40,30 @@ export function AdminTopbar() {
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="rounded-lg p-2 transition-colors hover:bg-white/5"
-          style={{ color: "#E8DDC0" }}
+          className={`rounded-lg p-2 transition-colors ${iconBtn}`}
+          style={{ color: isDark ? ACCENT_MUTED : "#78716c" }}
           aria-label="Activity"
         >
           <ClockIcon />
         </button>
         <button
           type="button"
-          className="rounded-lg p-2 transition-colors hover:bg-white/5"
-          style={{ color: "#E8DDC0" }}
+          className={`rounded-lg p-2 transition-colors ${iconBtn}`}
+          style={{ color: isDark ? ACCENT_MUTED : "#78716c" }}
           aria-label="Settings"
         >
           <SettingsIcon />
         </button>
         <button
           type="button"
-          className="relative rounded-lg p-2 transition-colors hover:bg-white/5"
-          style={{ color: "#E8DDC0" }}
+          className={`relative rounded-lg p-2 transition-colors ${iconBtn}`}
+          style={{ color: isDark ? ACCENT_MUTED : "#78716c" }}
           aria-label="Notifications"
         >
           <BellIcon />
           <span
             className="absolute right-1 top-1 h-2 w-2 rounded-full"
-            style={{ backgroundColor: "#E8DDC0" }}
+            style={{ backgroundColor: isDark ? ACCENT_MUTED : "#a8a29e" }}
           />
         </button>
 

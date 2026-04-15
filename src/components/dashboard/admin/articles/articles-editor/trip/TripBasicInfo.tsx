@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 const inputClass =
-  "w-full rounded-lg border border-[#444444] bg-[#333333] px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-gray-500";
+  "w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-2 text-sm text-foreground placeholder-gray-500 outline-none focus:border-gray-500";
 
 type TripBasicInfoProps = {
   title: string;
@@ -45,8 +45,8 @@ export function TripBasicInfo({
   );
 
   return (
-    <section className="rounded-lg border border-[#333333] p-4 space-y-4">
-      <h3 className="text-sm font-bold text-white">Basic Informations</h3>
+    <section className="rounded-lg border border-[var(--tott-card-border)] p-4 space-y-4">
+      <h3 className="text-sm font-bold text-foreground">Basic Informations</h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -105,7 +105,7 @@ export function TripBasicInfo({
               <button
                 type="button"
                 onClick={() => removeHighlight(idx)}
-                className="shrink-0 text-gray-500 hover:text-white"
+                className="shrink-0 text-gray-500 hover:text-foreground"
                 aria-label={`Remove highlight ${idx + 1}`}
               >
                 <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -119,7 +119,7 @@ export function TripBasicInfo({
         <button
           type="button"
           onClick={addHighlight}
-          className="mt-2 w-full rounded-lg border border-dashed border-[#444444] py-2 text-sm text-gray-400 hover:border-gray-400 hover:text-white"
+          className="mt-2 w-full rounded-lg border border-dashed border-[var(--tott-card-border)] py-2 text-sm text-gray-400 hover:border-gray-400 hover:text-foreground"
         >
           + Add Highlight
         </button>

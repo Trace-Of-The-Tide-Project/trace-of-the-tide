@@ -12,6 +12,9 @@ import {
   TRIP_ABOUT,
   TRIP_TIMELINE,
 } from "@/lib/constants";
+import { tripDisplayPriceLabel } from "@/services/trips.service";
+
+const DEMO_TRIP_PRICE = { min: "600", currency: "USD" as const };
 
 const DETAILS = TRIP_DETAILS.map((d) => ({
   ...d,
@@ -22,12 +25,15 @@ const DETAILS = TRIP_DETAILS.map((d) => ({
 
 export default function TripPage() {
   return (
-    <div className="min-h-screen w-full" style={{ backgroundColor: theme.bgDark }}>
+    <div className="min-h-screen w-full" style={{ backgroundColor: theme.pageBackground }}>
       {/* Hero */}
       <TripHero
         image={TRIP_HERO.image}
         title={TRIP_HERO.title}
-        price={TRIP_HERO.price}
+        price={tripDisplayPriceLabel({
+          price: DEMO_TRIP_PRICE.min,
+          currency: DEMO_TRIP_PRICE.currency,
+        })}
         difficulty={TRIP_HERO.difficulty}
         from={TRIP_HERO.from}
         to={TRIP_HERO.to}
@@ -42,7 +48,7 @@ export default function TripPage() {
 
             {/* About */}
             <div>
-              <h2 className="mb-4 text-lg font-semibold text-white">
+              <h2 className="mb-4 text-lg font-semibold text-foreground">
                 About this trip
               </h2>
               <p className="text-sm leading-relaxed text-gray-400">
@@ -56,7 +62,7 @@ export default function TripPage() {
 
           {/* Right sidebar */}
           <div className="w-full shrink-0 lg:sticky lg:top-6 lg:w-80">
-            <TripBookingForm price={TRIP_HERO.price} />
+            <TripBookingForm minPrice={DEMO_TRIP_PRICE.min} currency={DEMO_TRIP_PRICE.currency} />
           </div>
         </div>
       </div>

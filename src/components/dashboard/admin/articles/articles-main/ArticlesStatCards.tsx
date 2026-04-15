@@ -30,12 +30,12 @@ export function ArticlesStatCards({ stats }: ArticlesStatCardsProps) {
         return (
           <div
             key={stat.id}
-            className="flex flex-col items-center gap-2 rounded-xl border border-[#333] bg-[#0a0a0a] px-4 py-5"
+            className="flex flex-col items-center gap-2 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-5"
           >
             <span style={{ color: "#E8DDC0" }}>
               <Icon />
             </span>
-            <span className="text-2xl font-bold text-white">{stat.value}</span>
+            <span className="text-2xl font-bold text-foreground">{stat.value}</span>
             <span className="text-xs text-gray-500">{stat.label}</span>
           </div>
         );

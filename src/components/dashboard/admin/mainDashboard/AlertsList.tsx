@@ -43,8 +43,8 @@ function HexIcon({ children }: { children: React.ReactNode }) {
       >
         <path
           d="M24 2L44 14V34L24 46L4 34V14Z"
-          fill="#1a1a1a"
-          stroke="#333"
+          fill="var(--tott-dash-icon-bg)"
+          stroke="var(--tott-card-border)"
           strokeWidth="1"
         />
       </svg>
@@ -60,12 +60,12 @@ export function AlertsList({ items, onDismissAll }: AlertsListProps) {
     <>
       <div>
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-white">Alerts & Notifications</h3>
+          <h3 className="text-lg font-bold text-foreground">Alerts & Notifications</h3>
           {onDismissAll && (
             <button
               type="button"
               onClick={onDismissAll}
-              className="rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-xs font-medium text-[var(--tott-dash-control-fg)] transition-colors hover:border-gray-500 hover:text-foreground"
             >
               Dismiss all
             </button>
@@ -78,19 +78,19 @@ export function AlertsList({ items, onDismissAll }: AlertsListProps) {
             return (
               <div
                 key={item.id}
-                className="flex items-center gap-4 rounded-xl border border-[#333] bg-[#0a0a0a] px-5 py-4"
+                className="flex items-center gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-5 py-4"
               >
                 <HexIcon>
                   <Icon />
                 </HexIcon>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-white">{item.title}</p>
+                  <p className="text-sm font-medium text-foreground">{item.title}</p>
                   <p className="mt-0.5 text-xs text-gray-500">{item.description}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setActiveAlert(item)}
-                  className="shrink-0 text-xs font-medium text-gray-400 transition-colors hover:text-white"
+                  className="shrink-0 text-xs font-medium text-gray-400 transition-colors hover:text-foreground"
                 >
                   {item.actionLabel} &rsaquo;
                 </button>

@@ -169,7 +169,7 @@ export function NotificationsAdminContent() {
             placeholder="Search message or type…"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full min-w-0 rounded-lg border border-[#444] bg-[#232323] py-2.5 pl-10 pr-3 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none sm:pr-4"
+            className="w-full min-w-0 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-2.5 pl-10 pr-3 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none sm:pr-4"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch sm:gap-2 lg:items-center">
@@ -200,10 +200,10 @@ export function NotificationsAdminContent() {
         </div>
       ) : null}
 
-      <div className="-mx-1 w-full max-w-full overflow-x-auto overscroll-x-contain rounded-lg border border-[#444444] [touch-action:pan-x] sm:mx-0">
+      <div className="-mx-1 w-full max-w-full overflow-x-auto overscroll-x-contain rounded-lg border border-[var(--tott-card-border)] [touch-action:pan-x] sm:mx-0">
         <table className="min-w-[640px] w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-[#444444]">
+            <tr className="border-b border-[var(--tott-card-border)]">
               <th
                 className="bg-transparent px-3 py-2.5 text-xs font-semibold sm:px-4 sm:py-3"
                 style={{ color: theme.accentGoldFocus }}
@@ -253,9 +253,9 @@ export function NotificationsAdminContent() {
               rows.map((n) => (
                 <tr
                   key={n.id}
-                  className="border-b border-[#444444] last:border-b-0 transition-colors hover:bg-white/5"
+                  className="border-b border-[var(--tott-card-border)] last:border-b-0 transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
                 >
-                  <td className="max-w-[280px] px-3 py-2.5 text-white sm:max-w-md sm:px-4 sm:py-3">
+                  <td className="max-w-[280px] px-3 py-2.5 text-foreground sm:max-w-md sm:px-4 sm:py-3">
                     <p className="line-clamp-2 text-sm">{n.message}</p>
                   </td>
                   <td className="px-2 py-2.5 capitalize text-gray-400 sm:px-4 sm:py-3">{n.type}</td>
@@ -282,7 +282,7 @@ export function NotificationsAdminContent() {
             type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={loading || effectivePage <= 1 || meta.total === 0}
-            className="min-h-[44px] rounded-lg border border-[#444] bg-[#232323] px-4 py-2 text-sm font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[#2a2a2a] sm:min-h-0"
+            className="min-h-[44px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2 text-sm font-medium text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--tott-dash-surface-inset)] sm:min-h-0"
           >
             Previous
           </button>
@@ -293,7 +293,7 @@ export function NotificationsAdminContent() {
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={loading || effectivePage >= totalPages || meta.total === 0}
-            className="min-h-[44px] rounded-lg border border-[#444] bg-[#232323] px-4 py-2 text-sm font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[#2a2a2a] sm:min-h-0"
+            className="min-h-[44px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2 text-sm font-medium text-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--tott-dash-surface-inset)] sm:min-h-0"
           >
             Next
           </button>

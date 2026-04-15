@@ -94,6 +94,7 @@ export function mapArticleListItemToTableRow(a: ArticleListItem): ArticleRow {
     id: a.id,
     slug: a.slug?.trim() || a.id,
     title: articleListItemDisplayTitle(a),
+    content_type: a.content_type || "article",
     status,
     statusColor,
     lastUpdated: formatArticleListDate(a.updatedAt),

@@ -154,13 +154,13 @@ export function SystemSettingsContent() {
   };
 
   const inputShell =
-    "mt-2 w-full rounded-lg border border-[#2f2f2f] bg-[#232323] px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-[#555] focus:outline-none";
+    "mt-2 w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-3 text-sm text-foreground placeholder-gray-500 focus:border-[#555] focus:outline-none";
 
   return (
     <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
-      <div className="rounded-2xl border border-[#2f2f2f] bg-black p-6 lg:p-8">
+      <div className="rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 lg:p-8">
         <div className="flex flex-col gap-3">
-          <div className="flex w-full flex-wrap items-center gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+          <div className="flex w-full flex-wrap items-center gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
             {SYSTEM_SETTINGS_TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -168,7 +168,7 @@ export function SystemSettingsContent() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`rounded-md px-4 py-2.5 text-sm font-medium transition-all sm:px-5 ${
                   activeTab === tab.id
-                    ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                    ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                     : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
                 }`}
               >
@@ -228,7 +228,7 @@ export function SystemSettingsContent() {
 
         {activeTab === "categories" && (
           <div className="mt-8">
-            <h2 className="text-lg font-bold text-white">Content Categories</h2>
+            <h2 className="text-lg font-bold text-foreground">Content Categories</h2>
             <p className="mt-1 text-sm text-gray-500">
               Manage content classification categories.
             </p>
@@ -236,10 +236,10 @@ export function SystemSettingsContent() {
               {categories.map((cat) => (
                 <div
                   key={cat.id}
-                  className="flex items-center gap-4 rounded-lg border border-[#2f2f2f] bg-black px-4 py-4 sm:gap-5 sm:px-5 sm:py-4"
+                  className="flex items-center gap-4 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-4 sm:gap-5 sm:px-5 sm:py-4"
                 >
                   <div
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[#2f2f2f] bg-black text-[#E8DDC0]"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] text-[#E8DDC0]"
                     aria-hidden
                   >
                     <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -247,7 +247,7 @@ export function SystemSettingsContent() {
                     </span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-white">{cat.name}</p>
+                    <p className="font-semibold text-foreground">{cat.name}</p>
                     <p className="mt-0.5 font-mono text-sm text-gray-500">{cat.slug}</p>
                   </div>
                   <span className="hidden shrink-0 text-sm text-gray-500 sm:inline">
@@ -258,7 +258,7 @@ export function SystemSettingsContent() {
                     <button
                       type="button"
                       onClick={() => setCategoryModal({ type: "edit", category: cat })}
-                      className="rounded-lg p-2 text-[#E8DDC0] transition-colors hover:bg-white/10"
+                      className="rounded-lg p-2 text-[#E8DDC0] transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
                       aria-label={`Edit ${cat.name}`}
                     >
                       <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -283,24 +283,24 @@ export function SystemSettingsContent() {
         )}
 
         {activeTab === "tags" && (
-          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-white">Content Tags</h2>
+          <div className="mt-8 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-foreground">Content Tags</h2>
             <p className="mt-1 text-sm text-gray-500">Special tags for content highlighting</p>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
               {tags.map((tag) => (
                 <div
                   key={tag.id}
-                  className="flex items-center gap-4 rounded-lg border border-[#2f2f2f] bg-black px-4 py-4 sm:px-5 sm:py-4"
+                  className="flex items-center gap-4 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-4 sm:px-5 sm:py-4"
                 >
                   <TagHexShell>
                     <LinkIcon />
                   </TagHexShell>
-                  <p className="min-w-0 flex-1 font-semibold text-white">{tag.label}</p>
+                  <p className="min-w-0 flex-1 font-semibold text-foreground">{tag.label}</p>
                   <div className="flex shrink-0 items-center gap-1">
                     <button
                       type="button"
                       onClick={() => setTagModal({ type: "edit", tag })}
-                      className="rounded-lg p-2 text-[#E8DDC0] transition-colors hover:bg-white/10"
+                      className="rounded-lg p-2 text-[#E8DDC0] transition-colors hover:bg-[var(--tott-dash-ghost-hover)]"
                       aria-label={`Edit ${tag.label}`}
                     >
                       <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -325,8 +325,8 @@ export function SystemSettingsContent() {
         )}
 
         {activeTab === "badges" && (
-          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-white">Achievement Badges</h2>
+          <div className="mt-8 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-foreground">Achievement Badges</h2>
             <p className="mt-1 text-sm text-gray-500">
               Configure user achievement badges and milestones.
             </p>
@@ -334,19 +334,19 @@ export function SystemSettingsContent() {
               {badges.map((badge) => (
                 <div
                   key={badge.id}
-                  className="flex items-center gap-4 rounded-lg border border-[#2f2f2f] bg-black px-4 py-4 sm:px-5 sm:py-4"
+                  className="flex items-center gap-4 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-4 py-4 sm:px-5 sm:py-4"
                 >
                   <TagHexShell>
                     <BadgeIconRenderer iconId={badge.iconId} />
                   </TagHexShell>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-white">{badge.name}</p>
+                    <p className="font-semibold text-foreground">{badge.name}</p>
                     <p className="mt-0.5 text-sm text-gray-500">{badge.milestone}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setBadgeModal({ type: "edit", badge })}
-                    className="shrink-0 rounded-lg p-2 text-gray-500 transition-colors hover:bg-white/10 hover:text-[#E8DDC0]"
+                    className="shrink-0 rounded-lg p-2 text-gray-500 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-[#E8DDC0]"
                     aria-label={`Edit ${badge.name}`}
                   >
                     <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -361,17 +361,17 @@ export function SystemSettingsContent() {
 
         {activeTab === "email" && (
           <div className="mt-8">
-            <h2 className="text-lg font-bold text-white">Email Templates</h2>
+            <h2 className="text-lg font-bold text-foreground">Email Templates</h2>
             <p className="mt-1 text-sm text-gray-500">Customize automated email communications</p>
 
             <div className="mt-6 space-y-4">
               {emailTemplates.map((tpl) => (
                 <div
                   key={tpl.id}
-                  className="flex items-center justify-between gap-4 rounded-lg border border-[#2f2f2f] bg-black px-5 py-5"
+                  className="flex items-center justify-between gap-4 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-5 py-5"
                 >
                   <div className="flex min-w-0 items-center gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#2f2f2f] bg-black text-gray-400">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] text-gray-400">
                       <svg
                         width="18"
                         height="18"
@@ -388,7 +388,7 @@ export function SystemSettingsContent() {
                       </svg>
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-lg font-semibold text-white">{tpl.name}</p>
+                      <p className="truncate text-lg font-semibold text-foreground">{tpl.name}</p>
                       <p className="mt-1 text-sm text-gray-500">
                         Last edited: {formatLastEdited(tpl.lastEditedAt)}
                       </p>
@@ -400,7 +400,7 @@ export function SystemSettingsContent() {
                       setSelectedEmailTemplate(tpl);
                       setEditEmailOpen(true);
                     }}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#2f2f2f] bg-[#232323] px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:bg-[#2a2a2a]"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:bg-[var(--tott-dash-surface-inset)]"
                   >
                     <span className="[&_svg]:h-4 [&_svg]:w-4" style={{ color: ACCENT }}>
                       <ContributeIcon />
@@ -414,15 +414,15 @@ export function SystemSettingsContent() {
         )}
 
         {activeTab === "localisation" && (
-          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-white">Language Settings</h2>
+          <div className="mt-8 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-foreground">Language Settings</h2>
             <p className="mt-1 text-sm text-gray-500">
               Configure platform language and regional settings
             </p>
 
             <div className="mt-6 space-y-6">
               <div>
-                <p className="text-sm font-semibold text-white">Default Language</p>
+                <p className="text-sm font-semibold text-foreground">Default Language</p>
                 <select
                   value={defaultLanguage}
                   onChange={(e) => setDefaultLanguage(e.target.value)}
@@ -437,7 +437,7 @@ export function SystemSettingsContent() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-white">Timezone</p>
+                <p className="text-sm font-semibold text-foreground">Timezone</p>
                 <select value={timezone} onChange={(e) => setTimezone(e.target.value)} className={inputShell}>
                   <option value="UTC">UTC</option>
                   <option value="Eastern Time">Eastern Time</option>
@@ -447,7 +447,7 @@ export function SystemSettingsContent() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-white">Date Format</p>
+                <p className="text-sm font-semibold text-foreground">Date Format</p>
                 <select value={dateFormat} onChange={(e) => setDateFormat(e.target.value)} className={inputShell}>
                   <option value="MM/DD/YYYY">MM/DD/YYYY</option>
                   <option value="DD/MM/YYYY">DD/MM/YYYY</option>
@@ -457,21 +457,21 @@ export function SystemSettingsContent() {
 
               <div className="flex items-center justify-between gap-6">
                 <div>
-                  <p className="text-sm font-semibold text-white">Enable Multi-language</p>
+                  <p className="text-sm font-semibold text-foreground">Enable Multi-language</p>
                   <p className="mt-1 text-sm text-gray-500">Allow users to switch between languages</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setMultiLanguageEnabled((v) => !v)}
-                  className={`relative h-7 w-12 rounded-full border border-[#2f2f2f] transition-colors ${
-                    multiLanguageEnabled ? "bg-[#E8DDC0]" : "bg-[#232323]"
+                  className={`relative h-7 w-12 rounded-full border border-[var(--tott-card-border)] transition-colors ${
+                    multiLanguageEnabled ? "bg-[#E8DDC0]" : "bg-[var(--tott-dash-surface-inset)]"
                   }`}
                   aria-pressed={multiLanguageEnabled}
                   aria-label="Toggle multi-language"
                 >
                   <span
                     className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full transition-all ${
-                      multiLanguageEnabled ? "left-6 bg-black" : "left-1 bg-[#111]"
+                      multiLanguageEnabled ? "left-6 bg-[var(--tott-dash-surface-2)]" : "left-1 bg-[var(--tott-dash-surface-2)]"
                     }`}
                   />
                 </button>
@@ -506,13 +506,13 @@ export function SystemSettingsContent() {
         )}
 
         {activeTab === "guidelines" && (
-          <div className="mt-8 rounded-lg border border-[#2f2f2f] bg-black p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-white">Platform Guidelines</h2>
+          <div className="mt-8 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-foreground">Platform Guidelines</h2>
             <p className="mt-1 text-sm text-gray-500">Community rules and content guidelines</p>
 
             <div className="mt-6 space-y-6">
               <div>
-                <p className="text-sm font-semibold text-white">Community Guidelines</p>
+                <p className="text-sm font-semibold text-foreground">Community Guidelines</p>
                 <textarea
                   value={communityGuidelines}
                   onChange={(e) => setCommunityGuidelines(e.target.value)}
@@ -522,7 +522,7 @@ export function SystemSettingsContent() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-white">Content Policy</p>
+                <p className="text-sm font-semibold text-foreground">Content Policy</p>
                 <textarea
                   value={contentPolicy}
                   onChange={(e) => setContentPolicy(e.target.value)}
@@ -533,21 +533,21 @@ export function SystemSettingsContent() {
 
               <div className="flex items-center justify-between gap-6">
                 <div>
-                  <p className="text-sm font-semibold text-white">Enable Multi-language</p>
+                  <p className="text-sm font-semibold text-foreground">Enable Multi-language</p>
                   <p className="mt-1 text-sm text-gray-500">Allow users to switch between languages</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setMultiLanguageEnabled((v) => !v)}
-                  className={`relative h-7 w-12 rounded-full border border-[#2f2f2f] transition-colors ${
-                    multiLanguageEnabled ? "bg-[#E8DDC0]" : "bg-[#232323]"
+                  className={`relative h-7 w-12 rounded-full border border-[var(--tott-card-border)] transition-colors ${
+                    multiLanguageEnabled ? "bg-[#E8DDC0]" : "bg-[var(--tott-dash-surface-inset)]"
                   }`}
                   aria-pressed={multiLanguageEnabled}
                   aria-label="Toggle multi-language"
                 >
                   <span
                     className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full transition-all ${
-                      multiLanguageEnabled ? "left-6 bg-black" : "left-1 bg-[#111]"
+                      multiLanguageEnabled ? "left-6 bg-[var(--tott-dash-surface-2)]" : "left-1 bg-[var(--tott-dash-surface-2)]"
                     }`}
                   />
                 </button>
@@ -585,7 +585,7 @@ export function SystemSettingsContent() {
           activeTab !== "tags" &&
           activeTab !== "badges" &&
           activeTab !== "email" && (
-            <div className="mt-8 rounded-xl border border-[#2f2f2f] bg-black px-6 py-12 text-center text-sm text-gray-500">
+            <div className="mt-8 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-6 py-12 text-center text-sm text-gray-500">
               {SYSTEM_SETTINGS_TABS.find((t) => t.id === activeTab)?.label ?? "This section"} — coming
               soon.
             </div>

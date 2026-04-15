@@ -26,13 +26,13 @@ function ClockSmallIcon() {
 
 export function EditorApplications({ items, viewAllHref }: EditorApplicationsProps) {
   return (
-    <div className="rounded-xl border border-[#333] bg-[#0a0a0a] p-5">
+    <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-5">
       <div className="mb-4 flex items-center justify-between ">
-        <h3 className="text-lg font-bold text-white">Editor Applications</h3>
+        <h3 className="text-lg font-bold text-foreground">Editor Applications</h3>
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="rounded-lg border border-[#333] bg-[#333333] px-4 py-2 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+            className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-4 py-2 text-xs font-medium text-[var(--tott-dash-control-fg)] transition-colors hover:border-gray-500 hover:text-foreground"
           >
             View all
           </Link>
@@ -43,7 +43,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
         {items.map((app) => (
           <div
             key={app.id}
-            className="rounded-xl border border-[#333] bg-[#0a0a0a] px-7 py-5 "
+            className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-7 py-5 "
           >
             <div className="flex items-center gap-3">
               <span
@@ -57,7 +57,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-white">{app.name}</span>
+                  <span className="text-sm font-medium text-foreground">{app.name}</span>
                   <span className="rounded bg-[#222] px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-400">
                     {app.badge}
                   </span>
@@ -72,7 +72,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
             <div className="mt-3 flex items-center gap-2 pl-[52px]">
               <button
                 type="button"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-white transition-colors hover:border-gray-500"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-foreground transition-colors hover:border-gray-500"
                 aria-label="View application"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -82,7 +82,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
               </button>
               <button
                 type="button"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-white transition-colors hover:border-red-800 hover:text-red-400"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-foreground transition-colors hover:border-red-800 hover:text-red-400"
                 aria-label="Reject"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -91,7 +91,7 @@ export function EditorApplications({ items, viewAllHref }: EditorApplicationsPro
               </button>
               <button
                 type="button"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333] bg-[#333333] text-white transition-colors hover:border-emerald-800 hover:text-emerald-400"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-icon-bg)] text-foreground transition-colors hover:border-emerald-800 hover:text-emerald-400"
                 aria-label="Approve"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

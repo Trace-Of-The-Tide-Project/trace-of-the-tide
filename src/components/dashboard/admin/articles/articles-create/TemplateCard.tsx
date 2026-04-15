@@ -27,13 +27,13 @@ export function TemplateCard({
         <HexIconOutlined>{icon}</HexIconOutlined>
       </div>
       <p className="text-center text-sm text-gray-400">{number}</p>
-      <h3 className="text-center text-base font-bold text-white">{title}</h3>
+      <h3 className="text-center text-base font-bold text-foreground">{title}</h3>
       <p className="mt-1 text-center text-sm text-gray-500">{description}</p>
     </>
   );
 
   const cardClass =
-    "flex min-h-[200px] flex-col gap-3 rounded-lg border border-[#444444] px-4 py-8 transition-colors hover:opacity-90";
+    "flex min-h-[200px] flex-col gap-3 rounded-lg border border-[var(--tott-card-border)] px-4 py-8 transition-colors hover:opacity-90";
 
   if (href) {
     return (

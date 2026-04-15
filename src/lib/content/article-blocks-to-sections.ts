@@ -1,10 +1,13 @@
 import type { ArticleDetailBlock } from "@/services/articles.service";
 import type { ContentArticleSection } from "@/components/content/article/ContentArticleBody";
+import { isLikelyAudioUrl, isLikelyVideoUrl } from "@/lib/content/media-url";
 
 type Figure = { src: string; alt?: string; caption?: string };
 
 /** API may return metadata as a JSON string or a parsed object. */
-function metadataString(metadata: string | Record<string, unknown> | null | undefined): string | null {
+function metadataString(
+  metadata: string | Record<string, unknown> | null | undefined
+): string | null {
   if (metadata == null) return null;
   if (typeof metadata === "string") return metadata;
   try {
@@ -89,21 +92,49 @@ function galleryFallbackLines(metadata: string | null | undefined): string[] {
   }
 }
 
-/** First image URL in block order (standalone image or first gallery image). */
-export function getFirstCoverSrcFromBlocks(blocks: ArticleDetailBlock[]): string | null {
+export type CoverHeroKind = "image" | "video" | "audio";
+
+function coverHeroKindFromBlock(b: ArticleDetailBlock, src: string): CoverHeroKind {
+  const bt = (b.block_type || "").toLowerCase();
+  if (bt === "video") return "video";
+  if (bt === "audio") return "audio";
+  const obj = parseMetadataObject(b.metadata);
+  const mk = obj?.media_kind;
+  if (mk === "video") return "video";
+  if (mk === "audio") return "audio";
+  const mime = (obj?.mime_type ?? obj?.mimeType) as string | undefined;
+  if (typeof mime === "string") {
+    if (mime.startsWith("video/")) return "video";
+    if (mime.startsWith("audio/")) return "audio";
+  }
+  if (isLikelyVideoUrl(src)) return "video";
+  if (isLikelyAudioUrl(src)) return "audio";
+  return "image";
+}
+
+export type FirstCoverHero = { src: string; kind: CoverHeroKind };
+
+/** First image (or gallery) cover URL and whether the hero should be image, video, or audio. */
+export function getFirstCoverHeroFromBlocks(blocks: ArticleDetailBlock[]): FirstCoverHero | null {
   const sorted = [...blocks].sort((a, b) => a.block_order - b.block_order);
   for (const b of sorted) {
     const type = (b.block_type || "").toLowerCase();
-    if (type === "image") {
+    if (type === "image" || type === "video" || type === "audio") {
       const fig = parseImageFigure(b);
-      if (fig?.src) return fig.src;
+      if (fig?.src) return { src: fig.src, kind: coverHeroKindFromBlock(b, fig.src) };
     }
     if (type === "gallery") {
       const figs = parseGalleryFigures(b);
-      if (figs[0]?.src) return figs[0].src;
+      const first = figs[0];
+      if (first?.src) return { src: first.src, kind: coverHeroKindFromBlock(b, first.src) };
     }
   }
   return null;
+}
+
+/** First image URL in block order (standalone image or first gallery image). */
+export function getFirstCoverSrcFromBlocks(blocks: ArticleDetailBlock[]): string | null {
+  return getFirstCoverHeroFromBlocks(blocks)?.src ?? null;
 }
 
 type SectionsOptions = {
@@ -165,10 +196,8 @@ export function articleBlocksToSections(
       pushParas();
       breakOpenHeading();
       const obj = parseMetadataObject(b.metadata);
-      const title =
-        obj && typeof obj.title === "string" ? obj.title.trim() : "";
-      const bodyFromMeta =
-        obj && typeof obj.body === "string" ? obj.body.trim() : "";
+      const title = obj && typeof obj.title === "string" ? obj.title.trim() : "";
+      const bodyFromMeta = obj && typeof obj.body === "string" ? obj.body.trim() : "";
       const body = (b.content ?? "").trim() || bodyFromMeta;
       if (title && body) {
         sections.push({ paragraphs: [], callout: { title, body } });
@@ -187,7 +216,7 @@ export function articleBlocksToSections(
       continue;
     }
 
-    if (type === "image") {
+    if (type === "image" || type === "video" || type === "audio") {
       const fig = parseImageFigure(b);
       if (fig) {
         if (omitCoverSrc && fig.src === omitCoverSrc) {

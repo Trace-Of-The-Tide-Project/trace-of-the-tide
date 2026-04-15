@@ -108,7 +108,7 @@ type ContributionListResponse = {
 
 export async function getContributions(
   page = 1,
-  limit = 10,
+  limit = 10
 ): Promise<{ items: ContributionListItem[]; meta: ContributionListMeta }> {
   const { data } = await api.get<ContributionListResponse>("/contributions", {
     params: { page, limit },
@@ -122,7 +122,8 @@ export async function fetchContributionTypes(): Promise<ContributionType[]> {
 }
 
 /**
- * Create contribution with multipart/form-data (files field name MUST be "files").
+ * Create contribution with multipart/form-data (each part field name MUST be `files`).
+ * Do not set Content-Type manually — Axios must add the multipart boundary.
  * Backend requires Authorization Bearer token.
  */
 export async function createContribution(formData: FormData): Promise<CreatedContribution> {
@@ -134,12 +135,57 @@ export async function createContribution(formData: FormData): Promise<CreatedCon
   const { data } = await api.post<ApiEnvelope<CreatedContribution>>("/contributions", formData, {
     headers: {
       Authorization: `Bearer ${token}`,
-      // Override the default JSON content-type for this request.
-      // Axios will attach the correct multipart boundary automatically.
-      "Content-Type": "multipart/form-data",
     },
+    transformRequest: [
+      (body, headers) => {
+        if (body instanceof FormData) {
+          delete headers["Content-Type"];
+        }
+        return body;
+      },
+    ],
   });
 
   return data.data;
 }
 
+/**
+ * Append a `files` multipart part whose **filename** is the storage path or URL from POST /upload
+ * (body is a minimal placeholder so the part is valid).
+ */
+export function appendContributionFileByUrl(formData: FormData, storagePathOrUrl: string, mimeType: string): void {
+  const name = storagePathOrUrl.trim();
+  const type = mimeType.trim() || "application/octet-stream";
+  const placeholder = new File([new Uint8Array([32])], name, { type });
+  formData.append("files", placeholder);
+}
+
+const DEFAULT_API_BASE = "https://backend-phd7.onrender.com";
+
+/** Absolute URL to load a contribution file by storage `path` or full URL. */
+export function contributionFilePublicUrl(path: string | null | undefined): string {
+  const raw = (path ?? "").trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw;
+  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? DEFAULT_API_BASE).replace(/\/+$/, "");
+  const rel = raw.replace(/^\/+/, "");
+  return `${base}/${rel}`;
+}
+
+const IMAGE_EXT = /\.(jpe?g|png|gif|webp|avif|bmp|svg)(\?.*)?$/i;
+
+/** First file that can be shown as an image preview (mime or extension). */
+export function firstContributionPreviewableImageFile(
+  files: ContributionFile[] | null | undefined,
+): ContributionFile | null {
+  if (!files?.length) return null;
+  for (const f of files) {
+    const p = f.path?.trim();
+    if (!p) continue;
+    const mime = (f.mime_type ?? "").toLowerCase();
+    if (mime.startsWith("image/")) return f;
+    const label = `${f.file_name ?? ""} ${p}`.toLowerCase();
+    if (IMAGE_EXT.test(label)) return f;
+  }
+  return null;
+}

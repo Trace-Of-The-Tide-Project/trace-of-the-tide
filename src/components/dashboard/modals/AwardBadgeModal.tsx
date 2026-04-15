@@ -57,10 +57,10 @@ export function AwardBadgeModal({ open, badge, onClose, onAward }: AwardBadgeMod
         aria-label="Close modal"
       />
 
-      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[#333] bg-[#0a0a0a] p-6">
-        <div className="mb-5 flex items-start justify-between border-b border-[#333] pb-5">
+      <div className="relative mx-4 w-full max-w-lg rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6">
+        <div className="mb-5 flex items-start justify-between border-b border-[var(--tott-card-border)] pb-5">
           <div>
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-foreground">
               Award &quot;{badge.name}&quot;
             </h2>
             <p className="mt-1 text-sm text-gray-500">{badge.description}</p>
@@ -68,7 +68,7 @@ export function AwardBadgeModal({ open, badge, onClose, onAward }: AwardBadgeMod
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+            className="shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-[var(--tott-dash-ghost-hover)] hover:text-foreground"
             aria-label="Close"
           >
             <XIcon />
@@ -90,37 +90,37 @@ export function AwardBadgeModal({ open, badge, onClose, onAward }: AwardBadgeMod
           }}
         >
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Search User</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Search User</label>
             <input
               type="text"
               value={userQuery}
               onChange={(e) => setUserQuery(e.target.value)}
               placeholder="Type a username or email..."
-              className="w-full rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#e5e7eb" }}
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Description</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What does this Badge represent?"
               rows={4}
-              className="w-full resize-y rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#e5e7eb" }}
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-white">Award Criteria</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Award Criteria</label>
             <textarea
               value={criteria}
               onChange={(e) => setCriteria(e.target.value)}
               placeholder="When should this badge be awarded?"
               rows={4}
-              className="w-full resize-y rounded-lg border border-[#333] bg-[#1a1a1a] px-4 py-2.5 text-sm placeholder-[#6b7280] outline-none transition-colors focus:border-gray-500"
+              className="w-full resize-y rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-4 py-2.5 text-sm placeholder:text-gray-500 outline-none transition-colors focus:border-gray-500"
               style={{ color: "#e5e7eb" }}
             />
           </div>
@@ -129,7 +129,7 @@ export function AwardBadgeModal({ open, badge, onClose, onAward }: AwardBadgeMod
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#333] bg-[#333333] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-control-bg)] px-6 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-foreground"
             >
               Cancel
             </button>

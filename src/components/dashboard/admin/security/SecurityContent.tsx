@@ -74,8 +74,8 @@ export function SecurityContent() {
 
   return (
     <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
-      <div className="rounded-2xl border border-[#2f2f2f] bg-[#121212] p-6 lg:p-8">
-        <div className="flex w-fit flex-wrap items-center gap-1 rounded-lg border border-[#444] bg-[#232323] p-1">
+      <div className="rounded-2xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-6 lg:p-8">
+        <div className="flex w-fit flex-wrap items-center gap-1 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] p-1">
           {SECURITY_TABS.map((tab) => {
             const Icon = tab.icon;
             return (
@@ -85,7 +85,7 @@ export function SecurityContent() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all sm:px-5 ${
                   activeTab === tab.id
-                    ? "border border-[#4A4A4A] bg-[#333333] text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
+                    ? "border border-[#4A4A4A] bg-[var(--tott-dash-control-bg)] text-foreground shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                     : "border border-transparent bg-transparent text-[#AAAAAA] hover:text-[#E0E0E0]"
                 }`}
               >
@@ -100,7 +100,7 @@ export function SecurityContent() {
 
         {activeTab === "roles" && (
           <div className="mt-6">
-            <h2 className="text-lg font-bold text-white">Admin Roles</h2>
+            <h2 className="text-lg font-bold text-foreground">Admin Roles</h2>
             <p className="mt-1 text-sm text-gray-500">
               Configure admin role permissions and access levels.
             </p>
@@ -108,11 +108,11 @@ export function SecurityContent() {
               {securityAdminRoles.map((role) => (
                 <div
                   key={role.id}
-                  className="flex flex-col gap-4 rounded-xl border border-[#2f2f2f] bg-[#121212] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+                  className="flex flex-col gap-4 rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
                 >
                   <div className="flex min-w-0 flex-1 items-start gap-4">
                     <div
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#333] bg-[#121212] text-[#E8DDC0]"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] text-[#E8DDC0]"
                       aria-hidden
                     >
                       <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -120,8 +120,8 @@ export function SecurityContent() {
                       </span>
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-white">{role.title}</p>
-                      <span className="mt-1 inline-block rounded-full border border-[#444] bg-[#1a1a1a] px-2.5 py-0.5 text-xs text-gray-400">
+                      <p className="font-semibold text-foreground">{role.title}</p>
+                      <span className="mt-1 inline-block rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-2.5 py-0.5 text-xs text-gray-400">
                         {role.userBadge}
                       </span>
                       <p className="mt-2 text-sm text-gray-500">{role.description}</p>
@@ -130,9 +130,9 @@ export function SecurityContent() {
                   <button
                     type="button"
                     onClick={() => openConfigure(role.configureTitle)}
-                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-[#444] bg-[#232323] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a] sm:self-center"
+                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)] sm:self-center"
                   >
-                    <span className="text-white [&_svg]:h-4 [&_svg]:w-4">
+                    <span className="text-foreground [&_svg]:h-4 [&_svg]:w-4">
                       <SettingsIcon />
                     </span>
                     Configure
@@ -147,7 +147,7 @@ export function SecurityContent() {
           <div className="mt-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-lg font-bold text-white">Active Sessions</h2>
+                <h2 className="text-lg font-bold text-foreground">Active Sessions</h2>
                 <p className="mt-1 text-sm text-gray-500">
                   Monitor and manage active admin sessions.
                 </p>
@@ -165,10 +165,10 @@ export function SecurityContent() {
               </button>
             </div>
 
-            <div className="mt-6 overflow-x-auto rounded-xl border border-[#2f2f2f] bg-[#121212]">
+            <div className="mt-6 overflow-x-auto rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)]">
               <table className="w-full min-w-[720px] border-collapse text-left text-sm">
                 <thead>
-                  <tr className="border-b border-[#2f2f2f] bg-[#121212]">
+                  <tr className="border-b border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)]">
                     {(
                       ["User", "IP Address", "Location", "Device", "Last Active", "Status", ""] as const
                     ).map((h) => (
@@ -183,10 +183,10 @@ export function SecurityContent() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#2f2f2f]">
+                <tbody className="divide-y divide-[var(--tott-card-border)]">
                   {sessions.map((row) => (
-                    <tr key={row.id} className="bg-[#121212]">
-                      <td className="px-4 py-3 font-semibold text-white">{row.user}</td>
+                    <tr key={row.id} className="bg-[var(--tott-dash-surface)]">
+                      <td className="px-4 py-3 font-semibold text-foreground">{row.user}</td>
                       <td className="px-4 py-3 text-gray-400">{row.ip}</td>
                       <td className="px-4 py-3 text-gray-400">{row.location}</td>
                       <td className="px-4 py-3 text-gray-400">{row.device}</td>
@@ -201,7 +201,7 @@ export function SecurityContent() {
                           <button
                             type="button"
                             onClick={() => endSession(row.id)}
-                            className="rounded-lg border border-[#444] bg-[#232323] px-3 py-1.5 text-xs font-medium text-red-400 transition-colors hover:bg-[#2a2a2a]"
+                            className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-3 py-1.5 text-xs font-medium text-red-400 transition-colors hover:bg-[var(--tott-dash-surface-inset)]"
                           >
                             End
                           </button>
@@ -217,20 +217,20 @@ export function SecurityContent() {
 
         {activeTab === "settings" && (
           <div className="mt-6">
-            <h2 className="text-lg font-bold text-white">Security Settings</h2>
+            <h2 className="text-lg font-bold text-foreground">Security Settings</h2>
             <p className="mt-1 text-sm text-gray-500">
               Authentication and platform-wide security controls.
             </p>
 
             <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <div className="rounded-xl border border-[#2f2f2f] bg-[#121212] p-5 sm:p-6">
-                <h3 className="text-base font-bold text-white">Authentication</h3>
+              <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-5 sm:p-6">
+                <h3 className="text-base font-bold text-foreground">Authentication</h3>
                 <p className="mt-1 text-sm text-gray-500">Configure login and access settings</p>
 
-                <div className="mt-6 space-y-5 border-t border-[#2f2f2f] pt-5">
+                <div className="mt-6 space-y-5 border-t border-[var(--tott-card-border)] pt-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="font-medium text-white">Require 2FA for Admins</p>
+                      <p className="font-medium text-foreground">Require 2FA for Admins</p>
                       <p className="mt-0.5 text-sm text-gray-500">
                         All admin accounts must use two-factor authentication
                       </p>
@@ -244,13 +244,13 @@ export function SecurityContent() {
 
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="font-medium text-white">Session Timeout</p>
+                      <p className="font-medium text-foreground">Session Timeout</p>
                       <p className="mt-0.5 text-sm text-gray-500">Auto-logout after inactivity</p>
                     </div>
                     <select
                       value={sessionTimeout}
                       onChange={(e) => setSessionTimeout(e.target.value)}
-                      className="w-full max-w-[200px] rounded-lg border border-[#444] bg-[#121212] px-3 py-2 text-sm text-white focus:border-[#555] focus:outline-none sm:w-auto"
+                      className="w-full max-w-[200px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-3 py-2 text-sm text-foreground focus:border-[#555] focus:outline-none sm:w-auto"
                     >
                       {SESSION_TIMEOUTS.map((opt) => (
                         <option key={opt} value={opt}>
@@ -262,7 +262,7 @@ export function SecurityContent() {
 
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="font-medium text-white">Failed Login Lockout</p>
+                      <p className="font-medium text-foreground">Failed Login Lockout</p>
                       <p className="mt-0.5 text-sm text-gray-500">Lock account after failed attempts</p>
                     </div>
                     <input
@@ -271,20 +271,20 @@ export function SecurityContent() {
                       max={20}
                       value={lockoutAttempts}
                       onChange={(e) => setLockoutAttempts(Number(e.target.value) || 5)}
-                      className="w-full max-w-[100px] rounded-lg border border-[#444] bg-[#121212] px-3 py-2 text-sm text-white focus:border-[#555] focus:outline-none"
+                      className="w-full max-w-[100px] rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] px-3 py-2 text-sm text-foreground focus:border-[#555] focus:outline-none"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-[#2f2f2f] bg-[#121212] p-5 sm:p-6">
-                <h3 className="text-base font-bold text-white">System Controls</h3>
+              <div className="rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface)] p-5 sm:p-6">
+                <h3 className="text-base font-bold text-foreground">System Controls</h3>
                 <p className="mt-1 text-sm text-gray-500">Platform-wide security controls</p>
 
-                <div className="mt-6 space-y-5 border-t border-[#2f2f2f] pt-5">
+                <div className="mt-6 space-y-5 border-t border-[var(--tott-card-border)] pt-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="font-medium text-white">Maintenance Mode</p>
+                      <p className="font-medium text-foreground">Maintenance Mode</p>
                       <p className="mt-0.5 text-sm text-gray-500">Restrict access to admins only</p>
                     </div>
                     <PermissionToggle
@@ -296,7 +296,7 @@ export function SecurityContent() {
 
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="font-medium text-white">IP Whitelist</p>
+                      <p className="font-medium text-foreground">IP Whitelist</p>
                       <p className="mt-0.5 text-sm text-gray-500">Restrict admin access by IP</p>
                     </div>
                     <PermissionToggle
@@ -308,7 +308,7 @@ export function SecurityContent() {
 
                   <button
                     type="button"
-                    className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-[#444] bg-[#2a2a2a] py-3 text-sm font-medium text-white transition-colors hover:bg-[#333]"
+                    className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] py-3 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)]"
                   >
                     <span className="text-[#E8DDC0] [&_svg]:h-4 [&_svg]:w-4">
                       <DownloadIcon />
@@ -323,7 +323,7 @@ export function SecurityContent() {
 
         {activeTab === "logs" && (
           <div className="mt-6">
-            <h2 className="text-lg font-bold text-white">Security Logs</h2>
+            <h2 className="text-lg font-bold text-foreground">Security Logs</h2>
             <p className="mt-1 text-sm text-gray-500">Recent security events and activities</p>
             <div className="mt-6 space-y-3">
               {securityLogEntries.map((entry) => {
@@ -331,12 +331,12 @@ export function SecurityContent() {
                 return (
                   <div
                     key={entry.id}
-                    className={`flex items-center gap-4 rounded-xl border bg-[#121212] px-4 py-4 sm:gap-5 sm:px-5 ${
-                      isWarning ? "border-red-600/45" : "border-[#2f2f2f]"
+                    className={`flex items-center gap-4 rounded-xl border bg-[var(--tott-dash-surface)] px-4 py-4 sm:gap-5 sm:px-5 ${
+                      isWarning ? "border-red-600/45" : "border-[var(--tott-card-border)]"
                     }`}
                   >
                     <div
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#333] bg-[#1a1a1a] text-[#E8DDC0]"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] text-[#E8DDC0]"
                       aria-hidden
                     >
                       <span className="[&_svg]:h-[18px] [&_svg]:w-[18px]">
@@ -344,7 +344,7 @@ export function SecurityContent() {
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-white">{entry.title}</p>
+                      <p className="font-semibold text-foreground">{entry.title}</p>
                       <p className="mt-0.5 text-sm text-gray-500">{entry.meta}</p>
                     </div>
                     <p className="shrink-0 text-sm text-gray-500">{entry.timeAgo}</p>

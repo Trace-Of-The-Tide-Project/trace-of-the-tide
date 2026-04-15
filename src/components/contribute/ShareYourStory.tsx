@@ -103,13 +103,13 @@ function ScatteredHexBackground() {
 export function ShareYourStory() {
   return (
     <section className="relative w-full overflow-hidden py-16 sm:py-20">
-      <div className="absolute inset-0" style={{ backgroundColor: theme.bgDark }} />
+      <div className="absolute inset-0" style={{ backgroundColor: theme.pageBackground }} />
       <div className="absolute inset-0">
         <ScatteredHexBackground />
       </div>
 
       <div className="relative z-10 flex flex-col items-center px-6 pt-24">
-        <h2 className="text-center text-xl font-semibold text-white sm:text-2xl">
+        <h2 className="text-center text-xl font-semibold text-foreground sm:text-2xl">
           Share your story
         </h2>
 

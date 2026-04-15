@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useCallback, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
   AvailableBlocks,
@@ -22,6 +23,7 @@ import { articleDetailBlocksToContentBlocks } from "@/components/dashboard/admin
 import {
   articleConfig,
   contentFormConfigForType,
+  mainMediaEditorCopy,
   type ContentFormConfig,
 } from "./content-form-config";
 import { invalidateAdminArticlesListCache } from "@/lib/dashboard/admin-articles-list-cache";
@@ -36,9 +38,10 @@ import {
   type CreateArticlePayload,
 } from "@/services/articles.service";
 import { isAxiosError } from "axios";
+import { previewHrefForContentType } from "@/lib/content/public-article-preview-href";
 
 const titleClass =
-  "w-full border-0 bg-transparent px-0 py-2 text-lg text-white placeholder:text-white outline-none";
+  "w-full border-0 bg-transparent px-0 py-2 text-lg text-foreground placeholder:text-foreground outline-none";
 
 function errMessage(e: unknown): string {
   if (isAxiosError(e)) {
@@ -75,6 +78,8 @@ export type ContentEditorLayoutProps = {
 
 const ADMIN_ARTICLES_PATH = "/admin/articles";
 
+const SUCCESS_TOAST_MS = 3200;
+
 export function ContentEditorLayout({ config: configFromProps, articleId }: ContentEditorLayoutProps) {
   const router = useRouter();
   const invalidateArticlesListAndLeave = useCallback(() => {
@@ -83,6 +88,10 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
   }, [router]);
   const isEditMode = Boolean(articleId);
   const initialWasDraftRef = useRef(true);
+  const pendingDelayedNavRef = useRef(false);
+  const [mediaUploading, setMediaUploading] = useState(false);
+  const [successToast, setSuccessToast] = useState<string | null>(null);
+  const [toastEntered, setToastEntered] = useState(false);
 
   const [config, setConfig] = useState<ContentFormConfig>(() => configFromProps ?? articleConfig);
 
@@ -103,6 +112,11 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
   const [articleLoading, setArticleLoading] = useState(isEditMode);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loadKey, setLoadKey] = useState(0);
+  const [portalReady, setPortalReady] = useState(false);
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   useEffect(() => {
     if (configFromProps && !articleId) {
@@ -165,6 +179,30 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
     };
   }, [articleId, loadKey]);
 
+  useEffect(() => {
+    if (!successToast) {
+      setToastEntered(false);
+      return;
+    }
+    const id = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => setToastEntered(true));
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [successToast]);
+
+  const notifySuccessAndLeave = useCallback(
+    (message: string) => {
+      pendingDelayedNavRef.current = true;
+      setSuccessToast(message);
+      window.setTimeout(() => {
+        pendingDelayedNavRef.current = false;
+        setSuccessToast(null);
+        invalidateArticlesListAndLeave();
+      }, SUCCESS_TOAST_MS);
+    },
+    [invalidateArticlesListAndLeave],
+  );
+
   const addBlock = useCallback((type: BlockType) => {
     setBlocks((prev) => [
       ...prev,
@@ -225,7 +263,9 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
   }, []);
 
   const buildPayload = useCallback(async (): Promise<CreateArticlePayload> => {
-    const apiBlocks = await buildArticleBlocksFromEditor(blocks);
+    const apiBlocks = await buildArticleBlocksFromEditor(blocks, {
+      onUploading: setMediaUploading,
+    });
     const cid = collectionId.trim();
     return {
       title: title.trim(),
@@ -277,17 +317,25 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
               ? "published"
               : "scheduled";
         await updateArticle(articleId, { ...editPatchFromPayload(payload), status });
-        invalidateArticlesListAndLeave();
+        notifySuccessAndLeave("Changes saved");
         return;
       }
       await createArticle(payload);
-      invalidateArticlesListAndLeave();
+      notifySuccessAndLeave("Draft saved");
     } catch (e) {
       setError(errMessage(e));
     } finally {
-      setBusy(false);
+      if (!pendingDelayedNavRef.current) setBusy(false);
     }
-  }, [title, category, buildPayload, invalidateArticlesListAndLeave, isEditMode, articleId, workflowStatus]);
+  }, [
+    title,
+    category,
+    buildPayload,
+    notifySuccessAndLeave,
+    isEditMode,
+    articleId,
+    workflowStatus,
+  ]);
 
   const handlePublish = useCallback(async () => {
     if (workflowStatus !== "published" && workflowStatus !== "scheduled") return;
@@ -313,7 +361,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
           await publishArticle(articleId);
           initialWasDraftRef.current = false;
         }
-        invalidateArticlesListAndLeave();
+        notifySuccessAndLeave("Article submitted");
         return;
       }
       const res = await createArticle(payload);
@@ -323,13 +371,13 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
         return;
       }
       await publishArticle(id);
-      invalidateArticlesListAndLeave();
+      notifySuccessAndLeave("Article submitted");
     } catch (e) {
       setError(errMessage(e));
     } finally {
-      setBusy(false);
+      if (!pendingDelayedNavRef.current) setBusy(false);
     }
-  }, [workflowStatus, title, category, buildPayload, invalidateArticlesListAndLeave, isEditMode, articleId]);
+  }, [workflowStatus, title, category, buildPayload, notifySuccessAndLeave, isEditMode, articleId]);
 
   const handleScheduleConfirm = useCallback(
     async (iso: string) => {
@@ -360,7 +408,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
           });
           await scheduleArticle(articleId, iso);
           setScheduleModalOpen(false);
-          invalidateArticlesListAndLeave();
+          notifySuccessAndLeave("Article scheduled");
           return;
         }
         const res = await createArticle(payload);
@@ -372,15 +420,15 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
         }
         await scheduleArticle(id, iso);
         setScheduleModalOpen(false);
-        invalidateArticlesListAndLeave();
+        notifySuccessAndLeave("Article scheduled");
       } catch (e) {
         setError(errMessage(e));
         setScheduleModalOpen(false);
       } finally {
-        setBusy(false);
+        if (!pendingDelayedNavRef.current) setBusy(false);
       }
     },
-    [workflowStatus, title, category, buildPayload, invalidateArticlesListAndLeave, isEditMode, articleId],
+    [workflowStatus, title, category, buildPayload, notifySuccessAndLeave, isEditMode, articleId],
   );
 
   if (isEditMode && articleLoading) {
@@ -393,7 +441,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
 
   if (isEditMode && loadError) {
     return (
-      <div className="flex min-h-0 flex-col gap-4 p-8 text-white">
+      <div className="flex min-h-0 flex-col gap-4 p-8 text-foreground">
         <Link href={ADMIN_ARTICLES_PATH} className="text-sm text-[#C9A96E] hover:underline">
           ← Articles
         </Link>
@@ -401,7 +449,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
         <button
           type="button"
           onClick={() => setLoadKey((k: number) => k + 1)}
-          className="w-fit text-sm text-gray-400 underline hover:text-white"
+          className="w-fit text-sm text-gray-400 underline hover:text-foreground"
         >
           Try again
         </button>
@@ -412,13 +460,59 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
   if (!isEditMode && !configFromProps) {
     return (
       <div className="p-8 text-sm text-red-300">
-        Editor misconfigured: pass <code className="text-white">config</code> for create mode.
+        Editor misconfigured: pass <code className="text-foreground">config</code> for create mode.
       </div>
     );
   }
 
+  const uploadOverlay =
+    portalReady && typeof document !== "undefined" && mediaUploading
+      ? createPortal(
+          <div
+            className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+            role="alertdialog"
+            aria-modal="true"
+            aria-busy="true"
+            aria-labelledby="article-editor-uploading-title"
+          >
+            <div className="max-w-sm rounded-xl border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-8 py-10 text-center shadow-xl">
+              <div
+                className="mx-auto mb-5 h-12 w-12 rounded-full border-2 border-[#C9A96E]/25 border-t-[#C9A96E] animate-spin"
+                aria-hidden
+              />
+              <p id="article-editor-uploading-title" className="text-lg font-semibold text-foreground">
+                Uploading files…
+              </p>
+              <p className="mt-2 text-sm text-gray-400">Keep this tab open until upload finishes.</p>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
+  const successToastPortal =
+    portalReady && typeof document !== "undefined" && successToast
+      ? createPortal(
+          <div
+            className={`pointer-events-none fixed right-4 top-20 z-[301] max-w-sm sm:right-6 sm:top-24 ${
+              toastEntered ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+            } transition-all duration-300 ease-out`}
+            role="status"
+            aria-live="polite"
+          >
+            <div className="pointer-events-auto rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-3 shadow-lg">
+              <p className="text-sm font-semibold text-foreground">{successToast}</p>
+              <p className="mt-0.5 text-xs text-gray-400">Redirecting to articles…</p>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
   return (
     <div className="flex min-h-0 flex-col">
+      {uploadOverlay}
+      {successToastPortal}
       <ScheduleArticleModal
         open={scheduleModalOpen}
         busy={busy}
@@ -429,7 +523,7 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
       <div className="flex flex-1 gap-6 overflow-hidden">
         <div className="min-w-0 flex-1 space-y-6 overflow-y-auto">
           {isEditMode && articleId ? (
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#444444] pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--tott-card-border)] pb-4">
               <div className="flex flex-wrap items-center gap-3 text-sm">
                 <Link href={ADMIN_ARTICLES_PATH} className="text-[#C9A96E] hover:underline">
                   ← Articles
@@ -437,10 +531,10 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
                 <span className="text-gray-500">Edit article</span>
               </div>
               <Link
-                href={`/content/article?id=${encodeURIComponent(articleId)}`}
+                href={previewHrefForContentType(config.contentType, articleId)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg border border-[#444444] bg-[#1a1a1a] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:border-[#C9A96E]/50 hover:bg-[#252525]"
+                className="rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-input-bg)] px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-[#C9A96E]/50 hover:bg-[#252525]"
               >
                 Preview
               </Link>
@@ -465,7 +559,14 @@ export function ContentEditorLayout({ config: configFromProps, articleId }: Cont
         </div>
 
         <aside className="flex w-64 shrink-0 flex-col gap-4 overflow-y-auto">
-          <AvailableBlocks onAddBlock={addBlock} />
+          <AvailableBlocks
+            onAddBlock={addBlock}
+            imageBlockLabel={
+              config.contentType === "video" || config.contentType === "audio"
+                ? "Image"
+                : mainMediaEditorCopy(config.contentType).blockName
+            }
+          />
           <ContentSettings
             title={config.settingsTitle}
             workflowStatus={workflowStatus}

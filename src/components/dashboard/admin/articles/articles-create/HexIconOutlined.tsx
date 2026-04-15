@@ -50,7 +50,12 @@ export function HexIconOutlined({ children, size = "md", className = "" }: HexIc
       className={`relative flex shrink-0 items-center justify-center ${sizeClasses[size]} ${className}`}
     >
       <svg className="absolute inset-0 h-full w-full" viewBox="0 0 48 48" fill="none">
-        <path d={roundedHexPath(24, 24, 22)} fill="#333333" stroke="#3a3a3a" strokeWidth="1.2" />
+        <path
+          d={roundedHexPath(24, 24, 22)}
+          fill="var(--tott-dash-icon-bg)"
+          stroke="var(--tott-card-border)"
+          strokeWidth="1.2"
+        />
       </svg>
       <span className="relative" style={{ color: "#E1D6BA" }}>
         {children}

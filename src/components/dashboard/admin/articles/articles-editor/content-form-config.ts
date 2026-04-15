@@ -48,9 +48,9 @@ export const articleConfig: ContentFormConfig = {
   contentType: "article",
   titlePlaceholder: "Enter your article title...",
   defaultBlocks: [
-    { id: "1", type: "paragraph", content: "" },
-    { id: "2", type: "quote", content: "", quoteAttribution: "" },
-    { id: "3", type: "image" },
+    { id: "1", type: "image" },
+    { id: "2", type: "paragraph", content: "" },
+    { id: "3", type: "quote", content: "", quoteAttribution: "" },
     { id: "4", type: "callout", content: "", calloutTitle: "" },
     { id: "5", type: "author-note", content: "" },
   ],
@@ -117,11 +117,10 @@ export const audioConfig: ContentFormConfig = {
   titlePlaceholder: "Enter your Audio title...",
   defaultBlocks: [
     { id: "1", type: "image" },
-    { id: "2", type: "image" },
-    { id: "3", type: "paragraph", content: "" },
-    { id: "4", type: "quote", content: "", quoteAttribution: "" },
-    { id: "5", type: "callout", content: "", calloutTitle: "" },
-    { id: "6", type: "author-note", content: "" },
+    { id: "2", type: "paragraph", content: "" },
+    { id: "3", type: "quote", content: "", quoteAttribution: "" },
+    { id: "4", type: "callout", content: "", calloutTitle: "" },
+    { id: "5", type: "author-note", content: "" },
   ],
   blockLabels: {
     paragraph: "Episode notes...",
@@ -143,4 +142,72 @@ export function contentFormConfigForType(contentType: string | undefined): Conte
   if (t === "audio") return audioConfig;
   if (t === "open_call" || t === "opencall") return openCallConfig;
   return articleConfig;
+}
+
+/** Labels for the first hero block (still an `image` block in the editor; API uses `image` / `video` / `audio`). */
+export type MainMediaEditorCopy = {
+  blockName: string;
+  uploadTitle: string;
+  uploadDetail: string;
+  pasteUrlHint: string;
+  addBlockButton: string;
+  missingHeroBlurb: string;
+};
+
+export function mainMediaEditorCopy(contentType: string | undefined): MainMediaEditorCopy {
+  const t = (contentType || "article").toLowerCase().replace(/-/g, "_");
+  if (t === "video") {
+    return {
+      blockName: "Video",
+      uploadTitle: "Upload video",
+      uploadDetail:
+        "MP4, WebM, or QuickTime — this is what plays full-width at the top of the public video page.",
+      pasteUrlHint: "Or paste your video URL",
+      addBlockButton: "Add video block",
+      missingHeroBlurb:
+        "No video yet. Add the video block — it is the hero at the top of the public page.",
+    };
+  }
+  if (t === "audio") {
+    return {
+      blockName: "Audio",
+      uploadTitle: "Upload audio",
+      uploadDetail: "MP3, WAV, AAC, and other audio — shown as the playable hero on the public audio page.",
+      pasteUrlHint: "Or paste your audio file URL",
+      addBlockButton: "Add audio block",
+      missingHeroBlurb:
+        "No audio yet. Add the audio block — it is the hero at the top of the public page.",
+    };
+  }
+  if (t === "thread") {
+    return {
+      blockName: "Cover",
+      uploadTitle: "Upload cover",
+      uploadDetail: "Image ~1200×630px (or video/audio) — shown first on the public thread page.",
+      pasteUrlHint: "Or paste cover image, video, or audio URL",
+      addBlockButton: "Add cover block",
+      missingHeroBlurb:
+        "No cover yet. Add the cover block — it is the hero at the top of the public page.",
+    };
+  }
+  if (t === "open_call" || t === "opencall") {
+    return {
+      blockName: "Main media",
+      uploadTitle: "Upload main file",
+      uploadDetail: "Image, video, or audio — the hero visitors see first for this open call.",
+      pasteUrlHint: "Or paste main file URL (image, video, or audio)",
+      addBlockButton: "Add main media block",
+      missingHeroBlurb:
+        "No main media yet. Add the main media block — it is the hero at the top of the public page.",
+    };
+  }
+  return {
+    blockName: "Cover",
+    uploadTitle: "Upload cover",
+    uploadDetail: "Image ~1200×630px (or video/audio) — shown first on the public article page.",
+    pasteUrlHint: "Or paste cover image, video, or audio URL",
+    addBlockButton: "Add cover block",
+    missingHeroBlurb:
+      "No cover yet. Add the cover block — it is the hero at the top of the public page.",
+  };
 }

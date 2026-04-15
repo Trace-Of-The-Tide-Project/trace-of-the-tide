@@ -39,10 +39,13 @@ export function useSignupExample() {
     setLoading(true)
     try {
       const result = await signup(data)
-      // access_token is already stored in localStorage by signup()
-      // Redirect or update UI as needed
+      if ("pendingEmailVerification" in result) {
+        // No session yet — user must open the emailed link (/auth/verify-email?token=…)
+        console.log("Verify email sent to:", result.email)
+        return
+      }
+      // access_token is stored in localStorage when the API returns a session
       console.log("Signed up:", result.user)
-      // router.push("/profile") or router.push("/auth/login?registered=1")
     } catch (err: unknown) {
       const message =
         err && typeof err === "object" && "response" in err

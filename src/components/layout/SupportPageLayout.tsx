@@ -12,7 +12,7 @@ export function SupportPageLayout({ title, subtitle, children }: SupportPageLayo
   return (
     <div
       className="relative min-h-screen w-full select-none"
-      style={{ backgroundColor: theme.bgDark }}
+      style={{ backgroundColor: theme.pageBackground }}
     >
       <div className="relative">
         <div className="absolute inset-0">

@@ -8,6 +8,8 @@ type TimelineEntry = {
   time: string;
   description: string;
   location?: string;
+  /** Stop photo from API — if missing, no image block is shown */
+  imageUrl?: string | null;
 };
 
 type TripTimelineProps = {
@@ -51,14 +53,17 @@ export function TripTimeline({ entries, mapSlot }: TripTimelineProps) {
   return (
     <div>
       {/* Tabs */}
-      <div className="mb-8 flex overflow-hidden rounded-lg border border-gray-700/50">
+      <div
+        className="mb-8 flex overflow-hidden rounded-lg border"
+        style={{ borderColor: "var(--tott-card-border)" }}
+      >
         <button
           type="button"
           onClick={() => setTab("timeline")}
           className={`flex-1 cursor-pointer py-3 text-center text-sm font-medium transition-colors ${
             tab === "timeline"
-              ? "bg-[#1a1a1a] text-white"
-              : "bg-transparent text-gray-500 hover:text-gray-300"
+              ? "bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              : "bg-transparent text-gray-500 hover:text-foreground"
           }`}
         >
           Trip timeline
@@ -68,8 +73,8 @@ export function TripTimeline({ entries, mapSlot }: TripTimelineProps) {
           onClick={() => setTab("map")}
           className={`flex-1 cursor-pointer py-3 text-center text-sm font-medium transition-colors ${
             tab === "map"
-              ? "bg-[#1a1a1a] text-white"
-              : "bg-transparent text-gray-500 hover:text-gray-300"
+              ? "bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              : "bg-transparent text-gray-500 hover:text-foreground"
           }`}
         >
           Route map
@@ -95,7 +100,8 @@ export function TripTimeline({ entries, mapSlot }: TripTimelineProps) {
                 )}
                 {/* Number badge */}
                 <div
-                  className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-600 bg-[#232323] text-sm font-medium text-white"
+                  className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-600 text-sm font-medium text-[color:var(--tott-panel-text)]"
+                  style={{ backgroundColor: "var(--tott-well-bg)" }}
                 >
                   {i + 1}
                 </div>
@@ -108,7 +114,7 @@ export function TripTimeline({ entries, mapSlot }: TripTimelineProps) {
               {/* Content */}
               <div className="min-w-0 flex-1 pb-4" style={{ paddingTop: i === 0 ? "0" : "3rem" }}>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                  <h3 className="text-base font-semibold text-white">
+                  <h3 className="text-base font-semibold text-foreground">
                     {entry.title}
                   </h3>
                   <div className="flex items-center gap-3 text-xs text-gray-500">
@@ -127,7 +133,16 @@ export function TripTimeline({ entries, mapSlot }: TripTimelineProps) {
                   {entry.description}
                 </p>
 
-                <div className="mt-4 h-40 rounded-lg bg-[#1a1a1a] sm:h-48" />
+                {entry.imageUrl?.trim() ? (
+                  <div className="relative mt-4 h-40 w-full max-w-2xl overflow-hidden rounded-lg sm:h-48">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- trip stop URLs from API */}
+                    <img
+                      src={entry.imageUrl.trim()}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ) : null}
 
                 {entry.location && (
                   <p className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">

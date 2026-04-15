@@ -29,7 +29,7 @@ export function ContentEditorFooter({
   const disabledPrimary = busy || !publishFlowEnabled;
 
   return (
-    <footer className="mt-6 border-t border-[#444444] pt-6">
+    <footer className="mt-6 border-t border-[var(--tott-card-border)] pt-6">
       <div className="flex flex-col items-stretch gap-3">
         {error ? (
           <p
@@ -54,7 +54,7 @@ export function ContentEditorFooter({
             type="button"
             disabled={busy}
             onClick={onSaveDraft}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#333333] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3d3d3d] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[var(--tott-dash-control-bg)] py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SaveIcon />
             {saveDraftLabel}
@@ -63,7 +63,7 @@ export function ContentEditorFooter({
             type="button"
             disabled={busy || !publishFlowEnabled}
             onClick={onOpenSchedule}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#333333] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3d3d3d] disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[var(--tott-dash-control-bg)] py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-control-hover)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             <CalendarIcon />
             Schedule

@@ -24,11 +24,11 @@ export default function ContributionSuccessPage() {
   return (
     <div
       className="relative min-h-screen w-full select-none"
-      style={{ backgroundColor: theme.bgDark }}
+      style={{ backgroundColor: theme.pageBackground }}
     >
       {/* Hexagon pattern at top */}
       <section className="relative w-full overflow-hidden">
-        <div className="absolute inset-0" style={{ background: theme.bgDark }} />
+        <div className="absolute inset-0" style={{ background: theme.pageBackground }} />
         <div className="absolute inset-0 h-[280px] w-full">
           <HexBackground />
         </div>

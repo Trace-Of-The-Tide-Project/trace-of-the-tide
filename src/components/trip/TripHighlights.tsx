@@ -28,14 +28,14 @@ export function TripHighlights({ highlights }: TripHighlightsProps) {
 
   return (
     <div>
-      <h2 className="mb-4 text-lg font-semibold text-white">
+      <h2 className="mb-4 text-lg font-semibold text-foreground">
         Trip highlights
       </h2>
       <div className="grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-2">
         {[left, right].map((col, ci) => (
           <ul key={ci} className="space-y-2.5">
             {col.map((item, i) => (
-              <li key={i} className="flex items-start gap-2.5 text-sm text-gray-300">
+              <li key={i} className="flex items-start gap-2.5 text-sm text-foreground/75">
                 <span className="mt-0.5 shrink-0" style={{ color: theme.accentGold }}>
                   <CheckIcon />
                 </span>

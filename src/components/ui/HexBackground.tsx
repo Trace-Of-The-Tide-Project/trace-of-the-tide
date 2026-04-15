@@ -73,22 +73,22 @@ export default function HexBackground() {
           <path
             d={row1Path}
             fill="none"
-            stroke="#6b6b6b"
+            stroke="var(--tott-auth-hex-stroke)"
             strokeWidth="0.5"
-            strokeOpacity="0.3"
+            strokeOpacity="var(--tott-auth-hex-stroke-opacity)"
           />
           <path
             d={row2Path}
             fill="none"
-            stroke="#6b6b6b"
+            stroke="var(--tott-auth-hex-stroke)"
             strokeWidth="0.5"
-            strokeOpacity="0.3"
+            strokeOpacity="var(--tott-auth-hex-stroke-opacity)"
           />
         </pattern>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="white" stopOpacity="1" />
-          <stop offset="70%" stopColor="white" stopOpacity="1" />
-          <stop offset="100%" stopColor="white" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--tott-auth-hex-mask-from)" stopOpacity="1" />
+          <stop offset="70%" stopColor="var(--tott-auth-hex-mask-from)" stopOpacity="1" />
+          <stop offset="100%" stopColor="var(--tott-auth-hex-mask-to)" stopOpacity="0" />
         </linearGradient>
         <mask id={maskId}>
           <rect width="100%" height="100%" fill={`url(#${gradientId})`} />

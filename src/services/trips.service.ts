@@ -1,4 +1,14 @@
 import { api } from "./api";
+import type { ApplicationFormField } from "./open-calls.service";
+
+/** Default “Join this adventure” fields (same idea as static TripBookingForm). */
+export const DEFAULT_TRIP_BOOKING_FORM_FIELDS: ApplicationFormField[] = [
+  { name: "full_name", type: "text", required: true },
+  { name: "email", type: "email", required: true },
+  { name: "message", type: "textarea", required: false },
+];
+
+export type TripBookingFormConfig = { fields: ApplicationFormField[] };
 
 export type TripStopLocation = {
   name: string;
@@ -14,8 +24,18 @@ export type TripStop = {
   description: string;
   arrival_time?: string | null;
   duration_minutes?: number;
+  /** Primary field for stop photo from API */
+  image_url?: string | null;
+  /** Some responses use `image` instead */
+  image?: string | null;
   location: TripStopLocation;
 };
+
+/** Non-empty image URL for a stop, if the API provided one. */
+export function tripStopImageUrl(stop: TripStop): string | null {
+  const u = stop.image_url?.trim() || stop.image?.trim();
+  return u || null;
+}
 
 export type CreateTripPayload = {
   title: string;
@@ -25,6 +45,7 @@ export type CreateTripPayload = {
   route_summary?: string;
   start_date: string;
   end_date?: string;
+  /** Minimum contribution; same field the API already expects. */
   price: string;
   currency: string;
   max_participants: number;
@@ -36,6 +57,8 @@ export type CreateTripPayload = {
   languages?: string[];
   highlights?: string[];
   moderator_name?: string;
+  /** Join-trip form (same field model as open-call application form). */
+  booking_form?: TripBookingFormConfig;
   stops: TripStop[];
 };
 
@@ -49,12 +72,18 @@ export type TripListItem = {
   start_date: string;
   end_date: string | null;
   price: string;
+  /** Optional; some APIs may send camelCase `maxPrice`. */
+  max_price?: string | null;
+  maxPrice?: string | null;
   currency: string;
   max_participants: number;
+  min_participants?: number;
   status: string;
   difficulty: string;
   duration_hours: number;
   tags: string | null;
+  /** Offered languages (codes or labels), separate from tags */
+  languages?: string[] | string | null;
   /** JSON string, comma-separated string, or string[] depending on API */
   highlights?: string[] | string | null;
   moderator_name: string | null;
@@ -63,9 +92,10 @@ export type TripListItem = {
   updatedAt: string;
   creator?: { id: string; username: string; full_name: string };
   stops?: TripStop[];
+  booking_form?: TripBookingFormConfig | null;
 };
 
-/** Tags / languages from API: JSON array or comma-separated string. */
+/** Tags from API: JSON array or comma-separated string. */
 export function parseTripTags(raw: string | null | undefined): string[] {
   if (!raw) return [];
   try {
@@ -76,6 +106,15 @@ export function parseTripTags(raw: string | null | undefined): string[] {
   } catch {
     return raw.split(",").map((t) => t.trim()).filter(Boolean);
   }
+}
+
+/** Trip `languages` field: string[], JSON string, or comma-separated string. */
+export function parseTripLanguages(raw: string | string[] | null | undefined): string[] {
+  if (raw == null) return [];
+  if (Array.isArray(raw)) {
+    return raw.filter((l): l is string => typeof l === "string" && Boolean(l.trim())).map((l) => l.trim());
+  }
+  return parseTripTags(raw);
 }
 
 /** Highlights: array, JSON string, or comma-separated text. */
@@ -95,6 +134,61 @@ export function parseTripHighlights(raw: string | string[] | null | undefined): 
     /* not JSON */
   }
   return s.split(",").map((t) => t.trim()).filter(Boolean);
+}
+
+/** Resolved maximum trip price for UI (supports snake_case or camelCase from API). */
+export function tripMaxPrice(trip: TripListItem): string | null {
+  const raw = trip.max_price ?? trip.maxPrice;
+  if (raw == null) return null;
+  const s = String(raw).trim();
+  return s || null;
+}
+
+/** Compact amount for range ends and sliders (e.g. `$600` or `600 EUR`). */
+export function formatTripPriceAmount(value: number, currency: string): string {
+  const cur = (currency || "USD").toUpperCase();
+  const n = Math.round(value * 100) / 100;
+  const s = Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/, "");
+  return cur === "USD" ? `$${s}` : `${s} ${cur}`;
+}
+
+/** Hero / summary line: legacy capped range, “from” minimum, fixed single, or Free. */
+export function tripDisplayPriceLabel(
+  trip: Pick<TripListItem, "price" | "currency"> & { max_price?: string | null; maxPrice?: string | null },
+): string {
+  const min = parseFloat(trip.price);
+  const maxStr = trip.max_price ?? trip.maxPrice;
+  const max = maxStr != null && String(maxStr).trim() !== "" ? parseFloat(String(maxStr)) : NaN;
+  const cur = (trip.currency || "USD").toUpperCase();
+  if (!Number.isFinite(min) || min <= 0) return "Free";
+  if (Number.isFinite(max) && max > min) {
+    return `${formatTripPriceAmount(min, trip.currency || "USD")} – ${formatTripPriceAmount(max, trip.currency || "USD")}`;
+  }
+  return `From ${formatTripPriceAmount(min, trip.currency || "USD")}`;
+}
+
+/** True when the join form should show the pay-from-minimum slider (paid trip). */
+export function tripHasMinimumContribution(price: string): boolean {
+  const min = parseFloat(price);
+  return Number.isFinite(min) && min > 0;
+}
+
+/**
+ * Soft upper bound for the join-form slider only (not stored). Lets the control extend
+ * “upward” without a configured maximum.
+ */
+export function sliderUiMaxForMinPrice(min: number): number {
+  if (!Number.isFinite(min) || min <= 0) return 0;
+  return Math.max(Math.round(min * 25), Math.round(min + 8000), 3000);
+}
+
+/** Resolve join form fields from API trip (fallback to default template). */
+export function tripBookingFormFields(trip: TripListItem): ApplicationFormField[] {
+  const raw = trip.booking_form;
+  if (raw && Array.isArray(raw.fields) && raw.fields.length > 0) {
+    return raw.fields as ApplicationFormField[];
+  }
+  return DEFAULT_TRIP_BOOKING_FORM_FIELDS.map((f) => JSON.parse(JSON.stringify(f)));
 }
 
 export async function getTripById(id: string): Promise<TripListItem | null> {

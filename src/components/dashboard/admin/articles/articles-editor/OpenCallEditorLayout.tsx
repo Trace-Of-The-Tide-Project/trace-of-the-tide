@@ -13,7 +13,11 @@ import { ContentEditorFooter } from "./ContentEditorFooter";
 import { ScheduleArticleModal } from "./modals/ScheduleArticleModal";
 import { buildOpenCallContentBlocksAndMainMedia } from "./lib/build-open-call-payload";
 import { buildArticleBlocksFromEditor } from "./lib/build-api-blocks";
-import { openCallConfig, openCallAllowedBlockTypes } from "./content-form-config";
+import {
+  mainMediaEditorCopy,
+  openCallConfig,
+  openCallAllowedBlockTypes,
+} from "./content-form-config";
 import { ApplicationFormBuilder } from "./open-call/ApplicationFormBuilder";
 import { invalidateAdminArticlesListCache } from "@/lib/dashboard/admin-articles-list-cache";
 import { getAdminTags } from "@/services/admin-tags.service";
@@ -28,7 +32,7 @@ import {
 } from "@/services/open-calls.service";
 
 const titleClass =
-  "w-full border-0 bg-transparent px-0 py-2 text-lg text-white placeholder:text-white outline-none";
+  "w-full border-0 bg-transparent px-0 py-2 text-lg text-foreground placeholder:text-foreground outline-none";
 
 const ADMIN_ARTICLES_PATH = "/admin/articles";
 
@@ -362,7 +366,11 @@ export function OpenCallEditorLayout() {
         </div>
 
         <aside className="flex w-64 shrink-0 flex-col gap-4 overflow-y-auto">
-          <AvailableBlocks onAddBlock={addBlock} allowedBlockTypes={openCallAllowedBlockTypes} />
+          <AvailableBlocks
+            onAddBlock={addBlock}
+            allowedBlockTypes={openCallAllowedBlockTypes}
+            imageBlockLabel={mainMediaEditorCopy(config.contentType).blockName}
+          />
           <ContentSettings
             title={config.settingsTitle}
             workflowStatus={workflowStatus}
