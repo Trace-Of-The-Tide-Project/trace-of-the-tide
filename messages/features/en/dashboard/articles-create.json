@@ -2,6 +2,12 @@
   "Dashboard": {
     "articles": {
       "create": {
+        "uiLanguage": {
+          "label": "Editor language",
+          "hint": "This page only — sidebar stays in site language.",
+          "en": "English",
+          "ar": "Arabic"
+        },
         "pageTitle": "Create New",
         "pageSubtitle": "Choose a template to start building your content. Each template is optimized for specific storytelling formats.",
         "filters": {

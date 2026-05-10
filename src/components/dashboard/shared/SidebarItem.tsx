@@ -8,6 +8,15 @@ import { normalizeAppPathname } from "@/lib/i18n/strip-locale-from-path";
 
 const ACTIVE_COLOR = "#C9A96E";
 
+/** `/…/articles` must not stay active under `/…/articles/create` (prefix overlap with create flow). */
+function isSidebarLinkActive(path: string, href: string): boolean {
+  if (path === href) return true;
+  if (href === "/admin" || href === "/profile") return false;
+  if (!path.startsWith(`${href}/`)) return false;
+  if (href.endsWith("/articles") && path.startsWith(`${href}/create`)) return false;
+  return true;
+}
+
 type SidebarItemProps = SidebarItemConfig & {
   onClick?: () => void;
   badgeOverrides?: Record<string, string>;
@@ -18,9 +27,7 @@ export function SidebarItem({ labelKey, href, icon: Icon, badge, onClick, badgeO
   const label = (t as (key: string) => string)(labelKey);
   const pathname = usePathname();
   const path = normalizeAppPathname(pathname) ?? "";
-  const isActive =
-    path === href ||
-    ((href !== "/admin" && href !== "/profile") && path.startsWith(`${href}/`));
+  const isActive = isSidebarLinkActive(path, href);
   const { isDark } = useTheme();
   const inactive =
     "border border-transparent " +
