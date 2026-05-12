@@ -220,6 +220,255 @@ export async function getUsers(params?: GetUsersParams): Promise<UsersListResult
   return normalizeUsersListPayload(data);
 }
 
+export type AdminUserDetail = {
+  id: string;
+  username: string;
+  full_name: string;
+  email: string;
+  status: string;
+};
+
+function unwrapUserDetailResponse(raw: unknown): AdminUserDetail | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const inner = o.data;
+  const row =
+    inner && typeof inner === "object" && inner !== null && !Array.isArray(inner)
+      ? (inner as Record<string, unknown>)
+      : o;
+  if (typeof row.id !== "string" || typeof row.email !== "string") return null;
+  return {
+    id: row.id,
+    username: String(row.username ?? ""),
+    full_name: String(row.full_name ?? ""),
+    email: row.email,
+    status: String(row.status ?? "active"),
+  };
+}
+
+/** GET /users/:id — authenticated. */
+export async function getUserById(userId: string): Promise<AdminUserDetail> {
+  const { data } = await api.get<unknown>(`/users/${encodeURIComponent(userId)}`);
+  const parsed = unwrapUserDetailResponse(data);
+  if (!parsed) {
+    throw new Error("Invalid response from server when loading user");
+  }
+  return parsed;
+}
+
+export type AdminUserProfileDetails = {
+  id: string;
+  user_id: string;
+  avatar: string | null;
+  display_name: string;
+  company: string | null;
+  job_title: string | null;
+  personal_link: string | null;
+  website: string | null;
+  birth_date: string | null;
+  gender: string | null;
+  location: string;
+  about: string;
+  social_links: string | null;
+};
+
+export type AdminUserProfileView = {
+  id: string;
+  username: string;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  email_verified: boolean;
+  status: string;
+  profile: AdminUserProfileDetails | null;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function parseNullableString(value: unknown): string | null {
+  if (typeof value !== "string" || !value.trim()) return null;
+  return value.trim();
+}
+
+function parseSocialLinksField(raw: unknown): string | null {
+  if (typeof raw === "string" && raw.trim()) return raw.trim();
+  if (!isRecord(raw)) return null;
+  const normalized: Record<string, string> = {};
+  for (const [key, value] of Object.entries(raw)) {
+    if (typeof value === "string") normalized[key] = value;
+  }
+  return Object.keys(normalized).length > 0 ? JSON.stringify(normalized) : null;
+}
+
+function unwrapProfileDetails(raw: unknown): AdminUserProfileDetails | null {
+  if (!isRecord(raw)) return null;
+  const id = typeof raw.id === "string" ? raw.id : null;
+  const user_id = typeof raw.user_id === "string" ? raw.user_id : null;
+  if (!id || !user_id) return null;
+  const about =
+    parseNullableString(raw.about) ??
+    parseNullableString(raw.bio) ??
+    "";
+  return {
+    id,
+    user_id,
+    avatar: parseNullableString(raw.avatar),
+    display_name: parseNullableString(raw.display_name) ?? "",
+    company: parseNullableString(raw.company),
+    job_title: parseNullableString(raw.job_title),
+    personal_link: parseNullableString(raw.personal_link),
+    website: parseNullableString(raw.website) ?? parseNullableString(raw.personal_link),
+    birth_date: parseNullableString(raw.birth_date),
+    gender: parseNullableString(raw.gender),
+    location: parseNullableString(raw.location) ?? "",
+    about,
+    social_links: parseSocialLinksField(raw.social_links),
+  };
+}
+
+function unwrapUserProfileResponse(raw: unknown): AdminUserProfileView | null {
+  if (!isRecord(raw)) return null;
+  const row = isRecord(raw.data) ? raw.data : raw;
+  if (typeof row.id !== "string" || typeof row.email !== "string") return null;
+  const profileRaw = row.profile;
+  return {
+    id: row.id,
+    username: String(row.username ?? ""),
+    full_name: String(row.full_name ?? ""),
+    email: row.email,
+    phone_number: parseNullableString(row.phone_number) ?? "",
+    email_verified: row.email_verified === true,
+    status: String(row.status ?? ""),
+    profile: profileRaw ? unwrapProfileDetails(profileRaw) : null,
+  };
+}
+
+/** GET /users/:id/profile — authenticated. */
+export async function getUserProfile(userId: string): Promise<AdminUserProfileView | null> {
+  const { data } = await api.get<unknown>(`/users/${encodeURIComponent(userId)}/profile`);
+  return unwrapUserProfileResponse(data);
+}
+
+export type UserProfileSocialLinks = Record<string, string>;
+
+export const PROFILE_SOCIAL_LINK_KEYS = [
+  "facebook",
+  "twitter",
+  "instagram",
+  "linkedin",
+] as const;
+
+export function canonicalSocialLinksObject(links: UserProfileSocialLinks): UserProfileSocialLinks {
+  return {
+    facebook: links.facebook?.trim() ?? "",
+    twitter: links.twitter?.trim() ?? "",
+    instagram: links.instagram?.trim() ?? "",
+    linkedin: links.linkedin?.trim() ?? "",
+  };
+}
+
+export function canonicalSocialLinksJson(links: UserProfileSocialLinks): string {
+  return JSON.stringify(canonicalSocialLinksObject(links));
+}
+
+export function parseSocialLinksObject(raw: string | null | undefined): UserProfileSocialLinks {
+  const empty: UserProfileSocialLinks = {
+    facebook: "",
+    twitter: "",
+    instagram: "",
+    linkedin: "",
+  };
+  const trimmed = raw?.trim();
+  if (!trimmed) return empty;
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return empty;
+    const source = parsed as Record<string, unknown>;
+    return {
+      facebook: typeof source.facebook === "string" ? source.facebook : "",
+      twitter: typeof source.twitter === "string" ? source.twitter : "",
+      instagram: typeof source.instagram === "string" ? source.instagram : "",
+      linkedin: typeof source.linkedin === "string" ? source.linkedin : "",
+    };
+  } catch {
+    return empty;
+  }
+}
+
+export type UpdateUserProfilePayload = {
+  about?: string;
+  location?: string;
+  personal_link?: string;
+  avatar?: string;
+  social_links?: UserProfileSocialLinks;
+};
+
+export type UpdatedUserProfile = {
+  id: string;
+  about: string;
+  location: string;
+  personal_link: string;
+  avatar: string | null;
+  social_links: UserProfileSocialLinks;
+};
+
+function unwrapSocialLinksFromProfile(profile: Record<string, unknown>): UserProfileSocialLinks {
+  const raw = profile.social_links;
+  if (typeof raw === "string" && raw.trim()) {
+    return parseSocialLinksObject(raw);
+  }
+  if (isRecord(raw)) {
+    const out: UserProfileSocialLinks = {};
+    for (const [key, value] of Object.entries(raw)) {
+      if (typeof value === "string") out[key] = value;
+    }
+    return canonicalSocialLinksObject(out);
+  }
+  return parseSocialLinksObject(null);
+}
+
+function unwrapUpdatedUserProfileResponse(raw: unknown): UpdatedUserProfile | null {
+  if (!isRecord(raw)) return null;
+  const row = isRecord(raw.data) ? raw.data : raw;
+  const profile = isRecord(row.profile) ? row.profile : row;
+  if (typeof row.id !== "string" && typeof profile.id !== "string") return null;
+  return {
+    id: typeof row.id === "string" ? row.id : String(profile.id),
+    about: parseNullableString(profile.about) ?? parseNullableString(profile.bio) ?? "",
+    location: parseNullableString(profile.location) ?? "",
+    personal_link:
+      parseNullableString(profile.personal_link) ?? parseNullableString(profile.website) ?? "",
+    avatar: parseNullableString(profile.avatar),
+    social_links: unwrapSocialLinksFromProfile(profile),
+  };
+}
+
+/** PATCH /users/:id/profile — authenticated. */
+export async function updateUserProfile(
+  userId: string,
+  payload: UpdateUserProfilePayload,
+): Promise<UpdatedUserProfile> {
+  const body: Record<string, unknown> = {};
+  if (payload.about !== undefined) body.about = payload.about.trim();
+  if (payload.location !== undefined) body.location = payload.location.trim();
+  if (payload.personal_link !== undefined) body.personal_link = payload.personal_link.trim();
+  if (payload.avatar !== undefined) body.avatar = payload.avatar.trim();
+  if (payload.social_links !== undefined) {
+    body.social_links = canonicalSocialLinksObject(payload.social_links);
+  }
+  if (Object.keys(body).length === 0) {
+    throw new Error("No fields to update");
+  }
+  const { data } = await api.patch<unknown>(`/users/${encodeURIComponent(userId)}/profile`, body);
+  const parsed = unwrapUpdatedUserProfileResponse(data);
+  if (!parsed) {
+    throw new Error("Invalid response from server when updating profile");
+  }
+  return parsed;
+}
+
 const EXPORT_PAGE_LIMIT = 100;
 const EXPORT_MAX_PAGES = 500;
 
@@ -228,6 +477,59 @@ type AllUsersParams = Pick<GetUsersParams, "search" | "status" | "sortBy" | "ord
 /**
  * Fetches every user page from GET /users (limit 100) until done. Safe cap on page count.
  */
+export type UpdateUserPayload = {
+  full_name?: string;
+  status?: Exclude<AdminUserStatus, "pending">;
+};
+
+export type UpdateUserResult = {
+  id: string;
+  full_name: string;
+  status: string;
+};
+
+function unwrapUpdateUserResponse(raw: unknown): UpdateUserResult | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const inner = o.data;
+  const row =
+    inner && typeof inner === "object" && inner !== null && !Array.isArray(inner)
+      ? (inner as Record<string, unknown>)
+      : o;
+  if (typeof row.id !== "string") return null;
+  return {
+    id: row.id,
+    full_name: String(row.full_name ?? ""),
+    status: String(row.status ?? "active"),
+  };
+}
+
+/** PATCH /users/:id — admin only; send only changed fields in the body. */
+export async function updateUser(
+  userId: string,
+  payload: UpdateUserPayload,
+): Promise<UpdateUserResult> {
+  const body: Record<string, string> = {};
+  if (payload.full_name !== undefined) body.full_name = payload.full_name.trim();
+  if (payload.status !== undefined) body.status = payload.status;
+  if (Object.keys(body).length === 0) {
+    throw new Error("No fields to update");
+  }
+  const { data } = await api.patch<unknown>(`/users/${encodeURIComponent(userId)}`, body);
+  const parsed = unwrapUpdateUserResponse(data);
+  if (!parsed) {
+    throw new Error("Invalid response from server when updating user");
+  }
+  return parsed;
+}
+
+export type UserStatusValue = "active" | "pending" | "inactive" | "suspended" | "deleted";
+
+/** PATCH /users/:id/status — admin only. */
+export async function updateUserStatus(userId: string, status: UserStatusValue): Promise<void> {
+  await api.patch(`/users/${encodeURIComponent(userId)}/status`, { status });
+}
+
 export async function getAllUsersForExport(params?: AllUsersParams): Promise<AdminUserListItem[]> {
   const sortBy = params?.sortBy?.trim() || "username";
   const order = params?.order ?? "ASC";

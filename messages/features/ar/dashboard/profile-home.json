@@ -9,11 +9,15 @@
     },
     "adminProfile": {
       "pageTitle": "معلومات الملف الشخصي",
+      "loading": "جاري تحميل الملف…",
       "changePhoto": "تغيير الصورة",
       "photoHint": "JPG أو PNG أو GIF. الحد الأقصى 2 ميجابايت.",
       "errors": {
         "fileType": "استخدم JPG أو PNG أو GIF.",
-        "maxSize": "الحد الأقصى للحجم 2 ميجابايت."
+        "maxSize": "الحد الأقصى للحجم 2 ميجابايت.",
+        "loadFailed": "تعذّر تحميل ملفك.",
+        "updateFailed": "تعذّر حفظ تغييرات الملف.",
+        "noChanges": "لا توجد تغييرات للحفظ."
       },
       "fullName": "الاسم الكامل",
       "email": "البريد الإلكتروني",
@@ -37,6 +41,7 @@
       "removeLinkAria": "إزالة الرابط",
       "addNewLink": "إضافة رابط جديد",
       "saved": "تم الحفظ",
+      "saving": "جاري الحفظ…",
       "saveChanges": "حفظ التغييرات"
     },
     "adminPrivacy": {

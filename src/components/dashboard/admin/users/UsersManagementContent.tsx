@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { isAxiosError } from "axios";
 import { useLocale, useTranslations } from "next-intl";
 import { SearchIcon } from "@/components/ui/icons";
 import { FilterDropdown } from "./FilterDropdown";
 import { UserActionsDropdown } from "./UserActionsDropdown";
+import { UserProfileModal } from "./UserProfileModal";
 import { theme } from "@/lib/theme";
 import {
   formatContributionsCount,
@@ -19,11 +21,13 @@ import { downloadUsersCsv } from "@/lib/export/users-csv";
 import {
   getAllUsersForExport,
   getUsers,
+  updateUserStatus,
   type AdminUserListItem,
   type UsersListMeta,
 } from "@/services/users.service";
 
 const PAGE_LIMIT = 10;
+const SUCCESS_TOAST_MS = 4000;
 
 function displayName(u: AdminUserListItem): string {
   const n = u.full_name?.trim();
@@ -122,7 +126,27 @@ export function UsersManagementContent() {
   const [error, setError] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
   const exportBusyRef = useRef(false);
+  const statusActionBusyRef = useRef(false);
+  const [successToast, setSuccessToast] = useState<string | null>(null);
+  const [toastEntered, setToastEntered] = useState(false);
+  const [portalReady, setPortalReady] = useState(false);
+  const [profileUserId, setProfileUserId] = useState<string | null>(null);
   const [nowMs, setNowMs] = useState(() => Date.now());
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!successToast) {
+      setToastEntered(false);
+      return;
+    }
+    const id = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => setToastEntered(true));
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [successToast]);
+
   useEffect(() => {
     setNowMs(Date.now());
     const id = window.setInterval(() => setNowMs(Date.now()), 60_000);
@@ -222,12 +246,62 @@ export function UsersManagementContent() {
     return () => window.removeEventListener(USERS_CSV_EXPORT_EVENT, onExportRequest);
   }, [runExport]);
 
+  const handleUserAction = useCallback(
+    async (actionId: string, userId: string) => {
+      if (actionId === "view") {
+        setProfileUserId(userId);
+        return;
+      }
+
+      const statusUpdate =
+        actionId === "suspend"
+          ? { status: "suspended" as const, successMessage: t("suspendUserSuccess"), errorMessage: t("errors.suspendFailed") }
+          : actionId === "verify"
+            ? { status: "active" as const, successMessage: t("verifyUserSuccess"), errorMessage: t("errors.verifyFailed") }
+            : null;
+      if (!statusUpdate) return;
+      if (statusActionBusyRef.current) return;
+      statusActionBusyRef.current = true;
+      try {
+        await updateUserStatus(userId, statusUpdate.status);
+        setUsers((prev) =>
+          prev.map((user) => (user.id === userId ? { ...user, status: statusUpdate.status } : user)),
+        );
+        setSuccessToast(statusUpdate.successMessage);
+        window.setTimeout(() => setSuccessToast(null), SUCCESS_TOAST_MS);
+      } catch (e) {
+        setError(listErrMessage(e, statusUpdate.errorMessage));
+      } finally {
+        statusActionBusyRef.current = false;
+      }
+    },
+    [t],
+  );
+
   const effectivePage = Math.min(page, totalPages);
   const startItem = users.length === 0 ? 0 : (meta.page - 1) * meta.limit + 1;
   const endItem = users.length === 0 ? 0 : (meta.page - 1) * meta.limit + users.length;
 
   return (
-    <div className="mx-auto max-w-full space-y-4 px-3 py-4 sm:space-y-6 sm:px-4 sm:py-6 md:px-6 md:py-8 lg:px-8">
+    <>
+      <UserProfileModal userId={profileUserId} onClose={() => setProfileUserId(null)} />
+      {portalReady && typeof document !== "undefined" && successToast
+        ? createPortal(
+            <div
+              className={`pointer-events-none fixed right-4 top-20 z-[301] max-w-sm sm:right-6 sm:top-24 ${
+                toastEntered ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+              } transition-all duration-300 ease-out`}
+              role="status"
+              aria-live="polite"
+            >
+              <div className="pointer-events-auto rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-3 shadow-lg">
+                <p className="text-sm font-semibold text-foreground">{successToast}</p>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
+      <div className="mx-auto max-w-full space-y-4 px-3 py-4 sm:space-y-6 sm:px-4 sm:py-6 md:px-6 md:py-8 lg:px-8">
       <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
         <div className="relative min-w-0 flex-1">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
@@ -335,7 +409,9 @@ export function UsersManagementContent() {
                 </td>
               </tr>
             ) : (
-              users.map((user) => <UserRow key={user.id} user={user} nowMs={nowMs} t={t} />)
+              users.map((user) => (
+                <UserRow key={user.id} user={user} nowMs={nowMs} t={t} onAction={handleUserAction} />
+              ))
             )}
           </tbody>
         </table>
@@ -372,6 +448,7 @@ export function UsersManagementContent() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
@@ -379,10 +456,12 @@ function UserRow({
   user,
   nowMs,
   t,
+  onAction,
 }: {
   user: AdminUserListItem;
   nowMs: number;
   t: ReturnType<typeof useTranslations>;
+  onAction: (actionId: string, userId: string) => void;
 }) {
   const locale = useLocale();
   const color = statusColor(user.status);
@@ -432,7 +511,7 @@ function UserRow({
         {formatContributionsCount(user.contributions_count)}
       </td>
       <td className="px-1 py-2.5 sm:px-4 sm:py-3">
-        <UserActionsDropdown userId={user.id} />
+        <UserActionsDropdown userId={user.id} onAction={onAction} />
       </td>
     </tr>
   );

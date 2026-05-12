@@ -42,8 +42,12 @@
       },
       "tryAgain": "إعادة المحاولة",
       "tryExportAgain": "إعادة محاولة التصدير",
+      "suspendUserSuccess": "تم إيقاف المستخدم",
+      "verifyUserSuccess": "تم توثيق المستخدم",
       "errors": {
-        "loadFailed": "تعذّر تحميل المستخدمين"
+        "loadFailed": "تعذّر تحميل المستخدمين",
+        "suspendFailed": "تعذّر إيقاف المستخدم. تحقق من الصلاحيات أو أعد المحاولة.",
+        "verifyFailed": "تعذّر توثيق المستخدم. تحقق من الصلاحيات أو أعد المحاولة."
       },
       "addUserPage": {
         "headerTitle": "إضافة مستخدم",
@@ -66,6 +70,85 @@
         "errors": {
           "required": "الاسم الكامل والبريد وكلمة المرور مطلوبة.",
           "createFailed": "تعذر إنشاء المستخدم. تحقق من البيانات أو الصلاحيات."
+        }
+      },
+      "editUserPage": {
+        "headerTitle": "تعديل المستخدم",
+        "headerSubtitle": "تحديث بيانات الحساب وحالة الوصول.",
+        "backToList": "العودة إلى المستخدمين",
+        "intro": "تُحفظ التغييرات على حساب المستخدم فوراً. تتحكم الحالة في إمكانية تسجيل الدخول.",
+        "loading": "جاري تحميل المستخدم…",
+        "username": "اسم المستخدم",
+        "email": "البريد الإلكتروني",
+        "fullName": "الاسم الكامل",
+        "fullNamePlaceholder": "مثال: اسم محدّث",
+        "status": "الحالة",
+        "submit": "حفظ التغييرات",
+        "submitting": "جاري الحفظ…",
+        "successTitle": "تم تحديث المستخدم",
+        "successHint": "يعكس الحساب أحدث التغييرات.",
+        "viewUsersList": "عرض قائمة المستخدمين",
+        "errors": {
+          "required": "الاسم الكامل مطلوب.",
+          "noChanges": "لا توجد تغييرات للحفظ.",
+          "loadFailed": "تعذّر تحميل هذا المستخدم.",
+          "updateFailed": "تعذر تحديث المستخدم. تحقق من البيانات أو الصلاحيات."
+        }
+      },
+      "changeRolePage": {
+        "headerTitle": "تغيير الدور",
+        "headerSubtitle": "تعيين دور مختلف لهذا الحساب.",
+        "backToList": "العودة إلى المستخدمين",
+        "intro": "اختر الدور الذي يجب أن يمتلكه المستخدم. يظهر التعيين الحالي أدناه.",
+        "loading": "جاري تحميل الأدوار…",
+        "username": "اسم المستخدم",
+        "email": "البريد الإلكتروني",
+        "currentRole": "الدور الحالي",
+        "currentRoleNone": "لا يوجد دور معيّن",
+        "role": "الدور",
+        "noRolesAvailable": "لا توجد أدوار متاحة",
+        "submit": "حفظ الدور",
+        "submitting": "جاري الحفظ…",
+        "successTitle": "تم تحديث الدور",
+        "successHint": "أصبح لدى المستخدم الدور المحدد.",
+        "viewUsersList": "عرض قائمة المستخدمين",
+        "errors": {
+          "required": "اختر دوراً.",
+          "noChanges": "لا توجد تغييرات للحفظ.",
+          "loadFailed": "تعذّر تحميل أدوار هذا المستخدم.",
+          "updateFailed": "تعذّر تحديث دور المستخدم. تحقق من الصلاحيات أو أعد المحاولة.",
+          "revokeFailed": "فشل إلغاء الدور: {message}",
+          "assignFailed": "فشل تعيين الدور: {message}"
+        }
+      },
+      "viewProfilePage": {
+        "headerTitle": "عرض الملف",
+        "headerSubtitle": "تفاصيل ملف هذا الحساب.",
+        "closeModalAria": "إغلاق نافذة الملف",
+        "closeAria": "إغلاق",
+        "loading": "جاري تحميل الملف…",
+        "username": "اسم المستخدم",
+        "email": "البريد الإلكتروني",
+        "fullName": "الاسم الكامل",
+        "phoneNumber": "رقم الهاتف",
+        "status": "الحالة",
+        "emailVerified": "البريد موثّق",
+        "yes": "نعم",
+        "no": "لا",
+        "displayName": "الاسم المعروض",
+        "about": "نبذة",
+        "location": "الموقع",
+        "company": "الشركة",
+        "jobTitle": "المسمى الوظيفي",
+        "personalLink": "رابط شخصي",
+        "birthDate": "تاريخ الميلاد",
+        "gender": "الجنس",
+        "socialLinks": "روابط التواصل",
+        "avatar": "الصورة",
+        "noValue": "—",
+        "noProfile": "لم ينشئ هذا المستخدم ملفاً بعد.",
+        "errors": {
+          "loadFailed": "تعذّر تحميل ملف هذا المستخدم."
         }
       },
       "rowActions": {

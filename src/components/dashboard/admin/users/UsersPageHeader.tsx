@@ -10,9 +10,49 @@ import { normalizeAppPathname } from "@/lib/i18n/strip-locale-from-path";
 export function UsersPageHeader() {
   const t = useTranslations("Dashboard.headers.users");
   const tAdd = useTranslations("Dashboard.usersManagement.addUserPage");
+  const tEdit = useTranslations("Dashboard.usersManagement.editUserPage");
+  const tChangeRole = useTranslations("Dashboard.usersManagement.changeRolePage");
   const pathname = usePathname();
   const path = normalizeAppPathname(pathname) || "";
   const isAddUser = path === "/admin/users/add";
+  const editUserMatch = path.match(/^\/admin\/users\/([^/]+)\/edit$/);
+  const isEditUser = Boolean(editUserMatch);
+  const changeRoleMatch = path.match(/^\/admin\/users\/([^/]+)\/role$/);
+  const isChangeRole = Boolean(changeRoleMatch);
+
+  if (isChangeRole) {
+    return (
+      <DashboardHeader
+        title={tChangeRole("headerTitle")}
+        subtitle={tChangeRole("headerSubtitle")}
+        actions={
+          <Link
+            href="/admin/users"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)] sm:w-auto sm:py-2"
+          >
+            {tChangeRole("backToList")}
+          </Link>
+        }
+      />
+    );
+  }
+
+  if (isEditUser) {
+    return (
+      <DashboardHeader
+        title={tEdit("headerTitle")}
+        subtitle={tEdit("headerSubtitle")}
+        actions={
+          <Link
+            href="/admin/users"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--tott-card-border)] bg-[var(--tott-dash-surface-inset)] px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-[var(--tott-dash-surface-inset)] sm:w-auto sm:py-2"
+          >
+            {tEdit("backToList")}
+          </Link>
+        }
+      />
+    );
+  }
 
   if (isAddUser) {
     return (
