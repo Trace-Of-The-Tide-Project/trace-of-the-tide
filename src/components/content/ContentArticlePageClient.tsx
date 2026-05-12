@@ -17,6 +17,8 @@ import type { ContentPageLayoutProps } from "@/components/content/ContentPageLay
 import type { RelatedContentCardData } from "@/components/content/related/RelatedContentCard";
 import {
   CONTENT_MEDIA_ARTICLE,
+  CONTENT_MEDIA_AUDIO,
+  CONTENT_MEDIA_VIDEO,
   CONTENT_ARTICLE,
   CONTENT_AUTHOR,
   CONTENT_CONTRIBUTORS,
@@ -25,11 +27,37 @@ import {
 } from "@/lib/constants";
 import { useOptionalArticleReadingHeader } from "@/components/layout/ArticleReadingHeaderContext";
 
-function StaticArticleDemo() {
+type StaticArticleDemoProps = {
+  defaultContentType?: "audio" | "video";
+};
+
+function StaticArticleDemo({ defaultContentType }: StaticArticleDemoProps) {
+  const media =
+    defaultContentType === "video"
+      ? CONTENT_MEDIA_VIDEO
+      : defaultContentType === "audio"
+        ? CONTENT_MEDIA_AUDIO
+        : CONTENT_MEDIA_ARTICLE;
+
+  const breadcrumbs =
+    defaultContentType === "video"
+      ? [
+          { label: "Content", href: "/content" },
+          { label: "Video", href: "/content/video" },
+          { label: CONTENT_ARTICLE.title },
+        ]
+      : defaultContentType === "audio"
+        ? [
+            { label: "Content", href: "/content" },
+            { label: "Audio", href: "/content/audio" },
+            { label: CONTENT_ARTICLE.title },
+          ]
+        : [{ label: "Collections", href: "/content" }, { label: CONTENT_ARTICLE.title }];
+
   return (
     <ContentPageLayout
-      breadcrumbs={[{ label: "Collections", href: "/content" }, { label: CONTENT_ARTICLE.title }]}
-      media={{ ...CONTENT_MEDIA_ARTICLE }}
+      breadcrumbs={breadcrumbs}
+      media={{ ...media }}
       article={{
         title: CONTENT_ARTICLE.title,
         edition: CONTENT_ARTICLE.edition,
@@ -64,7 +92,9 @@ function formatShortDate(iso: string | null | undefined): string {
     : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
-function mapRelated(items: Awaited<ReturnType<typeof getRelatedArticles>>): RelatedContentCardData[] {
+function mapRelated(
+  items: Awaited<ReturnType<typeof getRelatedArticles>>
+): RelatedContentCardData[] {
   return items
     .filter((a) => !!a.cover_image)
     .map((a) => ({
@@ -78,7 +108,7 @@ function mapRelated(items: Awaited<ReturnType<typeof getRelatedArticles>>): Rela
 }
 
 function mapCollection(
-  col: Awaited<ReturnType<typeof getCollectionArticles>>,
+  col: Awaited<ReturnType<typeof getCollectionArticles>>
 ): ContentPageLayoutProps["collection"] {
   const hours = col.total_hours;
   const duration = hours >= 1 ? `${hours}h` : `${Math.round(hours * 60)}min`;
@@ -100,7 +130,9 @@ function ArticleByIdLoader({ id }: { id: string }) {
   const [phase, setPhase] = useState<"loading" | "ok" | "missing" | "error">("loading");
   const [article, setArticle] = useState<ArticleDetail | null>(null);
   const [displayViewCount, setDisplayViewCount] = useState<number | undefined>(undefined);
-  const [liveCollection, setLiveCollection] = useState<ContentPageLayoutProps["collection"] | null>(null);
+  const [liveCollection, setLiveCollection] = useState<ContentPageLayoutProps["collection"] | null>(
+    null
+  );
   const [liveRelated, setLiveRelated] = useState<RelatedContentCardData[]>([]);
   const recordedIdRef = useRef<string | null>(null);
 
@@ -138,7 +170,7 @@ function ArticleByIdLoader({ id }: { id: string }) {
           sideTasks.push(
             getCollectionArticles(a.collection_id).then((col) => {
               if (!cancelled) setLiveCollection(mapCollection(col));
-            }),
+            })
           );
         }
         await Promise.allSettled(sideTasks);
@@ -241,7 +273,11 @@ function ArticleByIdLoader({ id }: { id: string }) {
   return null;
 }
 
-function ContentArticlePageInner() {
+type ContentArticlePageInnerProps = {
+  defaultContentType?: "audio" | "video";
+};
+
+function ContentArticlePageInner({ defaultContentType }: ContentArticlePageInnerProps) {
   const searchParams = useSearchParams();
   const setArticleHeaderMeta = useOptionalArticleReadingHeader()?.setArticleHeaderMeta;
   const id = searchParams.get("id")?.trim();
@@ -251,13 +287,17 @@ function ContentArticlePageInner() {
   }, [id, setArticleHeaderMeta]);
 
   if (!id) {
-    return <StaticArticleDemo />;
+    return <StaticArticleDemo defaultContentType={defaultContentType} />;
   }
 
   return <ArticleByIdLoader id={id} />;
 }
 
-export function ContentArticlePageClient() {
+export function ContentArticlePageClient({
+  defaultContentType,
+}: {
+  defaultContentType?: "audio" | "video";
+}) {
   return (
     <Suspense
       fallback={
@@ -269,7 +309,7 @@ export function ContentArticlePageClient() {
         </div>
       }
     >
-      <ContentArticlePageInner />
+      <ContentArticlePageInner defaultContentType={defaultContentType} />
     </Suspense>
   );
 }

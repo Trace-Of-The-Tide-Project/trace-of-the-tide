@@ -263,6 +263,8 @@ export type ArticleDetail = {
   scheduled_at?: string | null;
   excerpt?: string | null;
   cover_image?: string | null;
+  /** Primary video/audio file URL or storage key (hero playback; cover_image is often the poster). */
+  media_url?: string | null;
   published_at?: string | null;
   reading_time?: number;
   language?: string;

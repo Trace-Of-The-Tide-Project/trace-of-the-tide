@@ -9,7 +9,7 @@ export default async function SuccessPage() {
   const t = await getTranslations("Auth");
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.pageBackground }}>
+    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.bgDark }}>
       <div
         className="absolute right-0 top-0 left-0 z-0"
         style={{
@@ -19,7 +19,7 @@ export default async function SuccessPage() {
       >
         <HexBackground />
       </div>
-      <div className="fixed inset-0 -z-10" style={{ background: theme.pageBackground }} />
+      <div className="fixed inset-0 -z-10" style={{ background: theme.bgDark }} />
       <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12 pt-16">
         <div className="w-full max-w-3xl">
           <div className="mb-8 text-center">
@@ -36,7 +36,10 @@ export default async function SuccessPage() {
 
           <HexagonCard size="medium">
             <div className="flex w-full max-w-md flex-col items-center text-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-500" aria-hidden>
+              <div
+                className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-500"
+                aria-hidden
+              >
                 <svg
                   width="36"
                   height="36"
@@ -50,8 +53,12 @@ export default async function SuccessPage() {
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
               </div>
-              <h1 className="mb-2 text-xl font-semibold text-neutral-100">{t("pages.success.title")}</h1>
-              <p className="mx-auto mb-8 max-w-sm text-sm text-neutral-400">{t("pages.success.subtitle")}</p>
+              <h1 className="mb-2 text-xl font-semibold text-neutral-100">
+                {t("pages.success.title")}
+              </h1>
+              <p className="mx-auto mb-8 max-w-sm text-sm text-neutral-400">
+                {t("pages.success.subtitle")}
+              </p>
               <Link
                 href="/auth/login"
                 className="block w-full cursor-pointer select-none rounded-lg py-3 text-center font-medium text-white transition-colors hover:opacity-90"
@@ -80,7 +87,11 @@ export default async function SuccessPage() {
                     />
                   </svg>
                 </span>
-                <Link href="/contact" className="inline-flex hover:underline" style={{ color: theme.accentGold }}>
+                <Link
+                  href="/contact"
+                  className="inline-flex hover:underline"
+                  style={{ color: theme.accentGold }}
+                >
                   {t("pages.success.contactUs")}
                 </Link>
               </p>

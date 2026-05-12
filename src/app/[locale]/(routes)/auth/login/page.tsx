@@ -10,7 +10,7 @@ export default async function LoginPage() {
   const t = await getTranslations("Auth");
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.pageBackground }}>
+    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.bgDark }}>
       <div
         className="absolute right-0 top-0 left-0 z-0"
         style={{
@@ -20,7 +20,7 @@ export default async function LoginPage() {
       >
         <HexBackground />
       </div>
-      <div className="fixed inset-0 -z-10" style={{ background: theme.pageBackground }} />
+      <div className="fixed inset-0 -z-10" style={{ background: theme.bgDark }} />
       <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12 pt-16">
         <div className="w-full max-w-3xl">
           <div className="mb-8 text-center">
@@ -39,7 +39,11 @@ export default async function LoginPage() {
           </h1>
 
           <HexagonCard>
-            <Suspense fallback={<div className="h-64 w-full max-w-md animate-pulse rounded-lg bg-white/5" />}>
+            <Suspense
+              fallback={
+                <div className="h-64 w-full max-w-md animate-pulse rounded-lg bg-white/5" />
+              }
+            >
               <LoginForm />
             </Suspense>
           </HexagonCard>

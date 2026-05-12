@@ -16,7 +16,7 @@ export default async function CheckEmailPage({
   const safeEmail = typeof email === "string" ? email : "";
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.pageBackground }}>
+    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.bgDark }}>
       <div
         className="tott-auth-top-band absolute right-0 top-0 left-0 z-0"
         style={{
@@ -26,17 +26,27 @@ export default async function CheckEmailPage({
       >
         <HexBackground />
       </div>
-      <div className="fixed inset-0 -z-10" style={{ background: theme.pageBackground }} />
+      <div className="fixed inset-0 -z-10" style={{ background: theme.bgDark }} />
       <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12 pt-16">
         <div className="w-full max-w-3xl">
           <div className="mb-8 text-center">
             <div className="mb-6 flex justify-center">
-              <Image src="/images/Brand.png" alt="" width={120} height={48} className="h-12 w-auto object-contain" />
+              <Image
+                src="/images/Brand.png"
+                alt=""
+                width={120}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
             </div>
           </div>
 
-          <h1 className="mb-2 text-center text-xl font-semibold text-foreground">{t("pages.checkEmail.title")}</h1>
-          <p className="mx-auto mb-6 max-w-md text-center text-sm text-neutral-400">{t("pages.checkEmail.intro")}</p>
+          <h1 className="mb-2 text-center text-xl font-semibold text-foreground">
+            {t("pages.checkEmail.title")}
+          </h1>
+          <p className="mx-auto mb-6 max-w-md text-center text-sm text-neutral-400">
+            {t("pages.checkEmail.intro")}
+          </p>
 
           <HexagonCard size="medium">
             <div className="flex w-full max-w-md flex-col items-center text-center">
@@ -59,7 +69,9 @@ export default async function CheckEmailPage({
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
               </div>
-              <h2 className="mb-3 text-lg font-semibold text-neutral-100">{t("pages.checkEmail.cardTitle")}</h2>
+              <h2 className="mb-3 text-lg font-semibold text-neutral-100">
+                {t("pages.checkEmail.cardTitle")}
+              </h2>
               <p className="mx-auto mb-3 max-w-sm text-sm leading-relaxed text-neutral-400">
                 {t("pages.checkEmail.cardBody")}
               </p>
@@ -68,7 +80,9 @@ export default async function CheckEmailPage({
                   {t("pages.checkEmail.sentTo", { email: safeEmail })}
                 </p>
               ) : null}
-              <p className="mx-auto mb-2 max-w-sm text-xs text-neutral-500">{t("pages.checkEmail.spamHint")}</p>
+              <p className="mx-auto mb-2 max-w-sm text-xs text-neutral-500">
+                {t("pages.checkEmail.spamHint")}
+              </p>
             </div>
           </HexagonCard>
 

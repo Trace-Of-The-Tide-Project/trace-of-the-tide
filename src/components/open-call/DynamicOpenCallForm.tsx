@@ -183,7 +183,7 @@ function FileField({ field }: { field: ApplicationFormField & { type: "file_mult
       }));
       setFiles((prev) => [...prev, ...newFiles].slice(0, field.max_files));
     },
-    [field.max_files],
+    [field.max_files]
   );
 
   const removeFile = useCallback((id: string) => {
@@ -214,7 +214,9 @@ function FileField({ field }: { field: ApplicationFormField & { type: "file_mult
           setIsDragging(false);
         }}
         className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 transition-colors ${
-          isDragging ? "border-[#C9A96E] bg-[#C9A96E]/10" : "border-gray-600 bg-[var(--tott-well-bg)]"
+          isDragging
+            ? "border-[#C9A96E] bg-[#C9A96E]/10"
+            : "border-gray-600 bg-[var(--tott-well-bg)]"
         }`}
       >
         <input

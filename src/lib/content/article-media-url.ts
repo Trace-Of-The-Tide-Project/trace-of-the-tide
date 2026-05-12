@@ -45,7 +45,9 @@ export function isUsableArticleMediaRef(raw: string | null | undefined): raw is 
   if (isUsableImageSrc(raw)) return true;
   const s = String(raw ?? "").trim();
   if (!s || s.includes("..")) return false;
-  if (/^(uploads|videos|audio|images|contributions)\//i.test(s) && /^[\w./-]+$/i.test(s)) return true;
+  // Allow percent-encoding and typical path chars (backend keys must not contain "..").
+  if (/^(uploads|videos|audio|images|contributions)\//i.test(s) && /^[\w./+%-]+$/i.test(s))
+    return true;
   return false;
 }
 
@@ -78,4 +80,25 @@ export function resolveArticleMediaSrc(ref: string): string {
   const base = getArticleApiBaseUrl();
   const path = s.startsWith("/") ? s : `/${s}`;
   return `${base}${path}`;
+}
+
+const RELATED_CARD_IMAGE_FALLBACK = "/images/image.png";
+
+/**
+ * API list/detail often returns `cover_image` as a bucket key (`images/…`) or API path (`uploads/…`).
+ * next/image requires a usable absolute URL or site path; this maps refs the same way as article heroes.
+ */
+export function resolveCoverImageForNextImage(
+  ref: string | null | undefined,
+  fallback: string = RELATED_CARD_IMAGE_FALLBACK,
+): string {
+  if (ref == null) return fallback;
+  const s = String(ref).trim();
+  if (!s) return fallback;
+  if (isUsableImageSrc(s)) return s;
+  if (isUsableArticleMediaRef(s)) {
+    const resolved = resolveArticleMediaSrc(s);
+    if (isUsableImageSrc(resolved)) return resolved;
+  }
+  return fallback;
 }

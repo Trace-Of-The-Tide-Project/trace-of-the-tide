@@ -85,16 +85,15 @@ export function Navbar() {
   }, [isMobileMenuOpen]);
 
   const navMuted = isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900";
-  const navRowHover = isDark ? "hover:bg-white/5 hover:text-white" : "hover:bg-gray-100 hover:text-gray-900";
+  const navRowHover = isDark
+    ? "hover:bg-white/5 hover:text-white"
+    : "hover:bg-gray-100 hover:text-gray-900";
   const chipBg = isDark ? theme.cardBorder : "#e5e7eb";
   const borderColor = isDark ? "#333333" : "#d1d5db";
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full py-2 ${isDark ? "bg-[#171717]" : "bg-white"}`}
-    >
+    <header className={`sticky top-0 z-50 w-full py-2 ${isDark ? "bg-[#171717]" : "bg-white"}`}>
       <nav className="flex h-14 w-full items-center justify-between gap-8 px-6">
-
         {/* Brand — left */}
         <Link
           href="/"
@@ -108,7 +107,6 @@ export function Navbar() {
 
         {/* Right section */}
         <div className="flex items-center justify-end gap-2 lg:gap-4">
-
           {/* Desktop nav links */}
           {navLinks.map(({ href, messageKey, icon: Icon }) => (
             <Link
@@ -122,13 +120,28 @@ export function Navbar() {
           ))}
 
           {/* Divider */}
-          <span className={`mx-1 hidden h-8 w-px lg:block`} style={{ backgroundColor: borderColor }} />
+          <span
+            className={`mx-1 hidden h-8 w-px lg:block`}
+            style={{ backgroundColor: borderColor }}
+          />
 
           {/* Language switcher */}
           <div className={`hidden items-center gap-2 lg:flex ${navMuted}`}>
             <LanguagesIcon />
             <LanguageSwitcher />
           </div>
+
+          <button
+            type="button"
+            onClick={toggleScheme}
+            className={`hidden h-10 w-10 items-center justify-center rounded-lg border transition-colors lg:inline-flex ${
+              isDark ? "text-white hover:text-white/90" : "text-gray-800 hover:text-gray-950"
+            }`}
+            style={{ borderColor, backgroundColor: chipBg }}
+            aria-label={isDark ? t("switchToLight") : t("switchToDark")}
+          >
+            {isDark ? <SunIcon /> : <MoonIcon />}
+          </button>
 
           {user ? (
             <>
@@ -150,9 +163,7 @@ export function Navbar() {
                   type="button"
                   onClick={() => setIsUserDropdownOpen((v) => !v)}
                   className={`inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors ${
-                    isDark
-                      ? "text-gray-200 hover:text-white"
-                      : "text-gray-700 hover:text-gray-900"
+                    isDark ? "text-gray-200 hover:text-white" : "text-gray-700 hover:text-gray-900"
                   }`}
                   style={{ borderColor }}
                 >
@@ -263,7 +274,9 @@ export function Navbar() {
             className={`flex flex-col gap-1 border-b p-4 ${isDark ? "border-[#333333]" : "border-gray-200"}`}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className={`font-medium ${isDark ? "text-white" : "text-gray-900"}`}>{t("menu")}</span>
+              <span className={`font-medium ${isDark ? "text-white" : "text-gray-900"}`}>
+                {t("menu")}
+              </span>
               <button
                 type="button"
                 onClick={closeMobileMenu}
@@ -293,7 +306,9 @@ export function Navbar() {
 
             <span className={`my-2 h-px w-full ${isDark ? "bg-[#333333]" : "bg-gray-200"}`} />
 
-            <div className={`flex items-center gap-3 rounded-md px-4 py-3 transition-colors ${navMuted} ${navRowHover}`}>
+            <div
+              className={`flex items-center gap-3 rounded-md px-4 py-3 transition-colors ${navMuted} ${navRowHover}`}
+            >
               <LanguagesIcon />
               <LanguageSwitcher />
             </div>

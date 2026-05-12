@@ -136,7 +136,10 @@ export default function OpenCallByIdPage() {
                       className="inline-block h-1.5 w-1.5 rounded-full"
                       style={{ backgroundColor: theme.accentGold }}
                     />
-                    {formatDate(openCall.createdAt ?? openCall.created_at ?? openCall.published_at, locale)}
+                    {formatDate(
+                      openCall.createdAt ?? openCall.created_at ?? openCall.published_at,
+                      locale
+                    )}
                   </span>
                 )}
               </div>
@@ -146,9 +149,7 @@ export default function OpenCallByIdPage() {
               </h1>
 
               {firstParagraph && (
-                <p className="text-sm leading-relaxed text-gray-400">
-                  {firstParagraph}
-                </p>
+                <p className="text-sm leading-relaxed text-gray-400">{firstParagraph}</p>
               )}
             </div>
 
@@ -187,7 +188,9 @@ export default function OpenCallByIdPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-semibold text-foreground">{t("supportTitle")}</h3>
-                <p className="mt-0.5 text-xs leading-relaxed text-gray-400">{t("supportDescription")}</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-gray-400">
+                  {t("supportDescription")}
+                </p>
               </div>
               <Link
                 href="/contribute"

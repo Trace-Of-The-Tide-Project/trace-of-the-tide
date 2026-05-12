@@ -112,7 +112,9 @@ export function OpenCallForm() {
       {/* First name / Last name */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">{td("firstName")}</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+            {td("firstName")}
+          </label>
           <div
             className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
             style={fieldRowStyle}
@@ -129,7 +131,9 @@ export function OpenCallForm() {
           </div>
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">{td("lastName")}</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+            {td("lastName")}
+          </label>
           <div
             className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
             style={fieldRowStyle}
@@ -149,7 +153,9 @@ export function OpenCallForm() {
 
       {/* Email */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">{td("email")}</label>
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+          {td("email")}
+        </label>
         <div
           className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
           style={fieldRowStyle}
@@ -168,7 +174,9 @@ export function OpenCallForm() {
 
       {/* Phone number */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">{td("phone")}</label>
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+          {td("phone")}
+        </label>
         <div
           className="flex items-stretch overflow-hidden rounded-lg border"
           style={{ borderColor: theme.inputBorder }}
@@ -204,14 +212,14 @@ export function OpenCallForm() {
             style={{ borderColor: "transparent" }}
           />
         </div>
-        <p className="mt-1 text-xs text-gray-500">
-          {td("phoneHint")}
-        </p>
+        <p className="mt-1 text-xs text-gray-500">{td("phoneHint")}</p>
       </div>
 
       {/* Experience field */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">{td("experienceField")}</label>
+        <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+          {td("experienceField")}
+        </label>
         <div
           className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
           style={fieldRowStyle}
@@ -223,34 +231,64 @@ export function OpenCallForm() {
             name="experience"
             className="w-full appearance-none bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
           >
-            <option value="" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value=""
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experiencePlaceholder")}
             </option>
-            <option value="journalism" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="journalism"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceJournalism")}
             </option>
-            <option value="research" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="research"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceResearch")}
             </option>
-            <option value="photography" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="photography"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experiencePhotography")}
             </option>
-            <option value="filmmaking" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="filmmaking"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceFilmmaking")}
             </option>
-            <option value="writing" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="writing"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceWriting")}
             </option>
-            <option value="art" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="art"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceArt")}
             </option>
-            <option value="education" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="education"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceEducation")}
             </option>
-            <option value="technology" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="technology"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceTechnology")}
             </option>
-            <option value="other" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+            <option
+              value="other"
+              className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+            >
               {td("experienceOther")}
             </option>
           </select>
@@ -277,7 +315,9 @@ export function OpenCallForm() {
       {/* Country / City */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">{td("country")}</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+            {td("country")}
+          </label>
           <div
             className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
             style={fieldRowStyle}
@@ -286,22 +326,40 @@ export function OpenCallForm() {
               name="country"
               className="w-full appearance-none bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
             >
-              <option value="" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+              <option
+                value=""
+                className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              >
                 {td("select")}
               </option>
-              <option value="palestine" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+              <option
+                value="palestine"
+                className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              >
                 {td("countryPalestine")}
               </option>
-              <option value="egypt" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+              <option
+                value="egypt"
+                className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              >
                 {td("countryEgypt")}
               </option>
-              <option value="jordan" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+              <option
+                value="jordan"
+                className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              >
                 {td("countryJordan")}
               </option>
-              <option value="lebanon" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+              <option
+                value="lebanon"
+                className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              >
                 {td("countryLebanon")}
               </option>
-              <option value="other" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+              <option
+                value="other"
+                className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              >
                 {td("countryOther")}
               </option>
             </select>
@@ -311,7 +369,9 @@ export function OpenCallForm() {
           </div>
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">{td("city")}</label>
+          <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
+            {td("city")}
+          </label>
           <div
             className="flex items-center gap-3 rounded-lg border px-3 py-2 sm:px-4 sm:py-3"
             style={fieldRowStyle}
@@ -320,7 +380,10 @@ export function OpenCallForm() {
               name="city"
               className="w-full appearance-none bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
             >
-              <option value="" className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]">
+              <option
+                value=""
+                className="bg-[var(--tott-well-bg)] text-[color:var(--tott-panel-text)]"
+              >
                 {td("select")}
               </option>
             </select>
@@ -334,15 +397,16 @@ export function OpenCallForm() {
       {/* Upload files */}
       <div>
         <label className="mb-1.5 block text-sm font-medium text-[color:var(--tott-panel-text)]">
-          {td("uploadLabel")}{" "}
-          <span className="font-normal text-gray-500">{td("uploadHint")}</span>
+          {td("uploadLabel")} <span className="font-normal text-gray-500">{td("uploadHint")}</span>
         </label>
         <div
           onDrop={onDrop}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 transition-colors ${
-            isDragging ? "border-[#C9A96E] bg-[#C9A96E]/10" : "border-gray-600 bg-[var(--tott-well-bg)]"
+            isDragging
+              ? "border-[#C9A96E] bg-[#C9A96E]/10"
+              : "border-gray-600 bg-[var(--tott-well-bg)]"
           }`}
         >
           <input
