@@ -94,28 +94,48 @@ export function buildArticleContentPageProps(article: ArticleDetail): ContentPag
     };
   });
 
+  const contentTypeNorm = normalizedArticleContentType(article);
   const firstCover = getFirstCoverHeroFromBlocks(article.blocks);
   const fromApiCover = article.cover_image?.trim() || null;
-  const heroCandidate = firstCover?.src ?? fromApiCover;
-  const heroTrimmed = heroCandidate?.trim() || "";
-  const heroKind =
-    firstCover?.kind ??
-    (isLikelyAudioUrl(heroTrimmed) ? ("audio" as const) : isLikelyVideoUrl(heroTrimmed) ? ("video" as const) : ("image" as const));
+  const mediaUrl = article.media_url?.trim() || null;
+  const useTopLevelStream =
+    (contentTypeNorm === "video" || contentTypeNorm === "audio") &&
+    !!mediaUrl &&
+    isUsableArticleMediaRef(mediaUrl);
+
+  const heroCandidate =
+    (useTopLevelStream ? mediaUrl : null) ?? firstCover?.src ?? fromApiCover ?? "";
+  const heroTrimmed = heroCandidate.trim();
+  const heroKind = useTopLevelStream
+    ? contentTypeNorm === "audio"
+      ? ("audio" as const)
+      : ("video" as const)
+    : firstCover?.kind ??
+      (isLikelyAudioUrl(heroTrimmed)
+        ? ("audio" as const)
+        : isLikelyVideoUrl(heroTrimmed)
+          ? ("video" as const)
+          : ("image" as const));
   const heroRefOk = heroTrimmed && isUsableArticleMediaRef(heroTrimmed) ? heroTrimmed : null;
   const heroSrc = heroRefOk ? resolveArticleMediaSrc(heroRefOk) : null;
+
+  const posterRef =
+    fromApiCover && isUsableArticleMediaRef(fromApiCover) ? fromApiCover : null;
+  const posterSrc = posterRef ? resolveArticleMediaSrc(posterRef) : null;
 
   const media = heroSrc
     ? heroKind === "video"
       ? {
           type: "video" as const,
           src: heroSrc,
+          thumbnail: posterSrc ?? undefined,
           title: article.title,
         }
       : heroKind === "audio"
         ? {
             type: "audio" as const,
             src: heroSrc,
-            thumbnail: CONTENT_MEDIA_AUDIO.thumbnail,
+            thumbnail: posterSrc ?? CONTENT_MEDIA_AUDIO.thumbnail,
             title: article.title,
           }
         : {
@@ -129,8 +149,6 @@ export function buildArticleContentPageProps(article: ArticleDetail): ContentPag
         src: "",
         title: article.title,
       };
-
-  const contentTypeNorm = normalizedArticleContentType(article);
   const breadcrumbs =
     contentTypeNorm === "audio"
       ? audioArticleHeroBreadcrumbs(article)

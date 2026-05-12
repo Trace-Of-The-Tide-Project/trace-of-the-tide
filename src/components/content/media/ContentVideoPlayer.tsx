@@ -76,7 +76,7 @@ export function ContentVideoPlayer({ src, thumbnail }: ContentVideoPlayerProps) 
   const handleLoadedMetadata = useCallback(() => {
     const v = videoRef.current;
     if (v) {
-      setDuration(v.duration);
+      if (Number.isFinite(v.duration)) setDuration(v.duration);
       setCurrentTime(v.currentTime);
       setVolume(v.volume);
       setMuted(v.muted);
@@ -86,7 +86,7 @@ export function ContentVideoPlayer({ src, thumbnail }: ContentVideoPlayerProps) 
   const handleCanPlay = useCallback(() => {
     const v = videoRef.current;
     if (v) {
-      setDuration(v.duration);
+      if (Number.isFinite(v.duration)) setDuration(v.duration);
       setCurrentTime(v.currentTime);
     }
   }, []);
@@ -101,8 +101,13 @@ export function ContentVideoPlayer({ src, thumbnail }: ContentVideoPlayerProps) 
     const bar = e.currentTarget;
     if (!v || !bar) return;
     const rect = bar.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    v.currentTime = pct * v.duration;
+    const w = rect.width;
+    if (!(w > 0)) return;
+    const dur = v.duration;
+    if (!Number.isFinite(dur) || dur <= 0) return;
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / w));
+    const t = pct * dur;
+    if (Number.isFinite(t)) v.currentTime = t;
   }, []);
 
   const toggleFullscreen = useCallback(() => {
@@ -128,7 +133,10 @@ export function ContentVideoPlayer({ src, thumbnail }: ContentVideoPlayerProps) 
     const bar = e.currentTarget;
     if (!v || !bar) return;
     const rect = bar.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height));
+    const h = rect.height;
+    if (!(h > 0)) return;
+    const pct = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / h));
+    if (!Number.isFinite(pct)) return;
     v.volume = pct;
     v.muted = pct === 0;
     setVolume(pct);

@@ -163,6 +163,50 @@ export function normalizeUsersListPayload(raw: unknown): UsersListResult {
   return { users, meta, status, results };
 }
 
+export type CreateUserPayload = {
+  full_name: string;
+  email: string;
+  password: string;
+};
+
+export type CreateUserResult = {
+  id: string;
+  full_name: string;
+  email: string;
+  status: string;
+};
+
+function unwrapCreateUserResponse(raw: unknown): CreateUserResult | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const inner = o.data;
+  const row =
+    inner && typeof inner === "object" && inner !== null && !Array.isArray(inner)
+      ? (inner as Record<string, unknown>)
+      : o;
+  if (typeof row.id !== "string" || typeof row.email !== "string") return null;
+  return {
+    id: row.id,
+    full_name: String(row.full_name ?? ""),
+    email: row.email,
+    status: String(row.status ?? "active"),
+  };
+}
+
+/** POST /users — admin only. */
+export async function createUser(payload: CreateUserPayload): Promise<CreateUserResult> {
+  const { data } = await api.post<unknown>("/users", {
+    full_name: payload.full_name.trim(),
+    email: payload.email.trim(),
+    password: payload.password,
+  });
+  const parsed = unwrapCreateUserResponse(data);
+  if (!parsed) {
+    throw new Error("Invalid response from server when creating user");
+  }
+  return parsed;
+}
+
 export async function getUsers(params?: GetUsersParams): Promise<UsersListResult> {
   const query: Record<string, string | number> = {};
   if (params?.page != null) query.page = params.page;

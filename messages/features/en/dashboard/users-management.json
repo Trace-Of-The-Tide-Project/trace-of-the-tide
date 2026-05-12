@@ -45,6 +45,29 @@
       "errors": {
         "loadFailed": "Failed to load users"
       },
+      "addUserPage": {
+        "headerTitle": "Add user",
+        "headerSubtitle": "Create a new account with admin credentials.",
+        "backToList": "Back to users",
+        "intro": "New users receive the status returned by the API (usually active). They can sign in with the email and password you set.",
+        "fullName": "Full name",
+        "fullNamePlaceholder": "e.g. New User",
+        "email": "Email",
+        "emailPlaceholder": "new@trace.ps",
+        "password": "Password",
+        "passwordPlaceholder": "Minimum strength per your policy",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "submit": "Create user",
+        "submitting": "Creating…",
+        "successTitle": "User created",
+        "successHint": "The account is ready. Share the password securely with them.",
+        "viewUsersList": "View users list",
+        "errors": {
+          "required": "Full name, email, and password are required.",
+          "createFailed": "Could not create user. Check details or permissions."
+        }
+      },
       "rowActions": {
         "menuAria": "More actions",
         "viewProfile": "View Profile",

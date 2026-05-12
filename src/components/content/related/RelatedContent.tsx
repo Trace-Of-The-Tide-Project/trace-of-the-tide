@@ -46,6 +46,10 @@ function RelatedContentHexBackground() {
 }
 
 export function RelatedContent({ items, viewMoreHref = "#" }: RelatedContentProps) {
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <section className="relative py-10 sm:py-14" style={{ backgroundColor: theme.pageBackground }}>
       <RelatedContentHexBackground />
@@ -78,7 +82,10 @@ export function RelatedContent({ items, viewMoreHref = "#" }: RelatedContentProp
           <style>{`
             .related-scroll::-webkit-scrollbar { display: none; }
           `}</style>
-          <StaggerContainer className="flex" style={{ marginLeft: "-138px", paddingRight: "138px", gap: 0 }}>
+          <StaggerContainer
+            className="flex"
+            style={{ marginLeft: "-138px", paddingRight: "138px", gap: 0 }}
+          >
             {items.map((item, i) => (
               <StaggerItem key={i} style={{ flexShrink: 0 }}>
                 <RelatedContentCard {...item} />

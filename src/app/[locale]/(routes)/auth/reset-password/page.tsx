@@ -10,7 +10,7 @@ export default async function ResetPasswordPage() {
   const t = await getTranslations("Auth");
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.pageBackground }}>
+    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.bgDark }}>
       <div
         className="absolute right-0 top-0 left-0 z-0"
         style={{
@@ -20,7 +20,7 @@ export default async function ResetPasswordPage() {
       >
         <HexBackground />
       </div>
-      <div className="fixed inset-0 -z-10" style={{ background: theme.pageBackground }} />
+      <div className="fixed inset-0 -z-10" style={{ background: theme.bgDark }} />
       <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12 pt-16">
         <div className="w-full max-w-3xl">
           <div className="mb-8 text-center">
@@ -35,13 +35,19 @@ export default async function ResetPasswordPage() {
             </div>
           </div>
 
-          <h1 className="mb-2 text-center text-xl font-semibold text-foreground">{t("pages.resetPassword.title")}</h1>
+          <h1 className="mb-2 text-center text-xl font-semibold text-foreground">
+            {t("pages.resetPassword.title")}
+          </h1>
           <p className="mx-auto mb-6 max-w-md text-center text-sm text-neutral-400">
             {t("pages.resetPassword.subtitle")}
           </p>
 
           <HexagonCard size="medium">
-            <Suspense fallback={<div className="h-64 w-full max-w-md animate-pulse rounded-lg bg-white/5" />}>
+            <Suspense
+              fallback={
+                <div className="h-64 w-full max-w-md animate-pulse rounded-lg bg-white/5" />
+              }
+            >
               <ResetPasswordForm />
             </Suspense>
           </HexagonCard>

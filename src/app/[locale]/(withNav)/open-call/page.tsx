@@ -113,7 +113,9 @@ export default function OpenCallPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-semibold text-foreground">{t("supportTitle")}</h3>
-                <p className="mt-0.5 text-xs leading-relaxed text-gray-400">{t("supportDescription")}</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-gray-400">
+                  {t("supportDescription")}
+                </p>
               </div>
               <Link
                 href="/contribute"

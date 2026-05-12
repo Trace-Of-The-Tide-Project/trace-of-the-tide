@@ -16,7 +16,9 @@ export default function EmailSentPage() {
 
   useEffect(() => {
     const stored =
-      typeof window !== "undefined" ? sessionStorage.getItem("forgot-password-email-sent-at") : null;
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("forgot-password-email-sent-at")
+        : null;
     const sentAt = stored ? parseInt(stored, 10) : Date.now();
     if (!stored) {
       sessionStorage.setItem("forgot-password-email-sent-at", String(Date.now()));
@@ -49,7 +51,7 @@ export default function EmailSentPage() {
   const canResend = secondsLeft === 0;
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.pageBackground }}>
+    <div className="relative min-h-screen overflow-hidden" style={{ background: theme.bgDark }}>
       <div
         className="absolute right-0 top-0 left-0 z-0"
         style={{
@@ -59,7 +61,7 @@ export default function EmailSentPage() {
       >
         <HexBackground />
       </div>
-      <div className="fixed inset-0 -z-10" style={{ background: theme.pageBackground }} />
+      <div className="fixed inset-0 -z-10" style={{ background: theme.bgDark }} />
       <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12 pt-16">
         <div className="w-full max-w-3xl">
           <div className="mb-8 text-center">
@@ -74,8 +76,12 @@ export default function EmailSentPage() {
             </div>
           </div>
 
-          <h1 className="mb-2 text-center text-xl font-semibold text-foreground">{t("pages.emailSent.title")}</h1>
-          <p className="mx-auto mb-6 max-w-md text-center text-sm text-neutral-400">{t("pages.emailSent.subtitle")}</p>
+          <h1 className="mb-2 text-center text-xl font-semibold text-foreground">
+            {t("pages.emailSent.title")}
+          </h1>
+          <p className="mx-auto mb-6 max-w-md text-center text-sm text-neutral-400">
+            {t("pages.emailSent.subtitle")}
+          </p>
 
           <HexagonCard size="compact">
             <div className="flex w-full max-w-md flex-col items-center text-center">
@@ -94,8 +100,12 @@ export default function EmailSentPage() {
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
               </div>
-              <h2 className="mb-2 text-lg font-semibold text-neutral-100">{t("pages.emailSent.cardTitle")}</h2>
-              <p className="mx-auto mb-6 max-w-sm text-sm text-neutral-400">{t("pages.emailSent.cardBody")}</p>
+              <h2 className="mb-2 text-lg font-semibold text-neutral-100">
+                {t("pages.emailSent.cardTitle")}
+              </h2>
+              <p className="mx-auto mb-6 max-w-sm text-sm text-neutral-400">
+                {t("pages.emailSent.cardBody")}
+              </p>
               <button
                 type="button"
                 onClick={handleResend}
