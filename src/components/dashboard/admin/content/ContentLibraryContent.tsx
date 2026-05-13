@@ -18,8 +18,9 @@ import {
 } from "@/components/ui/icons";
 import { FilterDropdown } from "@/components/dashboard/admin/users/FilterDropdown";
 import { HexIconOutlined } from "@/components/dashboard/admin/articles/articles-create/HexIconOutlined";
-import { AuthedContributionImage } from "@/components/dashboard/admin/content/AuthedContributionImage";
+import { UploadedMediaImage } from "@/components/media/UploadedMediaImage";
 import {
+  contributionDisplayMediaRef,
   contributionFilePublicUrl,
   getContributions,
   type ContributionFile,
@@ -33,9 +34,7 @@ const ROWS_PER_PAGE = 10;
 const CONTRIBUTION_IMAGE_EXT = /\.(jpe?g|png|gif|webp|avif|bmp|svg)(\?.*)?$/i;
 
 function contributionFileRef(f: ContributionFile): string {
-  const u = f.url?.trim();
-  if (u) return u;
-  return (f.path ?? "").trim();
+  return contributionDisplayMediaRef(f);
 }
 
 function errMessage(e: unknown, requestFailed: string, generic: string): string {
@@ -293,8 +292,9 @@ function ContributionDetailModal({
                     >
                       {isImage && ref && (
                         <div className="relative w-full bg-black/30">
-                          <AuthedContributionImage
-                            path={ref}
+                          <UploadedMediaImage
+                            mediaRef={ref}
+                            fileId={f.id}
                             alt={f.file_name}
                             className="max-h-64 w-full object-contain"
                           />

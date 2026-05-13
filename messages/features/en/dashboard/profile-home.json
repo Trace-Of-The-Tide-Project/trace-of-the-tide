@@ -9,11 +9,15 @@
     },
     "adminProfile": {
       "pageTitle": "Profile Information",
+      "loading": "Loading profile…",
       "changePhoto": "Change photo",
       "photoHint": "JPG, PNG or GIF. Max size 2MB.",
       "errors": {
         "fileType": "Use JPG, PNG, or GIF.",
-        "maxSize": "Max size 2MB."
+        "maxSize": "Max size 2MB.",
+        "loadFailed": "Could not load your profile.",
+        "updateFailed": "Could not save profile changes.",
+        "noChanges": "No changes to save."
       },
       "fullName": "Full Name",
       "email": "Email address",
@@ -37,6 +41,7 @@
       "removeLinkAria": "Remove link",
       "addNewLink": "Add new link",
       "saved": "Saved",
+      "saving": "Saving…",
       "saveChanges": "Save Changes"
     },
     "adminPrivacy": {

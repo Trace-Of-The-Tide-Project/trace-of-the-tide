@@ -14,7 +14,7 @@ import {
 import { theme } from "@/lib/theme";
 import { CONTRIBUTION_FORM_INPUT_BASE as inputBase, COUNTRY_CODES } from "@/lib/constants";
 import { appendContributionFile, createContribution } from "@/services/contributions.service";
-import { uploadFileForContribution } from "@/services/uploads.service";
+import { uploadUploadedMediaFile, uploadedMediaStoragePath } from "@/lib/media/uploaded-media";
 
 type UploadedFile = { id: string; file: File; sizeLabel: string };
 
@@ -102,11 +102,11 @@ export function ContributionForm({ selectedTypeId }: ContributionFormProps) {
       if (phone && phone !== countryCode) fd.append("contributor_phone", phone);
 
       for (const f of files) {
-        const { storageKey, mimeType } = await uploadFileForContribution(f.file);
+        const mediaRef = await uploadUploadedMediaFile(f.file);
         appendContributionFile(
           fd,
-          storageKey,
-          mimeType || f.file.type || "application/octet-stream",
+          uploadedMediaStoragePath(mediaRef),
+          f.file.type || "application/octet-stream",
           f.file,
         );
       }

@@ -42,8 +42,12 @@
       },
       "tryAgain": "Try again",
       "tryExportAgain": "Try export again",
+      "suspendUserSuccess": "User suspended",
+      "verifyUserSuccess": "User verified",
       "errors": {
-        "loadFailed": "Failed to load users"
+        "loadFailed": "Failed to load users",
+        "suspendFailed": "Could not suspend user. Check permissions or try again.",
+        "verifyFailed": "Could not verify user. Check permissions or try again."
       },
       "addUserPage": {
         "headerTitle": "Add user",
@@ -66,6 +70,85 @@
         "errors": {
           "required": "Full name, email, and password are required.",
           "createFailed": "Could not create user. Check details or permissions."
+        }
+      },
+      "editUserPage": {
+        "headerTitle": "Edit user",
+        "headerSubtitle": "Update account details and access status.",
+        "backToList": "Back to users",
+        "intro": "Changes are saved to the user account immediately. Status controls whether the user can sign in.",
+        "loading": "Loading user…",
+        "username": "Username",
+        "email": "Email",
+        "fullName": "Full name",
+        "fullNamePlaceholder": "e.g. Updated Name",
+        "status": "Status",
+        "submit": "Save changes",
+        "submitting": "Saving…",
+        "successTitle": "User updated",
+        "successHint": "The account reflects your latest changes.",
+        "viewUsersList": "View users list",
+        "errors": {
+          "required": "Full name is required.",
+          "noChanges": "No changes to save.",
+          "loadFailed": "Could not load this user.",
+          "updateFailed": "Could not update user. Check details or permissions."
+        }
+      },
+      "changeRolePage": {
+        "headerTitle": "Change role",
+        "headerSubtitle": "Assign a different role for this account.",
+        "backToList": "Back to users",
+        "intro": "Choose the role this user should have. The current assignment is shown below.",
+        "loading": "Loading roles…",
+        "username": "Username",
+        "email": "Email",
+        "currentRole": "Current role",
+        "currentRoleNone": "No role assigned",
+        "role": "Role",
+        "noRolesAvailable": "No roles available",
+        "submit": "Save role",
+        "submitting": "Saving…",
+        "successTitle": "Role updated",
+        "successHint": "The user now has the selected role.",
+        "viewUsersList": "View users list",
+        "errors": {
+          "required": "Select a role.",
+          "noChanges": "No changes to save.",
+          "loadFailed": "Could not load this user’s roles.",
+          "updateFailed": "Could not update the user role. Check permissions or try again.",
+          "revokeFailed": "Revoke failed: {message}",
+          "assignFailed": "Assign failed: {message}"
+        }
+      },
+      "viewProfilePage": {
+        "headerTitle": "View profile",
+        "headerSubtitle": "Profile details for this account.",
+        "closeModalAria": "Close profile dialog",
+        "closeAria": "Close",
+        "loading": "Loading profile…",
+        "username": "Username",
+        "email": "Email",
+        "fullName": "Full name",
+        "phoneNumber": "Phone number",
+        "status": "Status",
+        "emailVerified": "Email verified",
+        "yes": "Yes",
+        "no": "No",
+        "displayName": "Display name",
+        "about": "About",
+        "location": "Location",
+        "company": "Company",
+        "jobTitle": "Job title",
+        "personalLink": "Personal link",
+        "birthDate": "Birth date",
+        "gender": "Gender",
+        "socialLinks": "Social links",
+        "avatar": "Avatar",
+        "noValue": "—",
+        "noProfile": "This user has not created a profile yet.",
+        "errors": {
+          "loadFailed": "Could not load this user’s profile."
         }
       },
       "rowActions": {

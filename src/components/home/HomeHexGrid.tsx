@@ -29,6 +29,7 @@ const FALLBACK_CARDS: HexCard[] = Array.from({ length: 30 }, (_, i) => ({
 const ROWS = 4;
 const COL_RATIO = 0.80;
 const TOP_PEEK = -0.5; // row offset for the half-hex row peeking in from the top
+const DEFAULT_HEX_SIZE = 350;
 
 function buildGrid(): { row: number; col: number; isTopPeek?: boolean }[] {
   const cells: { row: number; col: number; isTopPeek?: boolean }[] = [];
@@ -63,12 +64,11 @@ function calcHexSize(vw: number): number {
 type Props = { cards: HexCard[] };
 
 export function HomeHexGrid({ cards }: Props) {
-  const [hexSize, setHexSize] = useState(() =>
-    typeof window !== "undefined" ? calcHexSize(window.innerWidth) : 350,
-  );
+  const [hexSize, setHexSize] = useState(DEFAULT_HEX_SIZE);
 
   useEffect(() => {
     const update = () => setHexSize(calcHexSize(window.innerWidth));
+    update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);

@@ -1,4 +1,7 @@
-import { getArticleApiBaseUrl, resolveArticleMediaSrc } from "@/lib/content/article-media-url";
+import {
+  resolveUploadedMediaSrc,
+  uploadedMediaApiUrl,
+} from "@/lib/media/uploaded-media";
 import { api } from "@/services/api";
 import { getStoredToken } from "@/services/auth.service";
 
@@ -152,6 +155,33 @@ export async function createContribution(formData: FormData): Promise<CreatedCon
   return data.data;
 }
 
+export function contributionDisplayMediaRef(file: ContributionFile): string {
+  const url = file.url?.trim();
+  if (url) return url;
+  const path = file.path?.trim();
+  if (path) return path;
+  return file.file_name?.trim() ?? "";
+}
+
+function unwrapSignedFileUrlResponse(raw: unknown): string | null {
+  if (typeof raw === "string" && raw.trim()) return raw.trim();
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const inner = o.data;
+  if (typeof o.url === "string" && o.url.trim()) return o.url.trim();
+  if (inner && typeof inner === "object" && !Array.isArray(inner)) {
+    const row = inner as Record<string, unknown>;
+    if (typeof row.url === "string" && row.url.trim()) return row.url.trim();
+  }
+  return null;
+}
+
+/** Temporary signed URL for a stored file (same kind of ref as POST /upload returns for articles). */
+export async function getContributionFileSignedUrl(fileId: string): Promise<string | null> {
+  const { data } = await api.get<unknown>(`/files/${encodeURIComponent(fileId)}/url`);
+  return unwrapSignedFileUrlResponse(data);
+}
+
 /**
  * Append a `files` multipart part: **full file bytes** (same as POST /upload) and the part
  * **filename** set to the storage key from that upload (e.g. `images/….png`). A 1-byte placeholder
@@ -178,7 +208,7 @@ export function appendContributionFile(
 export function contributionFilePublicUrl(path: string | null | undefined): string {
   const raw = (path ?? "").trim();
   if (!raw) return "";
-  return resolveArticleMediaSrc(raw);
+  return resolveUploadedMediaSrc(raw);
 }
 
 /**
@@ -186,12 +216,7 @@ export function contributionFilePublicUrl(path: string | null | undefined): stri
  * authorize reads here while the bucket stays private.
  */
 export function contributionFileApiUrl(path: string | null | undefined): string {
-  const raw = (path ?? "").trim();
-  if (!raw) return "";
-  if (/^https?:\/\//i.test(raw)) return raw;
-  const rel = raw.replace(/^\/+/, "");
-  const base = getArticleApiBaseUrl();
-  return `${base}/${rel.split("/").map(encodeURIComponent).join("/")}`;
+  return uploadedMediaApiUrl(path);
 }
 
 const IMAGE_EXT = /\.(jpe?g|png|gif|webp|avif|bmp|svg)(\?.*)?$/i;

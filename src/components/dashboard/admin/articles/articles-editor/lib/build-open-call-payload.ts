@@ -1,4 +1,4 @@
-import { uploadArticleAsset } from "@/services/uploads.service";
+import { uploadUploadedMediaFile } from "@/lib/media/uploaded-media";
 import type { OpenCallContentBlock, OpenCallMainMedia } from "@/services/open-calls.service";
 import type { ContentBlock } from "../ContentBlocks";
 
@@ -47,7 +47,7 @@ export async function buildOpenCallContentBlocksAndMainMedia(
       let url = "";
       let sizeMb = 0;
       if (b.file) {
-        url = await uploadArticleAsset(b.file);
+        url = await uploadUploadedMediaFile(b.file);
         sizeMb = fileSizeMb(b.file);
       } else {
         url = (b.imageUrl ?? "").trim();
@@ -63,7 +63,7 @@ export async function buildOpenCallContentBlocksAndMainMedia(
       const urls: string[] = [];
       if (files.length) {
         for (const f of files) {
-          const u = await uploadArticleAsset(f);
+          const u = await uploadUploadedMediaFile(f);
           urls.push(u);
           if (urls.length === 1) setMainMediaIfEmpty(u, fileSizeMb(f), "image");
         }

@@ -1,4 +1,4 @@
-import { uploadArticleAsset } from "@/services/uploads.service";
+import { uploadUploadedMediaFile } from "@/lib/media/uploaded-media";
 import type { CreateArticleBlock } from "@/services/articles.service";
 import type { ContentBlock } from "../ContentBlocks";
 import { isLikelyAudioUrl, isLikelyVideoUrl } from "@/lib/content/media-url";
@@ -36,7 +36,7 @@ export async function buildArticleBlocksFromEditor(
       if (b.type === "image") {
         const caption = (b.imageCaption ?? "").trim();
         if (b.file) {
-          const url = await uploadArticleAsset(b.file);
+          const url = await uploadUploadedMediaFile(b.file);
           const isVideo = b.file.type.startsWith("video/") || isLikelyVideoUrl(url);
           const isAudio = b.file.type.startsWith("audio/") || isLikelyAudioUrl(url);
           const mimeType = b.file.type?.trim() || undefined;
@@ -82,7 +82,7 @@ export async function buildArticleBlocksFromEditor(
         const files = b.files ?? [];
         if (files.length) {
           const urls: string[] = [];
-          for (const f of files) urls.push(await uploadArticleAsset(f));
+          for (const f of files) urls.push(await uploadUploadedMediaFile(f));
           out.push({
             block_order: order++,
             block_type: "gallery",
