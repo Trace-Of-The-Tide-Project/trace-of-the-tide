@@ -1,14 +1,7 @@
 import type { AuthUser } from "@/types/auth.types";
+import { isAdminDashboardUser } from "@/lib/auth/admin-access";
 
-/** Navbar user chip: admins / super-admin personas → dashboard. */
+/** Navbar account chip: admins → dashboard; everyone else → Trace a Story. */
 export function getNavAccountHref(user: AuthUser): string {
-  const roles = user.roles ?? [];
-  if (roles.some((r) => /super_?\s*admin|admin|moderator/i.test(String(r)))) {
-    return "/admin";
-  }
-  const persona = `${user.full_name ?? ""} ${user.username ?? ""}`.toLowerCase();
-  if (persona.includes("super admin") || persona.includes("admin")) {
-    return "/admin";
-  }
-  return "/profile";
+  return isAdminDashboardUser(user) ? "/admin" : "/contribute";
 }

@@ -22,14 +22,20 @@ import { useTheme } from "@/components/providers/ThemeProvider";
 import { useStoredAuthUser } from "@/hooks/useStoredAuthUser";
 import { clearStoredAuth } from "@/services/auth.service";
 import { getNavAccountHref } from "@/lib/auth/nav-account-href";
+import { publicNavRoutes } from "@/lib/navigation/public-nav-links";
 import { theme } from "@/lib/theme";
 
-const navLinks = [
-  { href: "/fields", messageKey: "fields" as const, icon: GridIcon },
-  { href: "/be-a-neighbor", messageKey: "beANeighbor" as const, icon: PersonPlusIcon },
-  { href: "/gift-a-trace", messageKey: "giftATrace" as const, icon: GiftIcon },
-  { href: "/contribute", messageKey: "traceAStory" as const, icon: PenLineIcon },
-];
+const navLinkMeta = {
+  "/fields": { messageKey: "fields" as const, icon: GridIcon },
+  "/be-a-neighbor": { messageKey: "beANeighbor" as const, icon: PersonPlusIcon },
+  "/gift-a-trace": { messageKey: "giftATrace" as const, icon: GiftIcon },
+  "/contribute": { messageKey: "traceAStory" as const, icon: PenLineIcon },
+} as const;
+
+const navLinks = publicNavRoutes.map(({ href }) => ({
+  href,
+  ...navLinkMeta[href],
+}));
 
 function getInitial(name: string | null | undefined, email: string | null | undefined): string {
   if (name?.trim()) return name.trim()[0].toUpperCase();
@@ -47,7 +53,7 @@ export function Navbar() {
   const { isDark, toggleScheme } = useTheme();
   const user = useStoredAuthUser();
   const displayName = user?.full_name || user?.username || user?.email || "Username";
-  const accountHref = user ? getNavAccountHref(user) : "/profile";
+  const accountHref = user ? getNavAccountHref(user) : "/contribute";
 
   const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), []);
   const handleLogout = useCallback(() => {

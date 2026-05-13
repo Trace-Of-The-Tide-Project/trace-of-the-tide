@@ -7,7 +7,8 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { EmailIcon } from "@/components/ui/icons";
 import { AuthInput } from "@/components/ui/AuthInput";
 import { theme } from "@/lib/theme";
-import { resendVerificationEmail, verifyEmail } from "@/services/auth.service";
+import { resendVerificationEmail, verifyEmail, getStoredUser } from "@/services/auth.service";
+import { resolvePostLoginHref } from "@/lib/auth/admin-access";
 
 type Status = "loading" | "success" | "error" | "missing";
 
@@ -45,7 +46,9 @@ export function VerifyEmailClient() {
         const result = await verifyEmail(token);
         setStatus("success");
         setMessage(result.loggedIn ? t("successLoggedIn") : t("successSignIn"));
-        const dest = result.loggedIn ? "/profile" : "/auth/login";
+        const dest = result.loggedIn
+          ? resolvePostLoginHref(getStoredUser())
+          : "/auth/login";
         router.replace(dest);
         router.refresh();
       } catch (err) {
