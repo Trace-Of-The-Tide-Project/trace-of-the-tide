@@ -21,12 +21,16 @@ import {
   TrashIcon,
   TwitterXIcon,
 } from "@/components/ui/icons";
-import { resolveArticleMediaSrc } from "@/lib/content/article-media-url";
+import { UploadedMediaImage } from "@/components/media/UploadedMediaImage";
 import { formatUserRoleLabel } from "@/lib/dashboard/user-table-formatters";
+import {
+  isSignedUploadedMediaRef,
+  uploadUploadedMediaFile,
+  uploadedMediaPersistedRef,
+} from "@/lib/media/uploaded-media";
 import { useStoredAuthUser } from "@/hooks/useStoredAuthUser";
 import { theme } from "@/lib/theme";
 import { getUserRoles } from "@/services/roles.service";
-import { uploadArticleAsset } from "@/services/uploads.service";
 import {
   canonicalSocialLinksJson,
   canonicalSocialLinksObject,
@@ -146,7 +150,7 @@ export function AdminProfileInformation() {
   const avatarFileRef = useRef<File | null>(null);
 
   const initials = useMemo(() => initialsFromName(fullName), [fullName]);
-  const avatarSrc = avatarPreview ?? (remoteAvatar ? resolveArticleMediaSrc(remoteAvatar) : null);
+  const avatarSrc = avatarPreview;
 
   const revokePreview = useCallback(() => {
     if (objectUrlRef.current) {
@@ -296,11 +300,12 @@ export function AdminProfileInformation() {
     setSubmitting(true);
     setError(null);
     setSavedFlash(false);
-    let uploadedAvatarRef: string | null = null;
+    let uploadedAvatarDisplayRef: string | null = null;
     try {
       if (avatarFileRef.current) {
-        uploadedAvatarRef = await uploadArticleAsset(avatarFileRef.current);
-        payload.avatar = uploadedAvatarRef;
+        const uploaded = await uploadUploadedMediaFile(avatarFileRef.current);
+        uploadedAvatarDisplayRef = uploaded.trim();
+        payload.avatar = uploadedMediaPersistedRef(uploaded);
       }
       if (Object.keys(payload).length === 0) {
         setError(t("errors.noChanges"));
@@ -326,7 +331,15 @@ export function AdminProfileInformation() {
         linkedin: refreshedSocial.linkedin,
       });
       setOriginalSocialLinksJson(canonicalSocialLinksJson(refreshedSocial));
-      setRemoteAvatar(updated.avatar?.trim() || uploadedAvatarRef?.trim() || null);
+      const savedAvatar = updated.avatar?.trim() || null;
+      setRemoteAvatar(
+        savedAvatar && isSignedUploadedMediaRef(savedAvatar)
+          ? savedAvatar
+          : uploadedAvatarDisplayRef && isSignedUploadedMediaRef(uploadedAvatarDisplayRef)
+            ? uploadedAvatarDisplayRef
+            : savedAvatar ||
+              (uploadedAvatarDisplayRef ? uploadedMediaPersistedRef(uploadedAvatarDisplayRef) : null),
+      );
       revokePreview();
       setAvatarPreview(null);
       avatarFileRef.current = null;
@@ -384,6 +397,8 @@ export function AdminProfileInformation() {
           >
             {avatarSrc ? (
               <img src={avatarSrc} alt="" className="h-full w-full object-cover" />
+            ) : remoteAvatar ? (
+              <UploadedMediaImage mediaRef={remoteAvatar} className="h-full w-full object-cover" />
             ) : (
               initials
             )}

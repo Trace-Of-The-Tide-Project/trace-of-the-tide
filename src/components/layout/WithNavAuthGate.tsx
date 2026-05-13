@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { AUTH_STATE_CHANGED_EVENT, getStoredToken } from "@/services/auth.service";
 
 /**
- * Blocks all `(withNav)` routes until a session token exists. Auth lives under `/auth/*` (separate layout).
+ * Blocks `(dashboard)` routes until a session token exists. Public `(withNav)` pages stay open.
  */
 export function WithNavAuthGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { isAxiosError } from "axios";
 import { useTranslations } from "next-intl";
-import { resolveArticleMediaSrc } from "@/lib/content/article-media-url";
+import { UploadedMediaImage } from "@/components/media/UploadedMediaImage";
 import { USER_STATUS_COLORS } from "@/lib/dashboard/users-management-constants";
 import { theme } from "@/lib/theme";
 import { getUserProfile, type AdminUserProfileView } from "@/services/users.service";
@@ -96,10 +96,7 @@ export function UserProfileModal({ userId, onClose }: UserProfileModalProps) {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const emptyLabel = t("noValue");
-  const avatarSrc = useMemo(() => {
-    const avatar = profileView?.profile?.avatar;
-    return avatar ? resolveArticleMediaSrc(avatar) : null;
-  }, [profileView?.profile?.avatar]);
+  const avatarRef = profileView?.profile?.avatar?.trim() || null;
 
   const handleClose = useCallback(() => {
     onClose();
@@ -217,8 +214,8 @@ export function UserProfileModal({ userId, onClose }: UserProfileModalProps) {
                   className="mx-auto flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl border-2 bg-[var(--tott-dash-control-bg)] shadow-inner lg:mx-0"
                   style={{ borderColor: theme.accentGold }}
                 >
-                  {avatarSrc ? (
-                    <img src={avatarSrc} alt="" className="h-full w-full object-cover" />
+                  {avatarRef ? (
+                    <UploadedMediaImage mediaRef={avatarRef} alt="" className="h-full w-full object-cover" />
                   ) : (
                     <span className="text-2xl font-semibold text-foreground/80">{profileInitials(profileView)}</span>
                   )}

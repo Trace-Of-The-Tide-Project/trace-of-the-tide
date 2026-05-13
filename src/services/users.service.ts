@@ -1,3 +1,4 @@
+import { uploadedMediaPersistedRef } from "@/lib/media/uploaded-media";
 import { api } from "./api";
 
 export type AdminUserStatus = "active" | "suspended" | "inactive" | "pending";
@@ -454,7 +455,7 @@ export async function updateUserProfile(
   if (payload.about !== undefined) body.about = payload.about.trim();
   if (payload.location !== undefined) body.location = payload.location.trim();
   if (payload.personal_link !== undefined) body.personal_link = payload.personal_link.trim();
-  if (payload.avatar !== undefined) body.avatar = payload.avatar.trim();
+  if (payload.avatar !== undefined) body.avatar = uploadedMediaPersistedRef(payload.avatar);
   if (payload.social_links !== undefined) {
     body.social_links = canonicalSocialLinksObject(payload.social_links);
   }

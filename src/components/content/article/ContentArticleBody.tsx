@@ -1,6 +1,6 @@
 import { theme } from "@/lib/theme";
 import { isLikelyAudioUrl, isLikelyVideoUrl } from "@/lib/content/media-url";
-import { resolveArticleMediaSrc } from "@/lib/content/article-media-url";
+import { UploadedMediaImage } from "@/components/media/UploadedMediaImage";
 import { ArticleBodyVideo } from "@/components/content/article/ArticleBodyVideo";
 import { ArticleBodyAudio } from "@/components/content/article/ArticleBodyAudio";
 
@@ -84,13 +84,10 @@ export function ContentArticleBody({ sections }: ContentArticleBodyProps) {
                   ) : isLikelyAudioUrl(img.src) ? (
                     <ArticleBodyAudio src={img.src} />
                   ) : (
-                    /* eslint-disable-next-line @next/next/no-img-element -- remote article URLs from API */
-                    <img
-                      src={resolveArticleMediaSrc(img.src)}
+                    <UploadedMediaImage
+                      mediaRef={img.src}
                       alt={img.alt ?? ""}
                       className="max-h-[min(70vh,720px)] w-full max-w-3xl rounded-lg border border-[var(--tott-card-border)] object-contain"
-                      loading="lazy"
-                      decoding="async"
                     />
                   )}
                   {img.caption ? (
