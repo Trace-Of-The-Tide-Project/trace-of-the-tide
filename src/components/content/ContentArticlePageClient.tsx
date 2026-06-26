@@ -1,10 +1,11 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { ContentPageLayout } from "@/components/content/ContentPageLayout";
 import { buildArticleContentPageProps } from "@/lib/content/build-article-content-page";
+import { publicContentHrefForArticle, publicContentHrefForDetail } from "@/lib/content/public-article-preview-href";
 import {
   getArticleById,
   recordArticleView,
@@ -103,7 +104,10 @@ function mapRelated(
       author: a.author?.full_name || a.author?.username || "Author",
       date: formatShortDate(a.published_at),
       edition: a.edition || a.category || "Article",
-      href: `/content/article?id=${a.id}`,
+      href: publicContentHrefForArticle({
+        id: a.id,
+        category: a.category,
+      }),
     }));
 }
 
@@ -125,7 +129,14 @@ function mapCollection(
   };
 }
 
-function ArticleByIdLoader({ id }: { id: string }) {
+function ArticleByIdLoader({
+  id,
+  preferredContentType,
+}: {
+  id: string;
+  preferredContentType?: "audio" | "video";
+}) {
+  const router = useRouter();
   const setArticleHeaderMeta = useOptionalArticleReadingHeader()?.setArticleHeaderMeta;
   const [phase, setPhase] = useState<"loading" | "ok" | "missing" | "error">("loading");
   const [article, setArticle] = useState<ArticleDetail | null>(null);
@@ -202,6 +213,14 @@ function ArticleByIdLoader({ id }: { id: string }) {
   }, [id, phase, article]);
 
   useEffect(() => {
+    if (phase !== "ok" || !article || preferredContentType) return;
+    const href = publicContentHrefForDetail(article);
+    if (!href.startsWith("/content/article")) {
+      router.replace(href);
+    }
+  }, [article, phase, preferredContentType, router]);
+
+  useEffect(() => {
     if (!setArticleHeaderMeta) return;
     if (phase === "ok" && displayViewCount != null && Number.isFinite(displayViewCount)) {
       setArticleHeaderMeta({ viewCount: displayViewCount });
@@ -259,7 +278,7 @@ function ArticleByIdLoader({ id }: { id: string }) {
   }
 
   if (article) {
-    const props = buildArticleContentPageProps(article);
+    const props = buildArticleContentPageProps(article, { preferredContentType });
     return (
       <ContentPageLayout
         {...props}
@@ -290,7 +309,7 @@ function ContentArticlePageInner({ defaultContentType }: ContentArticlePageInner
     return <StaticArticleDemo defaultContentType={defaultContentType} />;
   }
 
-  return <ArticleByIdLoader id={id} />;
+  return <ArticleByIdLoader id={id} preferredContentType={defaultContentType} />;
 }
 
 export function ContentArticlePageClient({

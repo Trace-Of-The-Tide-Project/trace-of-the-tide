@@ -3,6 +3,7 @@ import {
   articleBlocksToSections,
   getFirstCoverHeroFromBlocks,
 } from "@/lib/content/article-blocks-to-sections";
+import { inferArticleContentType } from "@/lib/content/public-article-preview-href";
 import { isLikelyAudioUrl, isLikelyVideoUrl } from "@/lib/content/media-url";
 import {
   isUsableArticleMediaRef,
@@ -51,7 +52,13 @@ function articleContentBreadcrumbs(article: ArticleDetail): { label: string; hre
   return [{ label: article.title }];
 }
 
-function normalizedArticleContentType(article: ArticleDetail): string {
+function normalizedArticleContentType(
+  article: ArticleDetail,
+  preferredContentType?: "audio" | "video",
+): string {
+  if (preferredContentType) return preferredContentType;
+  const inferred = inferArticleContentType(article);
+  if (inferred === "video" || inferred === "audio") return inferred;
   return (article.content_type || "article").toLowerCase().replace(/-/g, "_");
 }
 
@@ -73,7 +80,10 @@ function videoArticleHeroBreadcrumbs(article: ArticleDetail): { label: string; h
   ];
 }
 
-export function buildArticleContentPageProps(article: ArticleDetail): ContentPageLayoutProps {
+export function buildArticleContentPageProps(
+  article: ArticleDetail,
+  options?: { preferredContentType?: "audio" | "video" },
+): ContentPageLayoutProps {
   const authorName =
     article.author?.full_name?.trim() || article.author?.username?.trim() || "Author";
 
@@ -94,7 +104,7 @@ export function buildArticleContentPageProps(article: ArticleDetail): ContentPag
     };
   });
 
-  const contentTypeNorm = normalizedArticleContentType(article);
+  const contentTypeNorm = normalizedArticleContentType(article, options?.preferredContentType);
   const firstCover = getFirstCoverHeroFromBlocks(article.blocks);
   const fromApiCover = article.cover_image?.trim() || null;
   const mediaUrl = article.media_url?.trim() || null;

@@ -1,4 +1,5 @@
 import { PageTransition } from "@/components/motion/PageTransition";
+import { DashboardRoleGate } from "@/components/layout/DashboardRoleGate";
 import { WithNavAuthGate } from "@/components/layout/WithNavAuthGate";
 
 export default function DashboardRootLayout({
@@ -8,7 +9,9 @@ export default function DashboardRootLayout({
 }) {
   return (
     <WithNavAuthGate>
-      <PageTransition>{children}</PageTransition>
+      <DashboardRoleGate>
+        <PageTransition>{children}</PageTransition>
+      </DashboardRoleGate>
     </WithNavAuthGate>
   );
 }

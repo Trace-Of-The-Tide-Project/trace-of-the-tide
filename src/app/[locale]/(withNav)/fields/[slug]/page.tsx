@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { redirect } from "@/i18n/navigation";
+import { publicContentHrefForDetail } from "@/lib/content/public-article-preview-href";
 import { getArticleById, getArticles } from "@/services/articles.service";
-
 async function resolveArticleId(slug: string): Promise<string | null> {
   const direct = await getArticleById(slug);
   if (direct?.id) return direct.id;
@@ -27,8 +27,11 @@ export default async function FieldArticleSlugPage({
   const id = await resolveArticleId(s);
   if (!id) notFound();
 
+  const article = await getArticleById(id);
+  if (!article) notFound();
+
   redirect({
-    href: `/content/article?id=${encodeURIComponent(id)}`,
+    href: publicContentHrefForDetail(article),
     locale,
   });
 }

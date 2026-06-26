@@ -192,7 +192,26 @@ function isArticleListRecord(x: unknown): x is Record<string, unknown> {
 
 function coerceArticleListArray(value: unknown): ArticleListItem[] {
   if (!Array.isArray(value)) return [];
-  return value.filter(isArticleListRecord) as ArticleListItem[];
+  return value
+    .filter(isArticleListRecord)
+    .map((record) => normalizeArticleListItem(record))
+    .filter((item): item is ArticleListItem => item != null);
+}
+
+function normalizeArticleListItem(record: Record<string, unknown>): ArticleListItem | null {
+  if (!isArticleListRecord(record)) return null;
+
+  const contentTypeRaw =
+    (typeof record.content_type === "string" && record.content_type.trim()) ||
+    (typeof record.contentType === "string" && record.contentType.trim()) ||
+    (typeof record.type === "string" && record.type.trim()) ||
+    "article";
+
+  return {
+    ...(record as ArticleListItem),
+    content_type: contentTypeRaw,
+    blocks: Array.isArray(record.blocks) ? (record.blocks as ArticleListItem["blocks"]) : [],
+  };
 }
 
 /**
@@ -324,8 +343,15 @@ export async function getArticleById(articleId: string): Promise<ArticleDetail |
     const { data } = await api.get<unknown>(`/articles/${encodeURIComponent(articleId)}`);
     const detail = unwrapArticleDetailPayload(data);
     if (!detail) return null;
+    const contentType =
+      (typeof detail.content_type === "string" && detail.content_type.trim()) ||
+      (typeof (detail as { contentType?: string }).contentType === "string" &&
+        (detail as { contentType?: string }).contentType?.trim()) ||
+      "article";
+
     return {
       ...detail,
+      content_type: contentType,
       blocks: Array.isArray(detail.blocks) ? detail.blocks : [],
       tags: Array.isArray(detail.tags) ? detail.tags : [],
       contributors: Array.isArray(detail.contributors) ? detail.contributors : [],

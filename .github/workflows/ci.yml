@@ -1,0 +1,43 @@
+name: CI - Next.js Project
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    name: Lint + Typecheck + Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Run ESLint
+      - name: Lint code
+        run: npm run lint
+
+      # 5. Check TypeScript (important for your TS project)
+      - name: Type check
+        run: npx tsc --noEmit
+
+      # 6. Check Prettier formatting (optional but good)
+      - name: Format check
+        run: npm run format:check
+
+      # 7. Build Next.js app
+      - name: Build project
+        run: npm run build

@@ -1,6 +1,7 @@
 import { getArticles } from "@/services/articles.service";
 import { HomeHexGrid } from "@/components/home/HomeHexGrid";
 import { ShareYourStory } from "@/components/home/ShareYourStory";
+import { publicContentHrefForListItem } from "@/lib/content/public-article-preview-href";
 
 export type HexCard = {
   id: string;
@@ -20,7 +21,7 @@ async function fetchHexCards(): Promise<HexCard[]> {
         ? a.category.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
         : "Article",
       image: a.cover_image,
-      href: `/content/article?id=${encodeURIComponent(a.id)}`,
+      href: publicContentHrefForListItem(a),
     }));
   } catch {
     return [];

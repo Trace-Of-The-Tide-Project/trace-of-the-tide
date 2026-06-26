@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { stripLocalePrefixesFromPath } from "@/lib/i18n/strip-locale-from-path";
+import { resolvePostLoginHref } from "@/lib/auth/admin-access";
 import axios from "axios";
 import { login } from "@/services/auth.service";
 import type { LoginRequest } from "@/types/auth.types";
@@ -17,9 +18,7 @@ export function useLoginForm() {
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered");
   const rawCallback = searchParams.get("callbackUrl")?.trim();
-  const callbackUrl = stripLocalePrefixesFromPath(
-    rawCallback && rawCallback.length > 0 ? rawCallback : "/admin"
-  );
+  const callbackUrl = stripLocalePrefixesFromPath(rawCallback ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -56,8 +55,8 @@ export function useLoginForm() {
         window.localStorage.removeItem(REMEMBERED_EMAIL_KEY);
       }
 
-      await login(data);
-      router.push(callbackUrl);
+      const auth = await login(data);
+      router.push(resolvePostLoginHref(auth.user, callbackUrl));
       router.refresh();
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
