@@ -72,7 +72,7 @@ function TextField({
         <input
           name={field.name}
           type={field.type === "email" ? "email" : field.type === "phone" ? "tel" : "text"}
-          placeholder={t("dynamic.enterField", { label })}
+          placeholder={t("dynamic.ente1rField", { label })}
           required={field.required}
           className="w-full bg-transparent text-sm text-[color:var(--tott-panel-text)] placeholder:text-gray-500 focus:outline-none sm:text-base"
         />

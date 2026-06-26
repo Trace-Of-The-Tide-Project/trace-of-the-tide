@@ -1,0 +1,20 @@
+name: CD - Staging Deploy (Vercel)
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    name: Deploy to Vercel (Preview)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel Preview
+        run: vercel --token=${{ secrets.VERCEL_TOKEN }} --prod=false
